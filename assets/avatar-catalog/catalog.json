@@ -1,0 +1,146 @@
+[
+  {
+    "id": "ipas-lantern-polisher-robot",
+    "style": "ip-as-logo",
+    "label": "提灯 Bot",
+    "originalName": "Lantern Polisher Robot",
+    "source": "https://cdn.ipaslogo.com/logos/29f8a4b5858c57bb-lantern-polisher-robot.png",
+    "sourceSha256": "29f8a4b5858c57bb99b0a0821aeeb580823bac4d117404679ea1ff1bd245b56c",
+    "sha256": "7c362a632b17458475343b570e5bf4a91a0681b259d67e3c1679261277b9e6d2"
+  },
+  {
+    "id": "ipas-jelly-robot",
+    "style": "ip-as-logo",
+    "label": "果冻 Bot",
+    "originalName": "Jelly Robot",
+    "source": "https://cdn.ipaslogo.com/logos/5aaa2cce49739cdd-jelly-robot.png",
+    "sourceSha256": "5aaa2cce49739cdd08b54e217ef80c5f815002278718b44d6080fa511103b23a",
+    "sha256": "d0675a916a9066a3a1b72a3faf3617586c2d728fc170b434d277a047f6011c9b"
+  },
+  {
+    "id": "ipas-seed-robot",
+    "style": "ip-as-logo",
+    "label": "种子 Bot",
+    "originalName": "Seed Robot",
+    "source": "https://cdn.ipaslogo.com/logos/141f172a02ad8030-seed-robot.png",
+    "sourceSha256": "141f172a02ad80308d832696327d74845d465cf68a9f87c1f8fb6f1f946389eb",
+    "sha256": "f906151b65e4dafee97b27869c672973eb377630ba259e461f2807e22628036f"
+  },
+  {
+    "id": "ipas-helper-robot",
+    "style": "ip-as-logo",
+    "label": "助手 Bot",
+    "originalName": "Helper Robot",
+    "source": "https://cdn.ipaslogo.com/logos/3c9f6b44624721ce-helper-robot.png",
+    "sourceSha256": "3c9f6b44624721ced093da1a0f16850abfdf40e913aecfe788dba11c51938e42",
+    "sha256": "e175885218d951c115b153110adccd66fdf835115736c1d3c3b0023b5853fe61"
+  },
+  {
+    "id": "ipas-laundry-robot",
+    "style": "ip-as-logo",
+    "label": "洗衣 Bot",
+    "originalName": "Laundry Robot",
+    "source": "https://cdn.ipaslogo.com/logos/465cad30814c3a1e-laundry-robot.png",
+    "sourceSha256": "465cad30814c3a1e67fb00fa481f922d9f77d0dd2b6cfbb540b7a1fc909746ab",
+    "sha256": "47707d64e6aa3c7c9585d78ed92df4ce8a62dc5fee7344688a5d1596fa1bbd9f"
+  },
+  {
+    "id": "ipas-pillow-guard-robot",
+    "style": "ip-as-logo",
+    "label": "守梦 Bot",
+    "originalName": "Pillow Guard Robot",
+    "source": "https://cdn.ipaslogo.com/logos/4abc142f63ce6e45-pillow-guard-robot.png",
+    "sourceSha256": "4abc142f63ce6e452ac3e4e1fc0c69ee02905a54918e8965d19f4a256b7425b8",
+    "sha256": "c34329a2decda70ae400a62d3c3b9818345a5c73ee73f80aa2875ae38f400e60"
+  },
+  {
+    "id": "ipas-tide-clock-robot",
+    "style": "ip-as-logo",
+    "label": "潮汐 Bot",
+    "originalName": "Tide Clock Robot",
+    "source": "https://cdn.ipaslogo.com/logos/cbd8d58e0dff49aa-tide-clock-robot.png",
+    "sourceSha256": "cbd8d58e0dff49aa664b6d3e382c0f2a2a8947ff26e48fd9211d23cd888dcc3b",
+    "sha256": "3f2a54793e33fddf1f187fc9ba6f44b455fb5554c3774e0461f3b6de0bdde820"
+  },
+  {
+    "id": "ipas-loom-robot",
+    "style": "ip-as-logo",
+    "label": "织梦 Bot",
+    "originalName": "Loom Robot",
+    "source": "https://cdn.ipaslogo.com/logos/52ee36583bb3a48e-loom-robot.png",
+    "sourceSha256": "52ee36583bb3a48eadfbae1141329a5e860386b1621c9803d25523df5be65964",
+    "sha256": "414efdce57f2b16dc9ef02ac1e64dc2968c437ff12370b917da49ba3f7fff885"
+  },
+  {
+    "id": "ipas-kettle-robot-2",
+    "style": "ip-as-logo",
+    "label": "茶壶 Bot",
+    "originalName": "Kettle Robot",
+    "source": "https://cdn.ipaslogo.com/logos/6ecbff9f30aa8079-kettle-robot-2.png",
+    "sourceSha256": "6ecbff9f30aa8079cbe556d9e551e423517582ac79fd2c8fefae477119076e95",
+    "sha256": "1a81d5b87992f6bb7238ecc61ffc5733c7d574142d9b4a888ac62869b8fe0fc2"
+  },
+  {
+    "id": "ipas-constellation-mender-robot",
+    "style": "ip-as-logo",
+    "label": "星空 Bot",
+    "originalName": "Constellation Mender Robot",
+    "source": "https://cdn.ipaslogo.com/logos/9f4f661b19a06606-constellation-mender-robot.png",
+    "sourceSha256": "9f4f661b19a0660652c04b030c8d5463dfd7c14bc52c35a49112b122d84390c3",
+    "sha256": "441e8362bdf674f82a2afc95878cef2c6cb2515902d31a24a2bb9ab39ef25597"
+  },
+  {
+    "id": "ipas-comet-mapping-robot",
+    "style": "ip-as-logo",
+    "label": "彗星 Bot",
+    "originalName": "Comet Mapping Robot",
+    "source": "https://cdn.ipaslogo.com/logos/c1c2ce93ece17a46-comet-mapping-robot.png",
+    "sourceSha256": "c1c2ce93ece17a46a6ba8be009e3efd4f4b05dafb360b02e775d085cf2c75ba0",
+    "sha256": "d262843e46ab864edd8a81a86fe02176a99b43970694b22459b77e7e9ebbfa55"
+  },
+  {
+    "id": "ipas-familiar-robot",
+    "style": "ip-as-logo",
+    "label": "伙伴 Bot",
+    "originalName": "Familiar Robot",
+    "source": "https://cdn.ipaslogo.com/logos/285471d062129851-familiar-robot.png",
+    "sourceSha256": "285471d0621298519aeef09e7802f09e6ec15aea5d53b63ed8e6d422bd108f33",
+    "sha256": "3686bb081853c86e5c04d9453c1ee40334e33cd124795dbe6a52d6dff4384edb"
+  },
+  {
+    "id": "ipas-music-box-robot",
+    "style": "ip-as-logo",
+    "label": "音乐盒 Bot",
+    "originalName": "Music Box Robot",
+    "source": "https://cdn.ipaslogo.com/logos/cc935eb1a8c1701c-music-box-robot.png",
+    "sourceSha256": "cc935eb1a8c1701cfb29a518f088ea7b52fdcddaa0e8513b1c6416e6b49318d4",
+    "sha256": "ac919bc6d378ea592ed1ecd14736c94f09724dbb91ff7818a50690353fbb2a2b"
+  },
+  {
+    "id": "ipas-lotus-robot",
+    "style": "ip-as-logo",
+    "label": "莲花 Bot",
+    "originalName": "Lotus Robot",
+    "source": "https://cdn.ipaslogo.com/logos/c2cd710ee22b6692-lotus-robot.png",
+    "sourceSha256": "c2cd710ee22b669237b58e22bfbec833b97a47bc9d5e0e68c99d6f947874e36e",
+    "sha256": "7731c3e96cb7c1fa7e5954a44a656a5d4b9e47ce03fc59f83a79498b8039f051"
+  },
+  {
+    "id": "ipas-cloud-care-robot",
+    "style": "ip-as-logo",
+    "label": "云朵 Bot",
+    "originalName": "Cloud Care Robot",
+    "source": "https://cdn.ipaslogo.com/logos/5e1045a24d7fed52-cloud-care-robot.png",
+    "sourceSha256": "5e1045a24d7fed52e1b28ccfd28cb0fb79f4bc17be50db53661792aa576f0d6f",
+    "sha256": "952ded87efa9d3c00655c74b02de9ec858cbdceca5b64c750143fa61b6f42dd9"
+  },
+  {
+    "id": "ipas-pancake-flipping-robot",
+    "style": "ip-as-logo",
+    "label": "松饼 Bot",
+    "originalName": "Pancake Flipping Robot",
+    "source": "https://cdn.ipaslogo.com/logos/e177f0bae6f4b282-pancake-flipping-robot.png",
+    "sourceSha256": "e177f0bae6f4b28241a20cf5f6939c6ddb4f22201d735aab245df831a5e58fb0",
+    "sha256": "67118139343c5ea8a9e5cc650d2e46f4e02551cbc1dde4fa45ca21bb9eff3447"
+  }
+]

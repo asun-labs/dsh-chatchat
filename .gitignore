@@ -1,0 +1,11 @@
+/office.js
+/office.js.map
+/lib/
+/node_modules/
+/dev/harness/
+/coverage/
+/*.tgz
+/.env
+/.env.*
+!/.env.example
+*.log

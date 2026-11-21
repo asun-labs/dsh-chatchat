@@ -1,0 +1,20 @@
+{
+  "about.test.js": "Standalone app update UI; Seal owns its About and updater.",
+  "update.test.js": "Standalone plugin auto-update is deliberately disabled in Seal.",
+  "dsh-update.test.js": "Seal pins and updates its DSH runtime through its own desktop release.",
+  "computer.test.js": "Standalone app consent/provider manager is not installed; Seal owns Computer Use.",
+  "connectors.test.js": "Standalone connector runtime is not installed in the integrated profile.",
+  "connectors-engine.test.js": "Standalone OAuth engine/catalog differs from Seal's existing connectors.",
+  "connectors-gateway.test.js": "Standalone connector gateway is not installed; Seal owns MCP connectors.",
+  "install.test.js": "Standalone composition snapshot; product integration tests verify Seal's composition.",
+  "client-bundle.test.js": "Upstream build-client script and committed bundle contract; Seal uses its product build/verify gate.",
+  "mock-llm.test.js": "Requires upstream dev/mock-llm.mjs, not part of the product plugin.",
+  "style-debt.test.js": "Requires upstream standalone style-debt build script and stylesheet baseline.",
+  "local-agents-loop.test.js": "Requires dsh-agent-loop-testkit from DSH 0.2.2; unavailable in Seal's pinned 0.2.1 runtime.",
+  "plugin-reload.test.js": "Requires dsh-agent-loop-testkit from DSH 0.2.2; unavailable in Seal's pinned 0.2.1 runtime.",
+  "legacy-storage.test.js": "Standalone DS-Bot legacy namespaces must remain isolated from Seal; product tests verify this.",
+  "settings-shell.test.js": "Standalone settings-shell ownership differs; Seal retains its existing settings shell.",
+  "sidebar-switch.test.js": "Standalone footer/account layout differs; Seal retains its primary navigation and account controls.",
+  "message-layout.test.js": "Asserts standalone whole-shell layout CSS; Seal embeds the original conversation within its own layout.",
+  "user-bubble.test.js": "Parses upstream unbundled template CSS; Seal's build emits compiled CSS and uses product/browser checks."
+}
