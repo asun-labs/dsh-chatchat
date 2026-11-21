@@ -1,0 +1,4 @@
+# 独立 bundle 只启用一个 Host；宿主适配可以保留此稳定 ID。
+- insert:
+    - id: seal-harness-seal-dot
+      name: dsh-chatchat

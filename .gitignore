@@ -4,6 +4,7 @@
 /node_modules/
 /dev/harness/
 /coverage/
+/dist/
 /*.tgz
 /.env
 /.env.*

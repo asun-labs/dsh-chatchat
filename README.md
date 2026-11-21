@@ -2,7 +2,7 @@
 
 DSH 团队智能体与群聊插件。每个 Bot 使用原生 DSH 会话，提供团队、群聊、长期记忆、原生消息与输入、文件交付和侧栏视图。独立安装使用 DSH 原生面板；在 Seal Harness 中显示为 Bot / Seal Bot。
 
-源码仓库：[asun-labs/dsh-chatchat](https://github.com/asun-labs/dsh-chatchat)。本次仅公开源码，不发布 npm 包或独立桌面安装器。
+源码仓库：[asun-labs/dsh-chatchat](https://github.com/asun-labs/dsh-chatchat)。独立预编译插件包位于本仓库的 [GitHub Releases](https://github.com/asun-labs/dsh-chatchat/releases)，不发布独立桌面安装器，也不要求 npm registry 包名已被发布。
 
 ## 开发与构建
 
@@ -12,24 +12,32 @@ DSH 团队智能体与群聊插件。每个 Bot 使用原生 DSH 会话，提供
 npm ci
 npm run build
 npm run test:package
-npm pack --dry-run
+npm run pack:release
 ```
 
 `npm ci` 根据 `package-lock.json` 安装开发依赖并通过 `prepare` 构建。`npm run build` 使用固定的 esbuild 0.25.12，生成 Client Loader 格式的 `lib/client.js`、source map 和 `office.js`。React、React DOM 与 DSH Client UI primitives 由宿主提供；`deep-view`、二维码和纯工作区地址工具打入 Client，不引入第二份 React。构建和打包脚本只读本仓库与已安装的本地依赖，不下载最新源码。
 
-Git 仓库仅保存源码、资源、锁文件与许可证，忽略 `lib/`、`office.js` 和 `node_modules/`。npm tarball 的 `prepack` 会构建并包含运行所需的产物、源码、资源和第三方声明。`prepare` 与 `prepack` 直接运行同一个 Node 构建脚本，不相互调用，也不要求 pnpm 宿主额外提供 `npm` 可执行程序。
+Git 仓库仅保存源码、资源、锁文件与许可证，忽略 `lib/`、`office.js`、`node_modules/` 和 `dist/`。源码开发的 `prepare` 与 `prepack` 会构建；面向用户的 `npm run pack:release` 则先构建，再把已编译 Client、Host、资源、bundle patch 和声明装入 `dist/dsh-chatchat-<version>.tgz`，同时生成 SHA-256 与 SHA-512 完整性摘要。发布包剔除全部安装/构建脚本和开发依赖，内含 `npm-shrinkwrap.json` 固定运行依赖；安装该包不执行源码编译。
 
 ## 在 DSH 安装
 
-在 DSH 的插件管理器中添加本地源码目录，或添加 Git 来源 `github:asun-labs/dsh-chatchat#<commit>`；生产使用应固定经验证的 commit。Git 来源通过 `prepare` 构建，需要包管理器能安装开发构建依赖。部分 DSH/pnpm 版本会报告待批准的 Git 构建脚本；确认来源后在 DSH 中批准该项并重试，不要关闭全局构建脚本保护。对于本地目录，先执行上述安装与构建步骤。
+在 DSH 的插件管理器中添加版本化预编译包地址，例如：
+
+```text
+https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.1/dsh-chatchat-0.1.1.tgz
+```
+
+也可以先下载并核对同版本的 `.sha256`，再选择本地 `.tgz` 文件安装。包声明原生 `dsh.bundle`，安装后的启用、停用和卸载由 DSH 现有插件管理器处理，不提供第二套插件管理。没有 HMR 的 Profile 在切换启用状态后按原生提示重启；停用不会删除 Bot 数据。当前 DSH 对 tarball 来源不提供原生自动查新或一键升级：更换版本时先通过插件管理器停用并移除旧包，再安装明确的新版本 URL；按原生提示停止 Profile 或重启，保留的数据目录会继续使用。
+
+本地源码目录和 Git 来源仍可用于插件开发，但源码安装会通过 `prepare` 构建；普通用户与 Seal 产品装配使用预编译发布包。
 
 插件当前面向 DSH `0.2.2-rc.3` SDK，Host 服务由所选 Profile 提供。Manifest 中的 SDK 与 React peer dependencies 描述宿主边界；可选 peer 声明避免给宿主安装第二套运行时，不表示缺少必需服务也能使用对应功能。语音、浏览器、MCP 或 Computer Use 仍取决于宿主实际安装并授权的服务。
 
 ## Seal 集成与兼容
 
-Seal 通过 Git 子模块固定本仓库的 commit，构建装配同一份源码。日常独立开发在平级仓库进行，Seal 子模块跟随审核后的提交，避免维护两份实现。
+Seal 默认安装并启用固定版本的预编译包；产品构建核对安装包摘要并装配运行依赖，不使用 Git 子模块或相邻源码目录编译 ChatChat。后续启用与停用由原生 DSH bundle/Profile 选择管理。
 
-Client 默认不要求 Seal 服务。Seal 适配层使用 `dsh-chatchat/client-source` 的 `apply(ctx, integration)` 包装入口，提供导航注册、设置入口和返回办公行为的回调对象。Host 适配层调用 `createRuntime`，显式设置集成模式、身份服务和兼容数据目录。Seal 统一登录的缺失或账号 epoch 变化必须拒绝请求；独立模式无需 Seal 登录服务。
+Client 默认不要求 Seal 服务。预编译 Client 注册公开的 ModuleLoader 模块 `dsh-chatchat`，工厂导出 `apply(ctx, integration)` 与 `inject`；Seal 的 Client 声明该模块为外部依赖并传入导航、设置与返回办公回调，不重新编译 core Client。Host 适配层调用 `createRuntime`，显式设置集成模式、身份服务和兼容数据目录。Seal 统一登录缺失或账号 epoch 变化必须拒绝请求；独立模式无需 Seal 登录服务。bundle 中稳定的 `seal-harness-seal-dot` 条目由 Seal 适配为本地包装入口，保留既有配置身份。
 
 Seal 专属的工作区隔离、右栏会话绑定与轨迹扩展由其 SDK 适配补丁测试负责，不由独立插件修改 DSH 内核。
 
@@ -43,7 +51,7 @@ npm run test:integration
 npm run test:package
 ```
 
-`npm test` 运行继承的兼容测试，历史产品差异与不可用 fixture 的逐项说明保留在 `test/profile-exclusions.json`，不算作已通过。`npm run test:integration` 运行本仓库新增的通用与集成回归；原生 SDK 测试需要对应 DSH 包，浏览器测试需要显式提供可用 Chromium，缺少的环境应单独报告。`npm run test:package` 验证实际构建依赖图、Client Loader、资源与 npm 包内容。
+`npm test` 运行继承的兼容测试，历史产品差异与不可用 fixture 的逐项说明保留在 `test/profile-exclusions.json`，不算作已通过。`npm run test:integration` 运行本仓库新增的通用与集成回归；原生 SDK 测试需要对应 DSH 包，浏览器测试需要显式提供可用 Chromium，缺少的环境应单独报告。`npm run test:package` 验证实际构建依赖图、Client Loader、资源与 npm 包内容；`tests/release-package.test.mjs` 对真实发布 tarball 使用原生 DSH bundle/Profile 与插件管理器验证识别、启用、停用和重载，不访问真实用户目录或模型。
 
 测试默认使用本包开发依赖，也可显式将 `DSH_HARNESS` 设为独立 SDK 安装根（其中应有 `package.json` 与所需 `node_modules`）。继承测试还支持本仓库 `dev/harness` 的单独安装；测试入口不会探测相邻 Seal checkout。SDK 路径只提供代码，不应指向真实用户资料。测试入口将 `DSH_HOME` 重定向到临时目录，测试不调用真实模型或读取用户凭据。
 

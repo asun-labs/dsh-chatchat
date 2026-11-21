@@ -7,4 +7,4 @@
 - 保留旧 Seal 数据目录、浏览器存储键与协议标识的兼容，测试不得读写真实用户数据。
 - 保留 LICENSE、NOTICE、第三方来源与头像 provenance。不得提交 node_modules、lib、覆盖率、测试产物或凭据。
 - 同区域回归覆盖行为边界，构建、测试、打包内容检查应可在独立目录执行；DSH 运行测试允许通过显式 DSH_HARNESS 指定 SDK 安装根。
-- 提交、推送、公开和发布仅按用户已有明确授权执行；本任务授权 GitHub 独立源码仓库，不包含 npm / Release 发布。
+- 提交、推送、公开和发布按用户当前明确授权执行；预编译插件包在本插件 GitHub Releases 分发，不自动发布 npm registry 包或 Seal 桌面安装器。
