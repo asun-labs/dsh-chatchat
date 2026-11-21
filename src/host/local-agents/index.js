@@ -51,8 +51,10 @@ export function install(rt) {
 
   // Only CLIs found on this machine get a route; the scan result feeds the page.
   const found = new Map()
+  let active = true
   async function scan() {
     await refreshSearchDirs()
+    if (!active) return [...found.values()]
     for (const route of Object.keys(ENGINES)) {
       const spec = ENGINES[route]
       const path = findExecutable(spec.command)
@@ -123,7 +125,8 @@ export function install(rt) {
   // with the repair card, and nothing moves the Bot to another run mode by itself.
   const servedRoutes = () => [...new Set([...found.keys(), ...customRouteId(), ...usedRefs().map(ref => splitRef(ref)?.provider).filter(isLocalAgentRoute)])]
   function applyRoutes() {
-    if (!supported()) return
+    // 发现和状态加载都可能晚于 Host 卸载完成，不能再读取服务或创建 effect。
+    if (!active || !supported()) return
     const routes = servedRoutes()
     // The initial registration needs at least one provider; an empty replace
     // is legal and keeps the adapter registered with zero routes.
@@ -135,14 +138,19 @@ export function install(rt) {
   // Custom agents hold a route whether or not their command resolves yet; a
   // missing one fails at prompt time with a typed error.
   applyRoutes()
-  void scan()
+  void scan().catch(error => {
+    if (active) rt.warn?.('seal-dot: local agent discovery failed: %s', error)
+  })
   // Custom agents arrive with the state load; their routes register then too.
-  void rt.load?.().then(() => applyRoutes()).catch(() => {})
+  void rt.load?.().then(() => applyRoutes()).catch(error => {
+    if (active) rt.warn?.('seal-dot: local agent state load failed: %s', error)
+  })
   // The callback returns the disposer: running adapter.dispose() inside the
   // setup would leave the adapter disposed from the moment it installs.
-  ctx.effect(() => () => {
-    void adapter.dispose()
+  ctx.effect(() => async () => {
+    active = false
     registration?.()
+    await adapter.dispose()
   }, 'seal-dot: local agents')
 
   // ---------------------------------------------------------------------------
