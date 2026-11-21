@@ -86,7 +86,7 @@ test('original surface shares native Session stores, keeps default transcript an
   core.register({ name: 'conversation.session', ...native }, () => null)
   const releases = []
   const references = []
-  const view = createSource({ sessionId: 'bot' })
+  const view = createSource({ sessionId: undefined })
   const roster = createSource({ byId: {}, mainBotId: null })
   const frame = createSource({ sidebarWidth: 280 })
   const pref = createSource('open')
@@ -174,6 +174,10 @@ test('original surface shares native Session stores, keeps default transcript an
   seatProps.sidebar.getBoundingClientRect = () => ({ width: sidebarWidth, left: 56 })
   const seat = core.entries('seal.bot.surface')[0].component
   await act(async () => { surface.enter(); surface.mount(seatProps); root.render(React.createElement(seat, { ...props, seat: seatProps, renderSlot: renderSession })) })
+  assert.equal(references.length, 0, 'startup with no selected session does not retain a reference')
+  assert.ok(document.querySelector('[data-team-sidebar]'), 'Bot sidebar renders before a session is selected')
+  assert.equal(document.querySelector('[data-native-content]'), null)
+  await act(async () => view.set({ sessionId: 'bot' }))
   assert.equal(document.querySelector('[data-native-content]'), null)
   await act(async () => references[0].resolve())
   assert.equal(document.querySelector('[data-session]').dataset.session, 'bot')
