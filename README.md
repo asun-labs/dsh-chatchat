@@ -24,7 +24,7 @@ Git 仓库仅保存源码、资源、锁文件与许可证，忽略 `lib/`、`of
 在 DSH 的插件管理器中添加版本化预编译包地址，例如：
 
 ```text
-https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.1/dsh-chatchat-0.1.1.tgz
+https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.2/dsh-chatchat-0.1.2.tgz
 ```
 
 也可以先下载并核对同版本的 `.sha256`，再选择本地 `.tgz` 文件安装。包声明原生 `dsh.bundle`，安装后的启用、停用和卸载由 DSH 现有插件管理器处理，不提供第二套插件管理。没有 HMR 的 Profile 在切换启用状态后按原生提示重启；停用不会删除 Bot 数据。当前 DSH 对 tarball 来源不提供原生自动查新或一键升级：更换版本时先通过插件管理器停用并移除旧包，再安装明确的新版本 URL；按原生提示停止 Profile 或重启，保留的数据目录会继续使用。
@@ -37,7 +37,7 @@ https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.1/dsh-chatchat-
 
 Seal 默认安装并启用固定版本的预编译包；产品构建核对安装包摘要并装配运行依赖，不使用 Git 子模块或相邻源码目录编译 ChatChat。后续启用与停用由原生 DSH bundle/Profile 选择管理。
 
-Client 默认不要求 Seal 服务。预编译 Client 注册公开的 ModuleLoader 模块 `dsh-chatchat`，工厂导出 `apply(ctx, integration)` 与 `inject`；Seal 的 Client 声明该模块为外部依赖并传入导航、设置与返回办公回调，不重新编译 core Client。Host 适配层调用 `createRuntime`，显式设置集成模式、身份服务和兼容数据目录。Seal 统一登录缺失或账号 epoch 变化必须拒绝请求；独立模式无需 Seal 登录服务。bundle 中稳定的 `seal-harness-seal-dot` 条目由 Seal 适配为本地包装入口，保留既有配置身份。
+Client 默认不要求 Seal 服务。独立激活时使用原有 ModuleLoader Client；宿主包装则使用 `dsh-chatchat/client-api` 导出的预编译 CommonJS 库，公开 `apply(ctx, integration)` 与 `inject`。该库不注册第二个 Loader 插件，也不要求 core Host 同时激活；Seal 将已编译库作为包依赖链接进自己的 Client 并传入导航、设置与返回办公回调，不读取或重编译 core 源码。Host 适配层调用 `createRuntime`，显式设置集成模式、身份服务和兼容数据目录。Seal 统一登录缺失或账号 epoch 变化必须拒绝请求；独立模式无需 Seal 登录服务。bundle 中稳定的 `seal-harness-seal-dot` 条目由 Seal 适配为本地包装入口，保留既有配置身份。
 
 Seal 专属的工作区隔离、右栏会话绑定与轨迹扩展由其 SDK 适配补丁测试负责，不由独立插件修改 DSH 内核。
 

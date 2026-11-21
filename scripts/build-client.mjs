@@ -19,11 +19,11 @@ export function assetDefines() {
   }
 }
 
-export async function buildClient({ write = true } = {}) {
+export async function buildClient({ write = true, library = false } = {}) {
   return build({
     absWorkingDir: root,
     entryPoints: ['src/client/index.js'],
-    outfile: 'lib/client.js',
+    outfile: library ? 'lib/client-api.cjs' : 'lib/client.js',
     bundle: true,
     format: 'cjs',
     platform: 'browser',
@@ -33,8 +33,10 @@ export async function buildClient({ write = true } = {}) {
     write,
     external: ['react', 'react/*', 'react-dom', 'react-dom/*', '@deepseek-ai/dsh-client-ui-primitives'],
     define: assetDefines(),
-    banner: { js: `window.__ModuleLoader__.load({ id: ${JSON.stringify(manifest.name)}, factory: (require) => {\nvar module = { exports: {} }; var exports = module.exports;` },
-    footer: { js: 'return module.exports; } });' },
+    ...library ? {} : {
+      banner: { js: `window.__ModuleLoader__.load({ id: ${JSON.stringify(manifest.name)}, factory: (require) => {\nvar module = { exports: {} }; var exports = module.exports;` },
+      footer: { js: 'return module.exports; } });' },
+    },
   })
 }
 

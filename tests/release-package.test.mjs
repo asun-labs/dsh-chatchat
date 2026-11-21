@@ -25,7 +25,7 @@ test('precompiled tarball loads through native DSH bundle selection without comp
   let ctx
   try {
     const archive = packRelease({ destination: join(home, 'dist'), build: false })
-    assert.equal(archive.version, '0.1.1')
+    assert.equal(archive.version, '0.1.2')
     const bytes = readFileSync(archive.archive)
     assert.equal(archive.sha256, createHash('sha256').update(bytes).digest('hex'))
     assert.equal(archive.integrity, `sha512-${createHash('sha512').update(bytes).digest('base64')}`)
@@ -76,6 +76,15 @@ test('precompiled tarball loads through native DSH bundle selection without comp
     assert.equal(registrations[0].id, manifest.name)
     assert.equal(typeof client.apply, 'function')
     assert(Array.isArray(client.inject))
+    assert.equal(manifest.exports['./client-api'], './lib/client-api.cjs')
+    const library = { exports: {} }
+    runInNewContext(readFileSync(join(installed, 'lib/client-api.cjs'), 'utf8'), {
+      module: library, exports: library.exports,
+      require: name => name === '@deepseek-ai/dsh-client-ui-primitives' ? {} : require(name),
+    })
+    assert.equal(typeof library.exports.apply, 'function')
+    assert.deepEqual(Array.from(library.exports.inject), Array.from(client.inject))
+    assert(existsSync(join(installed, 'lib/client-api.cjs.map')))
     for (const file of ['index.js', 'office.js', 'LICENSE', 'NOTICE', 'third-party/ds-bot/LICENSE']) assert(existsSync(join(installed, file)))
   } finally {
     await ctx?.fiber.dispose()

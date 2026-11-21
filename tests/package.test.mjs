@@ -95,6 +95,29 @@ test('client factory runs with only host platform modules and bundles real asset
   for (const { id } of catalog) assert(code.includes(readFileSync(join(root, 'assets/avatar-catalog', `${id}.png`)).toString('base64')), `avatar ${id} was not embedded`)
 })
 
+test('precompiled client API works without an active core Client Loader row', () => {
+  assert.equal(manifest.exports['./client-api'], './lib/client-api.cjs')
+  const code = readFileSync(join(root, 'lib/client-api.cjs'), 'utf8')
+  assert(!code.includes('__ModuleLoader__'), 'library must not require or register a second Client Loader plugin')
+  const requested = []
+  const require = createRequire(import.meta.url)
+  const module = { exports: {} }
+  runInNewContext(code, { module, exports: module.exports, require(name) {
+    requested.push(name)
+    if (name === '@deepseek-ai/dsh-client-ui-primitives') return {}
+    assert(['react', 'react-dom', 'react/jsx-runtime'].includes(name), `unprovided library dependency: ${name}`)
+    return require(name)
+  } })
+  assert.equal(typeof module.exports.apply, 'function')
+  assert(Array.isArray(module.exports.inject))
+  assert(requested.includes('react'))
+  const lifecycleReached = new Error('public Client lifecycle reached')
+  assert.throws(() => module.exports.apply({ effect(_install, label) {
+    assert.equal(label, 'seal-dot: interface copy')
+    throw lifecycleReached
+  } }, { registerPanel() {} }), error => error === lifecycleReached)
+})
+
 test('npm tarball includes client, runtime sources and licenses without developer or user files', () => {
   const home = mkdtempSync(join(tmpdir(), 'dsh-chatchat-pack-'))
   try {
@@ -112,7 +135,7 @@ test('npm tarball includes client, runtime sources and licenses without develope
     })
     assert.equal(result.status, 0, result.stderr || result.error?.message)
     const files = new Set(JSON.parse(result.stdout)[0].files.map(file => file.path))
-    for (const file of ['index.js', 'web-search.js', 'lib/client.js', 'lib/client.js.map', 'office.js', 'src/host/store.js', 'src/client/index.js', 'scripts/build-client.mjs', 'LICENSE', 'NOTICE', 'third-party/ds-bot/NOTICE', 'third-party/ds-bot/PROVENANCE.md', 'assets/avatar-catalog/PROVENANCE.md']) {
+    for (const file of ['index.js', 'web-search.js', 'lib/client.js', 'lib/client.js.map', 'lib/client-api.cjs', 'lib/client-api.cjs.map', 'office.js', 'src/host/store.js', 'src/client/index.js', 'scripts/build-client.mjs', 'LICENSE', 'NOTICE', 'third-party/ds-bot/NOTICE', 'third-party/ds-bot/PROVENANCE.md', 'assets/avatar-catalog/PROVENANCE.md']) {
       assert(files.has(file), `npm package is missing ${file}; run npm run build first`)
     }
     assert(![...files].some(file => /^(?:node_modules|test|tests|\.git|dev|coverage)\//.test(file)), 'npm package exposes development files')

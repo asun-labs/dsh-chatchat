@@ -2,6 +2,7 @@ import { build } from 'esbuild'
 import { buildClient, root } from './build-client.mjs'
 
 await buildClient()
+await buildClient({ library: true })
 await build({
   absWorkingDir: root,
   entryPoints: ['src/office/cli.js'],

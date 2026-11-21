@@ -1,6 +1,6 @@
 {
   "name": "dsh-chatchat",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "Apache-2.0",
   "type": "module",
   "description": "DSH ChatChat 团队智能体与群聊插件",
@@ -41,6 +41,7 @@
   "exports": {
     ".": "./index.js",
     "./client": "./lib/client.js",
+    "./client-api": "./lib/client-api.cjs",
     "./client-source": "./src/client/index.js",
     "./web-search": "./web-search.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
