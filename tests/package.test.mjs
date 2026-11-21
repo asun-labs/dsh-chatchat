@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { existsSync, readFileSync, readdirSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
+import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { test } from 'node:test'
 import { runInNewContext } from 'node:vm'
@@ -103,8 +103,8 @@ test('npm tarball includes client, runtime sources and licenses without develope
       join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js'),
       resolve(dirname(process.execPath), '../lib/node_modules/npm/bin/npm-cli.js'),
       '/usr/share/nodejs/npm/bin/npm-cli.js',
-    ].find(path => path && existsSync(path))
-    assert(npm, 'run this test with npm run test:package so npm_execpath identifies npm')
+    ].find(path => path && basename(path) === 'npm-cli.js' && existsSync(path))
+    assert(npm, 'install npm alongside Node or run npm run test:package to provide its CLI')
     const result = spawnSync(process.execPath, [npm, 'pack', '--dry-run', '--ignore-scripts', '--json'], {
       cwd: root,
       encoding: 'utf8',
