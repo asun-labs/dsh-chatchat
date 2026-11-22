@@ -77,8 +77,16 @@ test('standalone integration uses public DSH panel/sidebar slots and releases it
   Object.assign(globalThis, { window: page.window, document: page.window.document, IS_REACT_ACT_ENVIRONMENT: true })
   const rows = []
   const selected = []
+  let sidebarWidth = 280
+  const layoutListeners = new Set()
+  const layoutStore = {
+    getSnapshot: () => ({ layoutInfo: { sidebar: sidebarWidth } }),
+    subscribe(listener) { layoutListeners.add(listener); return () => layoutListeners.delete(listener) },
+    actions: { setSidebar(width) { sidebarWidth = width; for (const listener of layoutListeners) listener() } },
+  }
   const ctx = { layout: { selectPanel: id => selected.push(id) }, slots: {
     inject: (_name, factory) => factory(),
+    entries: name => name === 'root' ? [{ store: { create: () => layoutStore } }] : [],
     register(options, component) {
       const row = { options, component }
       rows.push(row)
@@ -98,17 +106,25 @@ test('standalone integration uses public DSH panel/sidebar slots and releases it
   registerPanel(ctx, { id: 'seal-dot', label: 'Bot', order: 15 }, Panel)
   assert.equal(rows.find(row => row.options.name === 'sidebar.panellist').options.id, 'seal-dot')
   await act(async () => mainRoot.render(React.createElement(rows.find(row => row.options.name === 'main').component)))
+  assert.equal(sidebarWidth, 272)
+  layoutStore.actions.setSidebar(0)
+  assert.equal(sidebarWidth, 0)
+  layoutStore.actions.setSidebar(280)
+  assert.equal(sidebarWidth, 272, 'reopening uses the Bot default')
   await act(async () => sideRoot.render(React.createElement(rows.find(row => row.options.name === 'sidebar.workspaces').component)))
   assert.equal(document.querySelector('aside').textContent, 'Bots and groups')
   await act(async () => document.querySelector('main button').click())
   assert.deepEqual(selected, [null])
   await act(async () => mainRoot.unmount())
+  assert.equal(sidebarWidth, 280, 'leaving restores the native default')
+  assert.equal(layoutListeners.size, 0)
   assert.equal(rows.some(row => row.options.name === 'sidebar.workspaces'), false)
   const calls = []
   const beforeBridge = rows.length
   registerPanel(ctx, { id: 'host-bot' }, Panel, { registerPanel: (...args) => calls.push(args) })
   assert.equal(calls.length, 1)
   assert.equal(calls[0][0], ctx)
+  assert.equal(calls[0][1].sidebarDefaultWidth, 272)
   assert.equal(calls[0][2], Panel)
   assert.equal(rows.length, beforeBridge, 'a host-provided panel does not also register the standalone sidebar')
   const ownSettings = () => {}

@@ -25,7 +25,7 @@ test('precompiled tarball loads through native DSH bundle selection without comp
   let ctx
   try {
     const archive = packRelease({ destination: join(home, 'dist'), build: false })
-    assert.equal(archive.version, '0.1.3')
+    assert.equal(archive.version, '0.1.4')
     const bytes = readFileSync(archive.archive)
     assert.equal(archive.sha256, createHash('sha256').update(bytes).digest('hex'))
     assert.equal(archive.integrity, `sha512-${createHash('sha512').update(bytes).digest('base64')}`)

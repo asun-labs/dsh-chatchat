@@ -14,7 +14,7 @@ export const DSH_NARROW = 1024
 // The open column's width range; a drag released short of RAIL_SNAP lands on the rail.
 export const SIDEBAR_MIN = 264
 export const SIDEBAR_MAX = 420
-export const FALLBACK_SIDEBAR_WIDTH = 280
+export const FALLBACK_SIDEBAR_WIDTH = 272
 export const RAIL_SNAP = (RAIL_WIDTH + SIDEBAR_MIN) / 2
 
 /**
