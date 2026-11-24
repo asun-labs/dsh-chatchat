@@ -34,7 +34,7 @@ import { SECRET_CSS, SecretDock } from './secret-card.js'
 import { ConnectorDock, MailDock, CONNECTOR_CSS } from './connectors.js'
 import { CONNECTORS_PAGE_CSS } from './connectors-page.js'
 import { LearningDock, LearningTurnTail, LEARNING_CSS } from './learning-card.js'
-import { MODEL_CSS } from './model-menu.js'
+import { MODEL_CSS, ModelChoiceDock } from './model-menu.js'
 import { BOT_SETTINGS_CSS } from './bot-settings.js'
 import { AGENT_CARDS_CSS } from './agent-cards.js'
 import { AVATAR_LIBRARY_CSS } from './avatar-library.js'
@@ -1002,6 +1002,8 @@ export function apply(ctx, integration = {}) {
     // The composer carries no model picker or run statistics; a Bot's model lives
     // in its details panel.
     () => shadow('conversation.input.model', { priority: BOT_PRIORITY }, Nothing),
+    // 隐藏原生模型选择器后，仍须保留 Bot 的无模型和缺 Key 引导。
+    () => shadow('conversation.input.dock', { id: 'bot-model-choice', order: -200, priority: BOT_PRIORITY, inject: face }, ModelChoiceDock),
     () => shadow('conversation.composer.dock', { id: 'activity', order: 0, priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'usage', order: 1, priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'btw', order: 2, priority: BOT_PRIORITY, inject: face }, BtwDock),

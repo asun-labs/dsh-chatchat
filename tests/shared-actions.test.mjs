@@ -50,3 +50,24 @@ test('the generic host bridge uses the public schedules panel by default', () =>
   actions.openSettings('schedules')
   assert.deepEqual(calls, ['schedules'])
 })
+
+test('native model setup uses the current native settings store instead of the trimmed Bot dialog', () => {
+  const calls = []
+  let entry
+  const ctx = { slots: { entries(name) {
+    assert.equal(name, 'sidebar.settings')
+    return entry ? [entry] : []
+  } } }
+  const actions = {
+    openSettings: () => calls.push('bot-settings'),
+    closeSettings: () => calls.push('close-bot-settings'),
+    reportError: error => calls.push(error.message),
+  }
+  installSharedSettings(ctx, actions)
+  actions.openModels()
+  assert.match(calls.pop(), /Model settings are unavailable/)
+  entry = { store: { create: () => ({ actions: { openSection: id => calls.push(['native', id]) } }) } }
+  actions.openModels()
+  actions.openHarnessOnboarding('deepseek-official')
+  assert.deepEqual(calls, ['close-bot-settings', ['native', 'models'], 'close-bot-settings', ['native', 'models']])
+})

@@ -255,6 +255,7 @@ const ZH = {
   'Key set': '已设置 key',
   'Key set outside Seal Bot': 'key 在 Seal Bot 之外设置',
   'No models': '没有模型',
+  'Model settings are unavailable in this profile.': '当前配置未提供模型设置入口。',
   '{count} models': '{count} 个模型',
   // What a Bot runs on
   'Runs on': '运行方式',
