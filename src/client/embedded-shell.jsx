@@ -37,6 +37,8 @@ const layout = `
 .seal-bot-sidebar .bt-side{flex:1;min-height:0;width:100%;padding-right:0;background:transparent}
 .seal-bot-sidebar .bt-side-top{justify-content:flex-end}
 .seal-bot-sidebar .bt-side:not(.bt-rail)>.bt-list{margin-right:0;padding-inline:12px;box-sizing:border-box}
+/* 主 Bot 固定在滚动列表外，但须沿用列表两侧 12px 内边距和右侧 12px 滚动条占位。 */
+.seal-bot-sidebar .bt-side:not(.bt-rail)>.bt-row{flex-shrink:0;margin-inline:12px 24px;width:calc(100% - 36px)}
 .seal-bot-sidebar .bt-seal-folder{padding-inline:0}
 .seal-bot-sidebar .bt-rail{padding-inline:0}
 .seal-bot-sidebar .bt-rail :is(.bt-row,.bt-rail-top){width:100%;min-width:0}

@@ -1,6 +1,6 @@
 {
   "name": "dsh-chatchat",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "Apache-2.0",
   "type": "module",
   "description": "DSH ChatChat 团队智能体与群聊插件",
