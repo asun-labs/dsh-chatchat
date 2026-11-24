@@ -90,15 +90,6 @@ function BotRow({ bot, roster, actions, useSessions, useSessionStatus, useSessio
   }
   const pinned = bot.pinned === true && !tile
   const label = [bot.name, main ? t('Main Bot') : '', pinned ? t('Pinned') : '', running || away ? t('Working') : '', waitsFor, approval ? t('Waiting for your approval') : alert ? t('Waiting for your answer') : '', unread ? t('Unread activity') : ''].filter(Boolean).join(', ')
-  if (tile && wide) {
-    return h('div', { className: 'bt-tile-wrap' }, h('button', {
-      type: 'button', className: 'bt-tile', 'aria-label': label, 'aria-current': active ? 'page' : undefined,
-      'data-bot-id': id, title: preview || bot.name, onClick: () => actions.openSession(id), onContextMenu,
-    },
-    h(BotAvatar, { bot, size: 60, state, main: true }),
-    h('span', { className: 'bt-tile-name' }, bot.name),
-    bot.role ? h('span', { className: 'bt-chip' }, bot.role) : null))
-  }
   return h('button', {
     type: 'button', className: 'bt-row', 'aria-label': label, 'aria-current': active ? 'page' : undefined,
     'data-bot-id': id, title: wide ? undefined : bot.name,
@@ -106,7 +97,7 @@ function BotRow({ bot, roster, actions, useSessions, useSessionStatus, useSessio
     onDragStart: wide && !tile && onDragStart ? event => onDragStart(event, id) : undefined,
     onMouseEnter: wide ? nameIfCut : undefined, onClick: () => actions.openSession(id), onContextMenu,
   },
-  h(BotAvatar, { bot, size: wide ? 36 : 44, state, main }),
+  h(BotAvatar, { bot, size: wide ? 36 : 44, state, main, live: false }),
   pinned && !wide ? h(PinMark) : null,
   wide ? h('span', { className: 'bt-row-body' },
     h('span', { className: 'bt-row-name' }, h('span', { className: 'bt-row-title' }, bot.name), bot.engine ? h(AgentBadge, { engine: bot.engine }) : null, pinned ? h(PinMark) : null),
@@ -386,7 +377,8 @@ function SectionBlock({ section, entries, rowProps, markedUnread, renaming, drop
         },
         h('span', { className: 'bt-sec-chev', 'aria-hidden': true }, h(ChevronRightIcon)),
         section.color ? h('span', { className: 'bt-sec-dot', style: { background: inkFill(section.color) }, 'aria-hidden': true }) : null,
-        h('span', { className: 'bt-sec-title' }, section.name),
+        h('span', { className: 'bt-sec-title' }, /^New section(?: \d+)?$/.test(section.name)
+          ? section.name.replace('New section', t('New section')) : section.name),
         h('span', { className: `bt-sec-count${!section.collapsed ? ' bt-sec-count-hide' : ''}` }, visibleEntries.length),
         h('span', { className: 'bt-sec-tail' },
           section.collapsed && botsInSec.length > 0
@@ -565,11 +557,6 @@ export function TeamSidebar(props) {
     if (secId && sections.find(s => s.id === secId)?.collapsed) {
       void Promise.resolve(actions.saveSection({ id: secId, collapsed: false })).catch(() => {})
     }
-  }
-  const createNewSection = () => {
-    void Promise.resolve(actions.saveSection({}))
-      .then((sec) => { if (sec?.id) actions.beginSectionRename(sec.id) })
-      .catch(error => actions.reportError(error, 'section'))
   }
 
   // Our column pushes the conversation over by what it takes beyond the shell's
@@ -797,8 +784,11 @@ export function TeamSidebar(props) {
     ? h('div', { className: 'bt-side-top' },
         embedded ? null : h('span', { className: 'bt-brand' }, h(BrandName)),
         embedded ? null : h(UpdateButton, { useUpdate: props.useUpdate, actions }),
-        h('button', { type: 'button', className: 'bt-round', 'aria-label': t('New section'), title: t('New section'), onClick: createNewSection }, h(FolderIcon)),
-        h('button', { type: 'button', className: 'bt-round', 'aria-label': t('Search'), title: t('Search'), onClick: () => actions.openPalette() }, h(SearchIcon)),
+        h('label', { className: 'bt-sidebar-search' },
+          h(SearchIcon),
+          h('input', { type: 'search', placeholder: t('Search'), 'aria-label': t('Search Bots, chats and messages'),
+            onFocus: () => actions.openPalette(),
+            onChange: event => actions.openPalette(event.currentTarget.value) })),
         h('button', { type: 'button', className: 'bt-round', 'aria-label': t('New…'), title: t('New…'), onClick: () => actions.openNewChat('new') }, h(PlusIcon)),
         embedded ? null : h('button', { type: 'button', className: 'bt-round bt-side-collapse', 'aria-label': t('Collapse sidebar'), title: t('Collapse sidebar'), onClick: onToggle }, h(SidebarIcon)))
     : h('div', { className: 'bt-rail-top' },

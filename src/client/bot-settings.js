@@ -7,6 +7,8 @@ import { lookOf, BotMark } from './mark.js'
 import { ModelMenu, modelOf } from './model-menu.js'
 import { RunModeCard } from './agent-cards.js'
 import { FolderMenu } from './folder-menu.js'
+import { PermissionPicker } from './permission-picker.js'
+import { BotConnectorSettings } from './bot-connector-settings.js'
 import { BotSchedules } from './schedules.js'
 import { BotCapabilitiesCard } from './capability-settings.js'
 import { BotComputerCard } from './computer.js'
@@ -175,7 +177,7 @@ function MemoryCard({ bot, actions }) {
 // A Bot's settings as grouped cards: who it is (avatar, name, label), what it runs on
 // (model), what it does (instructions), its memory and tasks, its Main Bot role, its
 // sidebar place, and copies.
-export function BotSettingsForm({ bot, roster, actions, run, embedded = false }) {
+export function BotSettingsForm({ bot, roster, actions, run, usage, embedded = false }) {
   const [editing, setEditing] = useState(false)
   const [editorShown, editorLeaving] = useLinger(editing, 120)
   const [confirming, setConfirming] = useState(false)
@@ -214,6 +216,11 @@ export function BotSettingsForm({ bot, roster, actions, run, embedded = false })
       h('div', { className: 'bt-set-row bt-bs-row' },
         h('span', { className: 'bt-set-copy' }, h('span', { className: 'bt-bs-label' }, t('Model')), h('span', { className: 'bt-set-hint' }, modelHint(bot, roster))),
         h(ModelMenu, { bot, roster, actions, run, inherited: true }))),
+    roster.permissions?.options?.length ? h(Card, { title: t('Permissions') },
+      h('div', { className: 'bt-set-row bt-bs-row bt-bs-stack' },
+        h(PermissionPicker, { catalog: roster.permissions, saved: bot.permission ?? roster.permissions.defaultPreset,
+          repick: bot.permission === undefined, onPick: permission => save({ permission }) }))) : null,
+    h(BotConnectorSettings, { bot, roster, actions, run, SwitchRow }),
     h(Card, { title: t('Working folder') },
       h('div', { className: 'bt-set-row bt-bs-row' },
         h('span', { className: 'bt-set-copy' }, h('span', { className: 'bt-bs-label' }, t('Folder'))),
@@ -233,6 +240,8 @@ export function BotSettingsForm({ bot, roster, actions, run, embedded = false })
     embedded ? null : h(BotComputerCard, { bot, roster, actions, run, Card, Row }),
     roster.memory === false ? null : h(MemoryCard, { bot, actions }),
     embedded ? null : h(BotSchedules, { bot, roster, actions }),
+    usage ? h(Card, { title: t('Usage') },
+      h('div', { className: 'bt-set-row bt-bs-row' }, h('span', null, bot.name), h('span', null, usage))) : null,
     h(Card, { title: t('Main Bot') },
       onlyMain
         ? h('div', { className: 'bt-set-row bt-bs-row' },
@@ -289,6 +298,9 @@ label.bt-bs-row{cursor:text}
 .bt-bs-stack{flex-direction:column;align-items:stretch;gap:8px}
 .bt-bs-area{flex:none;width:auto;min-height:112px;height:auto;margin:0 -6px -4px;padding:8px;line-height:19px;text-align:left;resize:vertical;background:var(--bt-hover)}
 .bt-bs-area:hover{background:var(--bt-active)}
+@media(max-width:640px){
+  .bt-bs-row .bt-bs-input{flex:none;width:100%;min-width:0;max-width:100%;text-align:left}
+}
 .bt-bs-danger .bt-bs-label{color:var(--bt-danger)}
 .bt-bs-danger[data-confirm]{background:color-mix(in srgb,var(--bt-danger) 8%,transparent)}
 .bt-bs-danger[data-confirm]:hover{background:color-mix(in srgb,var(--bt-danger) 12%,transparent)}

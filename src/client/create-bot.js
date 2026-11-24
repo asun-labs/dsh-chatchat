@@ -25,6 +25,7 @@ export function CreateBot({ roster, actions, start, brief = '', onBack, canGoBac
   const [look, setLook] = useState(() => randomLook())
   const [image, setImage] = useState(() => randomRobotAvatar()?.image ?? null)
   const [name, setName] = useState(start?.name ?? '')
+  const [instructions, setInstructions] = useState(start?.instructions ?? '')
   const [mode, setMode] = useState('model')
   const [model, setModel] = useState(() => startModel(roster))
   const [agentModel, setAgentModel] = useState('')
@@ -50,7 +51,7 @@ export function CreateBot({ roster, actions, start, brief = '', onBack, canGoBac
     setError('')
     setBusy(true)
     try {
-      const bot = await actions.createBot(createPayload({ name: finalName, look, image: local && !ownLook ? null : image, model: chosen, effort: local ? undefined : effort, brief, ownLook, sectionId: start?.sectionId }))
+      const bot = await actions.createBot(createPayload({ name: finalName, look, image: local && !ownLook ? null : image, model: chosen, effort: local ? undefined : effort, brief, instructions, ownLook, sectionId: start?.sectionId }))
       onCreated(bot)
     } catch (failure) {
       setError(failure?.message ?? String(failure))
@@ -95,6 +96,12 @@ export function CreateBot({ roster, actions, start, brief = '', onBack, canGoBac
       }),
       problem ? h('span', { className: 'bt-note bt-danger' }, hostText(problem))
         : clash ? h('span', { className: 'bt-note bt-danger' }, t('A Bot named {name} already exists', { name: finalName })) : null),
+    h('label', { className: 'bt-field' },
+      h('span', { className: 'bt-field-label' }, t('Responsibilities')),
+      h('textarea', { className: 'bt-input bt-input-area', rows: 5, value: instructions, maxLength: 200000,
+        'aria-label': t('Responsibilities'), placeholder: t('For example: write product proposals, clarify requirements, and produce actionable plans.'),
+        onChange: event => setInstructions(event.target.value) }),
+      h('span', { className: 'bt-note' }, t('Describe what this Bot does and how it should work. You can edit this in Bot settings.'))),
     local ? h('div', { className: 'bt-field' },
       h('span', { className: 'bt-field-label' }, t('Local agent')),
       h(CliList, { ...localAgents, selected: routeOf(chosen), onPick: pickAgent, actions })) : null,

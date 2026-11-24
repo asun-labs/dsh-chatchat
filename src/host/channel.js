@@ -93,6 +93,7 @@ export function install(rt) {
     prefs: state.prefs,
     // Whether a Desktop window should serve Bot browser reads (see browser.js).
     browser: rt.browserEnabled,
+    botTemplates: typeof rt.config.botTemplates?.list === 'function',
     // False when config.memory turns memory off: no Memory row or panel.
     memory: rt.memoryEnabled !== false,
     // Set while another dsh host holds the team (store.js): why this one cannot change it.
@@ -311,6 +312,23 @@ export function install(rt) {
           // Any part id of the group's own Session means the group itself.
           const room = rt.roomOf(body.roomId) ?? rt.roomOf(rt.pastOwners.get(body.roomId)?.roomId)
           return ok([...rt.roomProgress.entries()].filter(([, entry]) => entry.roomId === (room?.id ?? body.roomId)).map(([callId, entry]) => ({ callId, replies: entry.replies, speaking: entry.slots.filter(slot => slot.status === 'speaking').map(slot => slot.id) })))
+        }
+        case 'bot-templates': {
+          await rt.bootstrap()
+          if (!rt.config.botTemplates?.list) return ok({ items: [] })
+          return ok(await rt.config.botTemplates.list())
+        }
+        case 'create-bot-template': {
+          await rt.bootstrap()
+          const templates = rt.config.botTemplates
+          if (!templates?.prepare) throw new Error('Bot templates are unavailable.')
+          const prepared = await templates.prepare({ id: body.templateId, expectedRevision: body.expectedRevision })
+          try {
+            return ok(await rt.createBot({ ...prepared.defaults, template: prepared.reference, name: body.name, sectionId: body.sectionId }))
+          } catch (error) {
+            await templates.discard?.(prepared.reference)
+            throw error
+          }
         }
         case 'create-bot': {
           await rt.bootstrap()

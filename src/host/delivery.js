@@ -7,10 +7,25 @@ import { headOf, textOf } from './text.js'
 export function install(rt) {
   const { ctx, state } = rt
 
+  // 原生聊天也会直接解析 Session；重启后的第一条消息同样需要模板能力。
+  ctx.on('agent/created', async ({ agent }) => {
+    await rt.load()
+    const bot = rt.botOf(rt.selfOf(String(agent.id)))
+    if (bot?.template) {
+      if (!rt.config.botTemplates?.prepareAgent) throw new Error('The template provider is unavailable for this Bot.')
+      await rt.config.botTemplates.prepareAgent({ bot, agent, reference: bot.template, initializing: true })
+    }
+  })
+
   const resolveAgent = async (sessionId) => {
     const resolved = await ctx.sessionController.resolveAgent(sessionId)
     if ('error' in resolved) throw Object.assign(new Error(resolved.error?.message ?? 'Session unavailable'), { code: resolved.error?.code })
     rt.hideBotUnusedTools(resolved.agent)
+    const bot = rt.botOf(rt.selfOf(sessionId))
+    if (bot?.template) {
+      if (!rt.config.botTemplates?.prepareAgent) throw new Error('The template provider is unavailable for this Bot.')
+      await rt.config.botTemplates.prepareAgent({ bot, agent: resolved.agent, reference: bot.template })
+    }
     return resolved.agent
   }
 

@@ -7,6 +7,7 @@ import { build } from 'esbuild'
 const { outputFiles } = await build({
   entryPoints: [fileURLToPath(new URL('../src/client/bot-settings.js', import.meta.url))],
   bundle: true, format: 'cjs', platform: 'browser', write: false, logLevel: 'silent',
+  define: { __SEAL_DOT_ICON__: '""', __SEAL_BOT_ROBOT_AVATARS__: '[]' },
   external: ['react', 'react-dom', '@deepseek-ai/dsh-client-ui-primitives'],
 })
 const react = {

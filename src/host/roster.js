@@ -148,8 +148,8 @@ export function install(rt) {
     return next
   }
 
-  function freshSectionName(base = 'New section') {
-    const stem = unquote(base).replace(/\s+/g, ' ').slice(0, SECTION_NAME_MAX - 4) || 'New section'
+  function freshSectionName(base = '新建分组') {
+    const stem = unquote(base).replace(/\s+/g, ' ').slice(0, SECTION_NAME_MAX - 4) || '新建分组'
     const taken = name => (state.sections ?? []).some(sec => normalize(sec.name) === normalize(name))
     if (!taken(stem)) return stem
     let index = 2
@@ -187,7 +187,7 @@ export function install(rt) {
     return holdName('bot', cleanName, () => buildBot(cleanName, options))
   }
 
-  async function buildBot(cleanName, { role = '', instructions = '', color, brief = '', createdBy, main = false, avatar, model, effort, workDir, copyOf, pickModel = false, section, sectionId }) {
+  async function buildBot(cleanName, { role = '', instructions = '', color, brief = '', createdBy, main = false, avatar, model, effort, workDir, copyOf, pickModel = false, section, sectionId, template }) {
     const cleanAvatarValue = cleanAvatar(avatar)
     // The model is fixed at creation, so a later change of the DSH default leaves it alone.
     const modelRef = model ? await rt.resolveModel(model) : pickModel ? undefined : await rt.defaultBotModel()
@@ -221,6 +221,7 @@ export function install(rt) {
         createdAt: Date.now(),
         createdBy: createdBy ?? null,
         capabilities: [],
+        ...(template ? { template } : {}),
       }
       if (main) state.mainBotIds.push(id)
       const creator = rt.botOf(createdBy)
@@ -242,7 +243,7 @@ export function install(rt) {
       const bot = state.bots[id]
       const greeting = { text, from: createdBy ?? null, ...(main ? { main: true } : {}) }
       // The Bot is saved by now; a failure here must not archive it in the catch below.
-      const scopeTools = () => rt.resolveAgent(id)
+      const scopeTools = () => template ? rt.resolveAgent(id) : rt.resolveAgent(id)
         .catch(error => rt.warn('seal-dot: scoped tools for %s not applied: %s', cleanName, error))
       if (modelRef === undefined) {
         bot.kickoff = greeting
@@ -356,6 +357,7 @@ export function install(rt) {
       workDir,
       sectionId: bot.sectionId,
       copyOf: bot.id,
+      template: bot.template,
     })
   }
 
@@ -917,6 +919,10 @@ export function install(rt) {
         .catch(error => rt.warn('seal-dot: Bot %s not archived: %s', bot.name, error))
     }
     if (failed !== undefined) throw failed
+    if (bot.template && !Object.values(state.bots).some(other => other.template?.name === bot.template.name)) {
+      await rt.config.botTemplates?.discard?.(bot.template)
+        .catch(error => rt.warn('seal-dot: template cleanup for %s failed: %s', bot.name, error))
+    }
   }
 
   // A deletion whose save fails stays in memory, and the next save writes it, so its

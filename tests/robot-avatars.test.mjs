@@ -94,7 +94,8 @@ test('the shared avatar editor picks and reopens robots in creation and editing'
     onBack() {}, onCreated() {},
   }
   await act(async () => root.render(React.createElement(CreateBot, createProps)))
-  assert.match(document.querySelector('.bt-note').textContent, /Add a provider and a model in Seal Harness first/)
+  const modelNote = () => document.querySelector('.bt-model-trigger').closest('.bt-field').querySelector('.bt-note').textContent
+  assert.match(modelNote(), /Add a provider and a model in Seal Harness first/)
   await act(async () => document.querySelector('.bt-model-trigger').click())
   assert.equal(document.querySelector('.bt-model-none').textContent, 'No models are set up in Seal Harness yet.')
   const disposeLocale = installLocale({
@@ -103,8 +104,8 @@ test('the shared avatar editor picks and reopens robots in creation and editing'
   })
   try {
     await act(async () => root.render(React.createElement(CreateBot, createProps)))
-    assert.match(document.querySelector('.bt-note').textContent, /请先在 Seal Harness 里添加服务商和模型/)
-    assert.doesNotMatch(document.querySelector('.bt-note').textContent, /DeepSeek Harness/)
+    assert.match(modelNote(), /请先在 Seal Harness 里添加服务商和模型/)
+    assert.doesNotMatch(modelNote(), /DeepSeek Harness/)
     assert.equal(document.querySelector('.bt-model-none').textContent, 'Seal Harness 里还没有设置模型。')
   } finally { disposeLocale() }
   await act(async () => root.render(null))

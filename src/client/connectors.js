@@ -4,6 +4,7 @@
 import { createElement as h, useEffect, useRef, useState } from 'react'
 import { MaskedInput } from './secret-card.js'
 import { Switch, SwitchRow } from './bot-settings.js'
+import { BotConnectorSettings } from './bot-connector-settings.js'
 import { Segmented, useMorph } from './motion.js'
 import { openPage, reserveWindow } from './open-window.js'
 import { contentText, currentPart } from './text.js'
@@ -378,21 +379,8 @@ export function AddMenu({ actions, run }) {
 }
 
 // Bot details → Connectors: one switch per connected connector (default on).
-export function BotConnectors({ bot, roster, actions, run }) {
-  const data = roster?.connectors
-  const list = (data?.connectors ?? []).filter(c => c.state === 'ready')
-  const mailOn = (data?.mail?.accounts ?? []).length > 0
-  if (list.length === 0 && !mailOn) return null
-  const rows = [...list, ...(mailOn ? [{ id: 'mail', name: t('Mailbox'), offFor: (data.mail?.offFor ?? []) }] : [])]
-  return h('div', { className: 'bt-drawer-model' },
-    h('div', { key: 't', className: 'bt-section-title' }, t('Connectors')),
-    rows.map((connector) => {
-      const off = (connector.offFor ?? []).includes(bot.id)
-      return h(SwitchRow, { key: connector.id, label: connector.name, on: !off, onChange: (checked) => {
-        const next = checked ? (connector.offFor ?? []).filter(id => id !== bot.id) : [...(connector.offFor ?? []), bot.id]
-        void run(actions.connectorSet(connector.id, { offFor: next }))
-      } })
-    }))
+export function BotConnectors(props) {
+  return h(BotConnectorSettings, { ...props, SwitchRow })
 }
 
 // --- cards ---------------------------------------------------------------

@@ -82,6 +82,22 @@ const enter = (extra = {}) => ({
 })
 const tick = () => new Promise(resolve => setImmediate(resolve))
 
+test('new section is above group chat and uses the original save and rename flow', async () => {
+  const calls = []
+  const view = mount({ mode: 'new', roster: { bots: [], byId: {}, agents: [], prefs: {} }, actions: {
+    saveSection: async payload => { calls.push(['save', Object.keys(payload).length]); return { id: 'section' } },
+    closeOverlay: () => calls.push(['close']),
+    beginSectionRename: id => calls.push(['rename', id]),
+  } })
+  const entries = options(view.render())
+  const section = entries.findIndex(node => text(node) === 'New section')
+  const group = entries.findIndex(node => text(node) === 'Create group chat')
+  assert.equal(group, section + 1)
+  entries[section].props.onClick()
+  await tick()
+  assert.deepEqual(calls, [['save', 0], ['close'], ['rename', 'section']])
+})
+
 test('the new-chat menu adds Seal Agent through the existing agent action', async () => {
   const calls = []
   const view = mount({ mode: 'new', roster: { bots: [], byId: {}, agents: [], prefs: {} }, actions: {

@@ -326,3 +326,13 @@ test('section-add menu offers both creating a new Bot/group in the section and a
   assert.equal(bodyInert, true)
   assert.equal(writerRows, 1)
 })
+
+test('new sections use Chinese default names with unique suffixes', async () => {
+  const runtime = start(baseTeam())
+  try {
+    const first = await runtime.call('section-save', {})
+    const second = await runtime.call('section-save', {})
+    assert.equal(first.value.name, '新建分组')
+    assert.equal(second.value.name, '新建分组 2')
+  } finally { await runtime.stop() }
+})

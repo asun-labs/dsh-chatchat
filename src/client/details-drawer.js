@@ -9,15 +9,12 @@ import { drawerMenuKeys } from './side-model.js'
 import { useEscape } from './overlay-hooks.js'
 import { BotSettingsForm } from './bot-settings.js'
 import { GroupSettingsForm, ROOM_MODES, roomSubtitle, shownMode } from './group-settings.js'
-import { ModelMenu, modelOf } from './model-menu.js'
-import { FolderMenu } from './folder-menu.js'
+import { BotOverview } from './bot-overview.js'
 import { MemoryRow } from './memory-panel.js'
-import { ScheduleSummary } from './schedules.js'
 import { useGlide, useMorph } from './motion.js'
 import { MemberApprovals, MemberState, StopMemberWork, StopRoomWork, useMemberWork, workState } from './member-status.js'
 import { canSetGoal, goalView, hasGoalAdmin } from './goal.js'
-import { PermissionPicker, presetDanger, presetName } from './permission-picker.js'
-import { BotConnectors } from './connectors.js'
+import { presetDanger, presetName } from './permission-picker.js'
 import { ComputerView } from './computer.js'
 import { t } from './i18n.js'
 
@@ -38,16 +35,6 @@ const TAB_LABELS = { details: 'Details', browser: 'Browser', computer: 'Computer
 const hostOf = (url) => { try { return new URL(url).hostname.replace(/^www\./, '') } catch { return '' } }
 const shortUrl = url => String(url ?? '').replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/$/, '')
 const EMPTY_TABS = { ids: [], active: null }
-
-// The Bot's permission preset, from the presets DeepSeek Harness offers.
-function PermissionRow({ bot, roster, actions, run }) {
-  const catalog = roster.permissions
-  if (!catalog?.options?.length) return null
-  return h('div', { className: 'bt-drawer-permission' },
-    h('div', { className: 'bt-section-title' }, t('Permissions')),
-    // A Bot without its own preset may run on another one set in DSH, so its first pick always applies.
-    h(PermissionPicker, { catalog, saved: bot.permission ?? catalog.defaultPreset, repick: bot.permission === undefined, onPick: permission => run(actions.updateBot(bot.id, { permission })) }))
-}
 
 // The current part's turns, speed, cache hits and context, for a window without DSH's
 // status bar (actions.runStats). It reads them again when a turn starts or ends.
@@ -266,7 +253,7 @@ export function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, ro
         h('span', { className: 'bt-subhead-title' }, bot ? t('Settings') : t('Group settings')),
         hasStrip ? null : h('button', { type: 'button', className: 'bt-icon-btn', 'aria-label': t('Close details'), onClick: close }, h(CloseIcon))),
       h('div', { key: 'set-body', className: 'bt-drawer-body bt-set-body', 'data-move': move }, errorLine,
-        bot ? h(BotSettingsForm, { bot, roster, actions, run }) : h(GroupSettingsForm, { room, roster, actions, run, onDeleted: close })),
+        bot ? h(BotSettingsForm, { bot, roster, actions, run, usage }) : h(GroupSettingsForm, { room, roster, actions, run, onDeleted: close })),
     ]
   }
   // The `···` button holds Browser, a new side chat, and DSH's right-column
@@ -301,7 +288,7 @@ export function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, ro
   const tabs = bot ? (roster.computer?.enabled === true ? ['details', 'browser', 'computer'] : ['details', 'browser']) : ['details']
   return [h(Fragment, { key: 'top' }, top),
     h('div', { key: 'id', className: 'bt-drawer-id', 'data-move': side },
-      bot ? h(BotAvatar, { bot, size: 64, state: botState(running, doing, roster.questions?.[part] !== undefined), main: isMainBot, badge: false, gaze: true, pokeable: true })
+      bot ? h(BotAvatar, { bot, size: 84, state: botState(running, doing, roster.questions?.[part] !== undefined), main: isMainBot, badge: true, live: true, gaze: true, pokeable: true })
         : h(MemberPile, { room, roster }),
       editing
         ? h('input', {
@@ -321,24 +308,8 @@ export function DetailsDrawer({ sessionId, startRenaming, startTab, hasStrip, ro
       bot && tab === 'computer' ? h(ComputerView, { bot, actions, hooks: { useComputer } }) : null,
       bot && tab === 'details' ? [
         h(RunStats, { key: 'stats', bot, part, running, actions }),
-        h('div', { key: 'model', className: 'bt-drawer-model' },
-          h('div', { className: 'bt-section-title' }, t('Model')),
-          h(ModelMenu, { bot, roster, actions, run, wide: true, inherited: true }),
-          modelOf(bot, roster) ? null : h('div', { className: 'bt-note' }, t('Uses the Seal model by default. Choose one here only to override it.')),
-        ),
+        h(BotOverview, { key: 'profile', bot, roster, actions, running, doing, useWork, openSettings: () => setView('settings') }),
         bot.engine ? h(AgentSessions, { key: 'sessions', bot, part, run, useSessions }) : null,
-        h(PermissionRow, { key: 'permission', bot, roster, actions, run }),
-        h(BotConnectors, { key: 'connectors', bot, roster, actions, run }),
-        h('div', { key: 'folder', className: 'bt-drawer-model' },
-          h('div', { className: 'bt-section-title' }, t('Working folder')),
-          h(FolderMenu, { value: bot.workDir, actions, run, wide: true, onPick: workDir => run(actions.updateBot(bot.id, { workDir })) })),
-        bot.instructions
-          ? h(About, { key: 'about', text: bot.instructions })
-          : h('button', { key: 'about', type: 'button', className: 'bt-more', onClick: () => setView('settings') }, t('Add instructions in Bot settings')),
-        roster.memory === false ? null : h(MemoryRow, { key: 'memory', owner: { id: bot.id, name: bot.name }, actions }),
-        usage ? h('div', { key: 'usage' }, h('div', { className: 'bt-section-title' }, t('Usage')),
-          h('div', { className: 'bt-kv' }, h('span', null, bot.name), h('span', null, usage))) : null,
-        h(ScheduleSummary, { key: 'routines', bot, actions }),
       ] : null,
       bot && tab === 'browser' ? h(BrowserCards, { bot, sessionId, roster, actions, useBrowserTabs, useBrowserPages }) : null)]
 }

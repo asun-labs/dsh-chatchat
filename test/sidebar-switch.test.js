@@ -96,16 +96,17 @@ test('embedded Bot moves its original tools and return action into the shared fi
   assert.equal(portals.length, 1)
   const buttons = findNodes(portals[0], node => node.type === 'button')
   assert.equal(portals[0].props.leadingTool, leadingTool)
-  assert.equal(buttons.length, 3)
+  assert.equal(buttons.length, 1)
+  const search = findNodes(portals[0], node => node.type === 'input' && node.props.type === 'search')[0]
+  assert.ok(search)
   let searched = 0, created = 0, sectioned = 0
   side.actions.openPalette = () => searched++
   side.actions.openNewChat = mode => { assert.equal(mode, 'new'); created++ }
   side.actions.saveSection = async () => { sectioned++; return {} }
+  search.props.onFocus()
   buttons[0].props.onClick()
-  buttons[1].props.onClick()
-  buttons[2].props.onClick()
   await Promise.resolve()
-  assert.deepEqual([sectioned, searched, created], [1, 1, 1])
+  assert.deepEqual([sectioned, searched, created], [0, 1, 1])
   side.render(false)
   assert.equal(findNodes(side.tree, node => node.type === HeaderTools).length, 0, '窄栏继续显示头像，不保留横排工具')
 })

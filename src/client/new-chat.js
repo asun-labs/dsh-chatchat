@@ -1,9 +1,10 @@
 import { createElement as h, useRef, useState } from 'react'
 import { MAIN_LOOK } from './characters.js'
-import { PlusIcon, PeopleIcon, ArrowUpIcon } from './icons.js'
+import { PlusIcon, PeopleIcon, ArrowUpIcon, FolderIcon } from './icons.js'
 import { AdminStar, BotMark } from './mark.js'
 import { useEscape } from './overlay-hooks.js'
 import { CreateBot } from './create-bot.js'
+import { CreateBotTemplate } from './create-bot-template.js'
 import { QUICK_EDGES, useFlip, useGlide, useMorph } from './motion.js'
 import { t } from './i18n.js'
 import { sendsOnEnter } from './enter-key.js'
@@ -98,6 +99,12 @@ export function NewChat({ mode, sectionId = null, paneLeft, roster, actions }) {
   const options = []
   if (!group && picked.length === 0 && mode !== 'search' && wanted === '') {
     options.push({ key: 'new', icon: h(PlusIcon), label: t('Create new Bot'), run: createBot })
+    if (roster.botTemplates) options.push({ key: 'template', icon: h(PlusIcon), label: t('New Bot — from template'), run: () => setDraft({ template: true, fromList: true, sectionId }) })
+    options.push({ key: 'section', icon: h(FolderIcon), label: t('New section'), run: () => run(async () => {
+      const section = await actions.saveSection({})
+      close()
+      if (section?.id) actions.beginSectionRename(section.id)
+    }) })
     options.push({ key: 'group', icon: h(PeopleIcon), label: t('Create group chat'), run: () => { setGroup(true); setCursor(0); inputRef.current?.focus() } })
     // A team holds at most one DSH Agent; the entry exists only while there is none.
     if ((roster.agents ?? []).length === 0 && actions.addAgent) {
@@ -116,7 +123,7 @@ export function NewChat({ mode, sectionId = null, paneLeft, roster, actions }) {
   useMorph(drop, listed)
   if (draft) {
     return h('div', { className: 'bt-pane', style: { left: paneLeft } },
-      h(CreateBot, {
+      h(draft.template ? CreateBotTemplate : CreateBot, {
         roster, actions, start: draft, brief: message.trim(), canGoBack: draft.fromList,
         onBack: draft.fromList ? () => { setDraft(null); setTimeout(() => inputRef.current?.focus()) } : close,
         onCreated: created,
