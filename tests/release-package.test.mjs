@@ -20,7 +20,8 @@ test('release manifest removes all installation/build scripts and development de
   assert(!manifest.files.some(file => file.startsWith('scripts')))
 })
 
-test('precompiled tarball loads through native DSH bundle selection without compiler or source checkout', async () => {
+// 真实 npm 打包在 Windows 文件扫描下可超过 30 秒，单独保留产物级测试的执行预算。
+test('precompiled tarball loads through native DSH bundle selection without compiler or source checkout', { timeout: 120000 }, async () => {
   const home = mkdtempSync(join(tmpdir(), 'dsh-chatchat-release-test-'))
   let ctx
   try {

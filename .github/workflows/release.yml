@@ -34,6 +34,8 @@ jobs:
         run: |
           node --input-type=module -e 'import fs from "node:fs"; const m=JSON.parse(fs.readFileSync("package.json")); const l=JSON.parse(fs.readFileSync("package-lock.json")); if (!/^\d+\.\d+\.\d+$/.test(process.env.RELEASE_VERSION) || m.version !== process.env.RELEASE_VERSION || l.version !== m.version || l.packages[""].version !== m.version) throw new Error("Release version mismatch");'
           test -f "docs/releases/${RELEASE_VERSION}.md"
+      - name: Use the verified packaging toolchain
+        run: npm install --global npm@11.21.3
       - run: npm ci
       - name: Install test browsers
         run: npx playwright install --with-deps chromium chrome
