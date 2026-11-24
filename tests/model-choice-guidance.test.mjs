@@ -50,7 +50,8 @@ test('model guidance appears proactively, opens setup, and clears after an expli
     },
   }
   const useRoster = selector => selector(useSyncExternalStore(roster.subscribe, roster.getSnapshot))
-  await act(async () => root.render(React.createElement(ModelChoiceDock, { sessionId: bot.id, useRoster, actions })))
+  const render = async (inheritDefaultModel = false) => act(async () => root.render(React.createElement(ModelChoiceDock, { sessionId: bot.id, useRoster, actions, inheritDefaultModel })))
+  await render()
   assert.equal(document.querySelector('.bt-model-dock'), null)
   await act(async () => roster.set(state => ({ ...state, ready: true })))
   assert.match(document.querySelector('.bt-model-dock').textContent, /don't have a model yet/)
@@ -60,6 +61,17 @@ test('model guidance appears proactively, opens setup, and clears after an expli
   const model = { ref: 'test-provider/model', provider: 'test-provider', providerName: 'Test provider', name: 'Test model' }
   await act(async () => roster.set(state => ({ ...state, models: [model] })))
   assert.match(document.querySelector('.bt-model-dock').textContent, /Pick a model/)
+  await act(async () => roster.set(state => ({ ...state, defaultModel: model.ref })))
+  await render(true)
+  assert.equal(document.querySelector('.bt-model-dock'), null, 'a host-inherited usable default needs no explicit Bot model')
+  assert.equal(roster.getSnapshot().byId[bot.id].model, undefined, 'guidance must not pin the inherited model')
+  await act(async () => roster.set(state => ({ ...state, models: [{ ...model, needsKey: true }] })))
+  assert.ok(document.querySelector('.bt-model-dock'), 'missing credentials must still offer setup')
+  await act(async () => roster.set(state => ({ ...state, models: [model], byId: { [bot.id]: { ...bot, model: 'removed/model' } } })))
+  assert.match(document.querySelector('.bt-model-dock').textContent, /not available anymore/, 'an unavailable explicit model still needs repair')
+  await act(async () => roster.set(state => ({ ...state, byId: { [bot.id]: bot } })))
+  await render()
+  assert.ok(document.querySelector('.bt-model-dock'), 'standalone onboarding retains explicit model selection')
   await act(async () => document.querySelector('button[aria-label="Test model · Test provider"]').click())
   assert.equal(document.querySelector('.bt-model-dock'), null)
   await act(async () => roster.set(state => ({ ...state, models: [], byId: { [bot.id]: { ...bot, model: 'local-codex-cli/default' } } })))

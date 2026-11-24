@@ -387,7 +387,7 @@ export function ModelMenu({ bot, roster, actions, run, wide = false, inherited =
 
 // The card a Bot's chat opens on while the Bot has no model, or has one that is no
 // longer served. The first Main Bot greets the user only after a pick.
-export function ModelChoiceDock({ sessionId, useRoster, actions }) {
+export function ModelChoiceDock({ sessionId, useRoster, actions, inheritDefaultModel = false }) {
   const roster = useRoster(value => value)
   const bot = roster.byId[sessionId]
   const [busy, setBusy] = useState('')
@@ -400,6 +400,8 @@ export function ModelChoiceDock({ sessionId, useRoster, actions }) {
   const models = modelsFor(roster.models)
   // A model whose provider has no API key fails every turn, so it is no choice.
   const usable = models.filter(model => !model.needsKey)
+  // 宿主接入中，未固定模型表示沿用宿主；有可用默认模型时不要求重复选择。
+  if (!bot.model && inheritDefaultModel && usable.some(model => model.ref === roster.defaultModel)) return null
   const lost = bot.model ? !models.some(model => model.ref === bot.model) : false
   // An unknown catalog (none listed) cannot tell a lost model from a slow provider.
   if (bot.model && (!lost || models.length === 0)) return null

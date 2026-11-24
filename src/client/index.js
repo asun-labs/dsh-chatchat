@@ -1012,7 +1012,8 @@ export function apply(ctx, integration = {}) {
     // in its details panel.
     () => shadow('conversation.input.model', { priority: BOT_PRIORITY }, Nothing),
     // 隐藏原生模型选择器后，仍须保留 Bot 的无模型和缺 Key 引导。
-    () => shadow('conversation.input.dock', { id: 'bot-model-choice', order: -200, priority: BOT_PRIORITY, inject: face }, ModelChoiceDock),
+    () => shadow('conversation.input.dock', { id: 'bot-model-choice', order: -200, priority: BOT_PRIORITY, inject: face },
+      props => h(ModelChoiceDock, { ...props, inheritDefaultModel: !standalone })),
     () => shadow('conversation.composer.dock', { id: 'activity', order: 0, priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'usage', order: 1, priority: BOT_PRIORITY }, Nothing),
     () => shadow('conversation.composer.dock', { id: 'btw', order: 2, priority: BOT_PRIORITY, inject: face }, BtwDock),
