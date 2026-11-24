@@ -2,6 +2,7 @@ import { createElement as h, useLayoutEffect, useSyncExternalStore } from 'react
 import { createPortal } from 'react-dom'
 import { FALLBACK_SIDEBAR_WIDTH } from './frame-layout.js'
 import { brandImage } from './branding.js'
+import { createSource } from './sources.js'
 
 const NATIVE_DEFAULT_WIDTH = 280
 
@@ -45,10 +46,25 @@ export function registerPanel(ctx, options, Panel, integration = {}) {
   function SidebarOutlet() {
     return h('div', { ref: setTarget, style: { display: 'flex', flex: 1, minHeight: 0, height: '100%' } })
   }
+  const headerTarget = createSource(null)
+  function HeaderTools({ children }) {
+    const seat = useSyncExternalStore(headerTarget.subscribe, headerTarget.getSnapshot)
+    return seat ? createPortal(children, seat) : null
+  }
+  function SessionAction({ wide, children }) {
+    if (!wide) return children
+    return h('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, width: '100%', minWidth: 0 } },
+      h('style', null, '.bt-native-header-tools .bt-side-top{padding:0}'),
+      h('div', { ref: headerTarget.set, className: 'bt-native-header-tools',
+        style: { minWidth: 0, color: 'var(--bt-ink)', fontFamily: 'var(--bt-font)' } }),
+      h('div', { style: { display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, width: '100%' } }, children))
+  }
   function Main() {
     useLayoutEffect(() => applyStandaloneSidebarDefault(ctx), [])
     useLayoutEffect(() => ctx.slots.register({ name: 'sidebar.workspaces', priority: -100 }, SidebarOutlet), [])
-    return h(Panel, { Sidebar, onLeaveOfficeMode: () => ctx.layout.selectPanel(null) })
+    // 原生工具栏装饰新会话插槽，保留原按钮，并随 Bot 面板离开而卸载。
+    useLayoutEffect(() => ctx.slots.register({ name: 'sidebar.session.action', id: `${options.id}-header-tools` }, SessionAction), [])
+    return h(Panel, { Sidebar, HeaderTools })
   }
   ctx.slots.inject('main', () => ctx.slots.register({ name: 'main', key: options.id }, Main))
   ctx.slots.inject('sidebar.panellist', () => ctx.slots.register({

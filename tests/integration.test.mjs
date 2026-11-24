@@ -93,9 +93,11 @@ test('standalone integration uses public DSH panel/sidebar slots and releases it
       return () => { const at = rows.indexOf(row); if (at >= 0) rows.splice(at, 1) }
     },
   } }
-  const Panel = ({ Sidebar, onLeaveOfficeMode }) => React.createElement(React.Fragment, null,
-    React.createElement(Sidebar, null, React.createElement('span', null, 'Bots and groups')),
-    React.createElement('button', { onClick: onLeaveOfficeMode }, 'Back'))
+  const Panel = ({ Sidebar, HeaderTools, onLeaveOfficeMode }) => {
+    assert.equal(typeof HeaderTools, 'function')
+    assert.equal(onLeaveOfficeMode, undefined, 'native navigation does not need a synthetic return action')
+    return React.createElement(Sidebar, null, React.createElement('span', null, 'Bots and groups'))
+  }
   const mainRoot = createRoot(document.querySelector('main'))
   const sideRoot = createRoot(document.querySelector('aside'))
   t.after(async () => {
@@ -113,12 +115,12 @@ test('standalone integration uses public DSH panel/sidebar slots and releases it
   assert.equal(sidebarWidth, 272, 'reopening uses the Bot default')
   await act(async () => sideRoot.render(React.createElement(rows.find(row => row.options.name === 'sidebar.workspaces').component)))
   assert.equal(document.querySelector('aside').textContent, 'Bots and groups')
-  await act(async () => document.querySelector('main button').click())
-  assert.deepEqual(selected, [null])
+  assert.deepEqual(selected, [])
   await act(async () => mainRoot.unmount())
   assert.equal(sidebarWidth, 280, 'leaving restores the native default')
   assert.equal(layoutListeners.size, 0)
   assert.equal(rows.some(row => row.options.name === 'sidebar.workspaces'), false)
+  assert.equal(rows.some(row => row.options.name === 'sidebar.session.action'), false)
   const calls = []
   const beforeBridge = rows.length
   registerPanel(ctx, { id: 'host-bot' }, Panel, { registerPanel: (...args) => calls.push(args) })

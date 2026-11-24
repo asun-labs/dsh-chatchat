@@ -127,7 +127,9 @@ export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, acti
       actions,
     }
     const Provider = props.SessionProvider
-    const back = <button type="button" className="bt-round seal-bot-back" aria-label="返回办公" title="返回办公" onClick={seat.onLeave}><ChevronLeftIcon /></button>
+    const back = typeof seat.onLeave === 'function'
+      ? <button type="button" className="bt-round seal-bot-back" aria-label="返回办公" title="返回办公" onClick={seat.onLeave}><ChevronLeftIcon /></button>
+      : null
     return <>
       <style>{layout}</style>
       {createPortal(<>
