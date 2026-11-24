@@ -172,9 +172,11 @@ test('original surface shares native Session stores, keeps default transcript an
   const seatProps = { sidebar: document.querySelector('aside'), chat: document.querySelector('section'), onLeave() {} }
   let sidebarWidth = 300
   seatProps.sidebar.getBoundingClientRect = () => ({ width: sidebarWidth, left: 56 })
+  seatProps.chat.getBoundingClientRect = () => ({ left: 56 + sidebarWidth + 24 })
   const seat = core.entries('seal.bot.surface')[0].component
   await act(async () => { surface.enter(); surface.mount(seatProps); root.render(React.createElement(seat, { ...props, seat: seatProps, renderSlot: renderSession })) })
   assert.equal(references.length, 0, 'startup with no selected session does not retain a reference')
+  assert.equal(frame.getSnapshot().contentLeft, 380, 'overlays start beyond the padded host sidebar, not at its inner outlet edge')
   assert.ok(document.querySelector('[data-team-sidebar]'), 'Bot sidebar renders before a session is selected')
   assert.equal(document.querySelector('[data-native-content]'), null)
   await act(async () => view.set({ sessionId: 'bot' }))
@@ -188,6 +190,7 @@ test('original surface shares native Session stores, keeps default transcript an
   await act(async () => dom.window.dispatchEvent(new dom.window.Event('resize')))
   assert.equal(document.querySelector('[data-team-sidebar]').dataset.teamSidebar, 'rail')
   assert.equal(pref.getSnapshot(), 'rail')
+  assert.equal(frame.getSnapshot().contentLeft, 136, 'overlay edge follows the host conversation when the sidebar collapses')
   assert.equal(references[0].releases, 0, 'native sidebar collapse keeps the active Bot conversation')
   sidebarWidth = 300
   await act(async () => dom.window.dispatchEvent(new dom.window.Event('resize')))

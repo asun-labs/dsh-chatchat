@@ -102,13 +102,16 @@ export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, acti
     useLayoutEffect(() => {
       const resize = () => {
         const rect = seat.sidebar.getBoundingClientRect()
+        // 宿主侧栏的内边距仍放置顶部按钮；浮层从实际会话区开始，不能覆盖它们。
+        const contentLeft = seat.chat.getBoundingClientRect().left
         const open = rect.width > 120
         setWide(open)
         sidebarPref.set(open ? 'open' : 'rail')
-        frame.set(value => ({ ...value, viewport: window.innerWidth - rect.left, offset: rect.left, sidebarActualWidth: rect.width, sidebarWidth: open ? rect.width : value.sidebarWidth }))
+        frame.set(value => ({ ...value, viewport: window.innerWidth - rect.left, offset: rect.left, contentLeft, sidebarActualWidth: rect.width, sidebarWidth: open ? rect.width : value.sidebarWidth }))
       }
       const observer = new ResizeObserver(resize)
       observer.observe(seat.sidebar)
+      observer.observe(seat.chat)
       resize()
       window.addEventListener('resize', resize)
       return () => { observer.disconnect(); window.removeEventListener('resize', resize) }

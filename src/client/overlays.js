@@ -39,7 +39,7 @@ export function Overlays({ embedded = false, useRoster, useUi, useSessions, useS
     pref, drawer: ui.leftDrawer === true,
     panel: open ? { view: open.view, yielded: ui.panelYield === true } : null,
   })
-  const paneLeft = embedded ? (frameSnap.sidebarActualWidth ?? layout.column) + (frameSnap.offset ?? 0) : layout.column
+  const paneLeft = embedded ? frameSnap.contentLeft ?? (frameSnap.sidebarActualWidth ?? layout.column) + (frameSnap.offset ?? 0) : layout.column
   const shown = open !== null && layout.panel !== 'folded' ? open : null
   const [kept, setKept] = useState(shown)
   useEffect(() => {
