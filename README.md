@@ -19,12 +19,14 @@ npm run pack:release
 
 Git 仓库仅保存源码、资源、锁文件与许可证，忽略 `lib/`、`office.js`、`node_modules/` 和 `dist/`。源码开发的 `prepare` 与 `prepack` 会构建；面向用户的 `npm run pack:release` 则先构建，再把已编译 Client、Host、资源、bundle patch 和声明装入 `dist/dsh-chatchat-<version>.tgz`，同时生成 SHA-256 与 SHA-512 完整性摘要。发布包剔除全部安装/构建脚本和开发依赖，内含 `npm-shrinkwrap.json` 固定运行依赖；安装该包不执行源码编译。
 
+线上发布使用 GitHub Actions 的 **Build and release ChatChat** 工作流，从 `main` 手动触发并输入 `package.json` 的版本号。流程校验版本与发布说明，执行构建及测试，通过后上传版本化 `.tgz`、校验文件与元数据到 GitHub Releases；已存在的版本不会被覆盖。
+
 ## 在 DSH 安装
 
 在 DSH 的插件管理器中添加版本化预编译包地址，例如：
 
 ```text
-https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.4/dsh-chatchat-0.1.4.tgz
+https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.5/dsh-chatchat-0.1.5.tgz
 ```
 
 也可以先下载并核对同版本的 `.sha256`，再选择本地 `.tgz` 文件安装。包声明原生 `dsh.bundle`，安装后的启用、停用和卸载由 DSH 现有插件管理器处理，不提供第二套插件管理。没有 HMR 的 Profile 在切换启用状态后按原生提示重启；停用不会删除 Bot 数据。当前 DSH 对 tarball 来源不提供原生自动查新或一键升级：更换版本时先通过插件管理器停用并移除旧包，再安装明确的新版本 URL；按原生提示停止 Profile 或重启，保留的数据目录会继续使用。
@@ -44,6 +46,10 @@ Seal 专属的工作区隔离、右栏会话绑定与轨迹扩展由其 SDK 适�
 包名由 `seal-dot` / `@seal-harness/seal-dot` 改为 `dsh-chatchat`。Seal 仍使用 `DSH_HOME/seal-dot` 与已有 `seal-dot:` 浏览器存储键、协议和面板标识，保留 Bot、群聊和会话历史。独立安装默认使用 `DSH_HOME/dsh-chatchat`；显式 `config.home` 自定义目录继续有效。不会自动导入或覆盖独立 DS-Bot 的存储。
 
 ## 测试
+
+普通新建 Bot 可填写长期职责，创建后在 Bot 设置中修改。Seal 宿主提供专家模板服务时，加号菜单显示“新建 Bot－选择从模板中创建”：从系统或个人专家选择模板，再填写名称，配置复制后独立维护，不跟随原专家更新。独立安装不显示宿主未提供的模板入口。
+
+Bot 右侧详情集中展示角色与动态，模型、权限及工作文件夹等集中在设置；顶部使用常驻搜索框，新建分组统一从加号菜单进入。
 
 ```sh
 npm test
