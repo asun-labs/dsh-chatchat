@@ -18,13 +18,14 @@ export function hostBranding(config = {}) {
 // Rename only records still carrying the product's old default name. Custom Bot
 // names and workspace titles belong to the user.
 export async function migrateBrandNames({ workspace, mainBots, renameBot, updateRole, updateAvatar, brand }) {
-  if (workspace?.title === LEGACY_BRAND_NAME) await workspace.setTitle(brand?.botName ?? BRAND_NAME)
+  const names = [LEGACY_BRAND_NAME, 'Seal Bot', 'DSH Bot']
+  const workspaceName = brand?.botName ?? BRAND_NAME
+  if (names.includes(workspace?.title) && workspace.title !== workspaceName) await workspace.setTitle(workspaceName)
   for (const bot of mainBots) {
     if (!bot) continue
     if (!brand) {
       if (bot?.name === LEGACY_BRAND_NAME) await renameBot(bot.id, BRAND_NAME)
     } else {
-      const names = [LEGACY_BRAND_NAME, 'Seal Bot', 'DSH Bot']
       const images = Object.values(DEFAULT_AVATARS)
       if (!bot.brandDefaults && (names.includes(bot.name) || images.includes(bot.avatar?.image))) {
         bot.brandDefaults = { name: names.includes(bot.name), avatar: images.includes(bot.avatar?.image) }

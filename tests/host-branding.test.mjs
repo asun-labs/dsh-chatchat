@@ -140,3 +140,35 @@ test('official DSH avatar is pinned and ships with its license and matching Host
   assert.equal(JSON.parse(assetDefines().__DSH_BOT_ICON__), DEFAULT_AVATARS.dsh)
   assert.equal(JSON.parse(assetDefines().__SEAL_DOT_ICON__), DEFAULT_AVATARS.seal)
 })
+
+test('default workspace titles follow both host brands, migrate once, and preserve custom titles', async () => {
+  for (const id of ['dsh', 'seal']) {
+    for (const title of ['Seal Dot', 'Seal Bot', 'DSH Bot', '我的项目']) {
+      const edits = []
+      const workspace = { title, async setTitle(value) { this.title = value; edits.push(value) } }
+      const options = { workspace, mainBots: [], brand: hostBranding({ branding: id }) }
+      await migrateBrandNames(options)
+      await migrateBrandNames(options)
+      const expected = title === '我的项目' ? title : brandProfile(id).botName
+      assert.equal(workspace.title, expected)
+      assert.deepEqual(edits, title === expected ? [] : [expected])
+    }
+  }
+})
+
+test('changing team folder creates a workspace with the host brand and keeps an existing title', async t => {
+  for (const id of ['dsh', 'seal']) {
+    const root = mkdtempSync(join(tmpdir(), 'chatchat-brand-folder-'))
+    const { rt, stop } = fixture(t, join(root, 'home'), id)
+    try {
+      await rt.bootstrap()
+      const created = []
+      rt.ctx.workspaceRegistry.create = async (path, title) => { created.push(title); return { id: 'next' } }
+      await rt.setTeamWorkspace(join(root, 'project'))
+      assert.deepEqual(created, [brandProfile(id).botName])
+      rt.ctx.workspaceRegistry.resolveByPath = async () => ({ id: 'custom', title: '我的项目' })
+      await rt.setTeamWorkspace(join(root, 'existing-project'))
+      assert.equal(created.length, 1, 'an existing workspace is reused without renaming')
+    } finally { await stop(); removeFixtureHome(root) }
+  }
+})
