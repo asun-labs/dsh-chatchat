@@ -7,9 +7,9 @@ import { build } from 'esbuild'
 // The pane's message field shares the composer preference: while Enter sends, a plain
 // Enter submits; off, it is the field's own newline and only the send button submits.
 const { outputFiles } = await build({
-  entryPoints: [fileURLToPath(new URL('../src/client/new-chat.js', import.meta.url))],
+  stdin: { contents: "export {NewChat} from './src/client/new-chat.js'; export {installBranding} from './src/client/branding.js'", resolveDir: fileURLToPath(new URL('../', import.meta.url)) },
   bundle: true, format: 'cjs', platform: 'browser', write: false, logLevel: 'silent',
-  define: { __SEAL_DOT_ICON__: JSON.stringify('data:image/png;base64,seal-icon-fixture') },
+  define: { __SEAL_DOT_ICON__: JSON.stringify('data:image/png;base64,seal-icon-fixture'), __DSH_BOT_ICON__: JSON.stringify('data:image/svg+xml;base64,dsh-icon-fixture') },
   external: ['react', 'react-dom', '@deepseek-ai/dsh-client-ui-primitives'],
 })
 let current
@@ -98,21 +98,26 @@ test('new section is above group chat and uses the original save and rename flow
   assert.deepEqual(calls, [['save', 0], ['close'], ['rename', 'section']])
 })
 
-test('the new-chat menu adds Seal Agent through the existing agent action', async () => {
+for (const brand of ['dsh', 'seal']) test(`the new-chat menu adds the ${brand} host Agent with its matching icon`, async () => {
+  const branding = module.exports.installBranding(brand)
+  try {
   const calls = []
   const view = mount({ mode: 'new', roster: { bots: [], byId: {}, agents: [], prefs: {} }, actions: {
     addAgent: async () => calls.push('add'), closeOverlay: () => calls.push('close'),
   } })
   const tree = view.render()
-  const entry = options(tree).find(node => text(node).includes('Add Seal Agent'))
+  const name = brand === 'seal' ? 'Seal Agent' : 'DSH Agent'
+  const entry = options(tree).find(node => text(node).includes(`Add ${name}`))
   assert.ok(entry)
-  const sealIcon = all(entry, node => node.props?.look?.image === 'data:image/png;base64,seal-icon-fixture')[0]
-  assert.ok(sealIcon, 'Seal Agent uses the product seal avatar')
+  const image = brand === 'seal' ? 'data:image/png;base64,seal-icon-fixture' : 'data:image/svg+xml;base64,dsh-icon-fixture'
+  const sealIcon = all(entry, node => node.props?.look?.image === image)[0]
+  assert.ok(sealIcon, 'Agent uses its host default avatar')
   assert.equal(sealIcon.props.size, 24)
-  assert.equal(text(tree).includes('DSH Agent'), false)
+  assert.equal(text(tree).includes(brand === 'seal' ? 'DSH Agent' : 'Seal Agent'), false)
   entry.props.onClick()
   await tick()
   assert.deepEqual(calls, ['add', 'close'])
+  } finally { branding.dispose() }
 })
 
 // A group pane picks its admin, then the member the typed message goes to. Every

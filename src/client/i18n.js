@@ -2,6 +2,8 @@
 // Copy is looked up at render time and every slot outlet re-renders on a language
 // switch, so nothing caches a translated string.
 
+import { brandText } from './branding.js'
+
 export const NAMESPACE = 'seal-dot'
 
 const ZH = {
@@ -1701,15 +1703,16 @@ export function installLocale(locale) {
 }
 
 export function t(key, params) {
-  return bound ? bound(key, params) : fill(key, params)
+  // 先替换固定产品文案，再插值，避免改写用户自定义的名字或内容。
+  return fill(brandText(bound ? bound(key) : key), params)
 }
 
 // A message from the host, in the interface language.
 export function hostText(message) {
-  if (!language().startsWith('zh')) return message
   if (Object.hasOwn(ZH, message)) return t(message)
+  if (!language().startsWith('zh')) return message
   for (const [pattern, template] of HOST_ERRORS) {
-    if (pattern.test(message)) return message.replace(pattern, template)
+    if (pattern.test(message)) return message.replace(pattern, brandText(template))
   }
   return message
 }

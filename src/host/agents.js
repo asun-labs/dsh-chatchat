@@ -2,7 +2,7 @@
 // them. Its Sessions are ordinary root Sessions in the Seal Bot workspace, so they get
 // the whole dsh conversation surface and none of the team tools.
 import { randomUUID } from 'node:crypto'
-import { AGENT_NAME, AGENT_SESSION_TITLE_MAX } from './constants.js'
+import { AGENT_SESSION_TITLE_MAX } from './constants.js'
 
 export function install(rt) {
   const { ctx, state } = rt
@@ -62,7 +62,7 @@ export function install(rt) {
   async function addAgent() {
     writeCheck()
     if (Object.keys(state.agents).length > 0) throw new Error('The team already has a DSH Agent')
-    const agent = { id: randomUUID(), name: AGENT_NAME, sessions: [], createdAt: Date.now() }
+    const agent = { id: randomUUID(), name: rt.branding.agentName, sessions: [], createdAt: Date.now() }
     state.agents[agent.id] = agent
     try {
       await createAgentSession(agent.id)

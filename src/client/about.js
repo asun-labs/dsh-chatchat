@@ -101,7 +101,7 @@ export function AboutPage({ useUpdate, actions, run, Section, Row }) {
     h('div', { key: 'hero', className: 'bt-about-hero' },
       h('span', { className: 'bt-about-mark' }, h(BotMark, { look: MAIN_LOOK, bot: { id: 'about' }, size: 52, state: markState, live: true, gaze: true, pokeable: true })),
       h('div', { className: 'bt-about-copy' },
-        h('span', { className: 'bt-about-name' }, 'Seal Bot'),
+        h('span', { className: 'bt-about-name' }, t('Seal Bot')),
         update.current ? h('span', { className: 'bt-about-version' }, t('Version {version}', { version: update.current })) : null),
       repo ? h('a', {
         className: 'bt-star', href: repo, target: '_blank', rel: 'noopener noreferrer', title: t('Star Seal Bot on GitHub'),
@@ -111,7 +111,7 @@ export function AboutPage({ useUpdate, actions, run, Section, Row }) {
       stars === null ? null : h('span', { className: 'bt-star-count' }, starCount(stars))) : null),
     repo ? h('p', { key: 'ask', className: 'bt-about-ask' }, t('If Seal Bot helps you, a star on GitHub helps more people find it.')) : null,
     h(Section, { key: 'updates', title: t('Updates') },
-      h(Row, { label: 'Seal Bot', hint: '随 Seal Harness 更新' }, botControl),
+      h(Row, { label: t('Seal Bot'), hint: t('Updates come with the Seal Bot app.') }, botControl),
       dsh?.current ? h(Row, { label: 'DeepSeek Harness', hint: dshHint(dsh, dshShown) }, dshControl) : null),
     h(Section, { key: 'links', title: t('Links') },
       repo ? h(Row, { label: t('Source code'), hint: repo.replace(/^https:\/\//, '') }, h('a', linkProps(repo), h(GitHubMark), t('Open'))) : null,

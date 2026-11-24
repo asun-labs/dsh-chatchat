@@ -1,4 +1,5 @@
 import { call } from './api.js'
+import { currentBrand, installBranding } from './branding.js'
 import { createElement as h } from 'react'
 import { registerPanel } from './integration.jsx'
 import { createBotSidebarSession } from './session-sidebar.js'
@@ -61,6 +62,8 @@ import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, ri
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'conversation', 'slots', 'theme', 'layout']
 
 export function apply(ctx, integration = {}) {
+  const branding = installBranding(integration.branding)
+  ctx.effect(() => branding.dispose, 'chatchat: host brand')
   ctx.effect(() => installLocale(ctx.get('locale')), 'seal-dot: interface copy')
   migrateStorage()
   // The window's cached prefs stand in until the first pull answers: a saved
@@ -183,6 +186,7 @@ export function apply(ctx, integration = {}) {
     const known = roster.getSnapshot()
     const value = await call('state', { since: known.revision, models: known.modelsKey ?? '', live: liveKey, locale: language() })
     if (order < applied) return
+    if (value.branding !== undefined) branding.update(value.branding)
     applied = order
     if (value.liveKey !== undefined) liveKey = value.liveKey
     if (value.activity !== undefined) {
@@ -201,6 +205,7 @@ export function apply(ctx, integration = {}) {
     const current = roster.getSnapshot()
     // Connector and capability states change without a new revision.
     const live = {}
+    if (value.branding !== undefined && value.branding !== current.branding) live.branding = value.branding
     if (value.connectors !== undefined && JSON.stringify(value.connectors) !== JSON.stringify(current.connectors ?? [])) live.connectors = value.connectors
     if (value.capabilityStatuses !== undefined && JSON.stringify(value.capabilityStatuses) !== JSON.stringify(current.capabilityStatuses ?? {})) live.capabilityStatuses = value.capabilityStatuses
     if (value.learning !== undefined && JSON.stringify(value.learning) !== JSON.stringify(current.learning ?? {})) live.learning = value.learning
@@ -745,7 +750,7 @@ export function apply(ctx, integration = {}) {
   function DotPanel({ Sidebar, HeaderTools, onLeaveOfficeMode }) {
     return h(EmbeddedBotPanel, { Sidebar, HeaderTools, onLeaveOfficeMode, actions })
   }
-  registerPanel(ctx, { id: 'seal-dot', label: 'Bot', order: 15, icon: 'superagent', description: 'Seal Bot 团队智能体与群聊', officeModeTitle: 'Seal Bot' }, DotPanel, integration)
+  registerPanel(ctx, { id: 'seal-dot', label: 'Bot', order: 15, icon: 'superagent', description: `${currentBrand().botName} 团队智能体与群聊`, officeModeTitle: currentBrand().botName }, DotPanel, integration)
   // The queue dock's per-session verbs, supplied the way the shell's own dock
   // injects them (the session facade and the conversation service).
   const queueFace = (sessionId) => ({

@@ -10,7 +10,7 @@ import { JSDOM } from 'jsdom'
 
 const require = createRequire(import.meta.url)
 const bundle = await build({
-  entryPoints: [fileURLToPath(new URL('../src/client/details-drawer.js', import.meta.url))],
+  stdin: { contents: "export {DetailsDrawer} from './src/client/details-drawer.js'; export {installBranding} from './src/client/branding.js'", resolveDir: fileURLToPath(new URL('../', import.meta.url)) },
   bundle: true, write: false, format: 'cjs', platform: 'node',
   define: { __SEAL_DOT_ICON__: '"data:image/png;base64,fixture"', __SEAL_BOT_ROBOT_AVATARS__: '[]' },
   external: ['react', 'react-dom', '@deepseek-ai/dsh-client-ui-primitives'],
@@ -33,6 +33,8 @@ test('Bot overview separates profile and live activity from settings and retains
     setTimeout, clearTimeout, setInterval, clearInterval, console,
   })
   const root = createRoot(document.querySelector('main'))
+  const branding = module.exports.installBranding('seal')
+  t.after(branding.dispose)
   t.after(async () => { await act(async () => root.unmount()); dom.window.close(); Object.assign(globalThis, previous) })
   const bot = { id: 'bot', name: 'Researcher', role: 'Research', avatar: { image: 'data:image/png;base64,fixture' }, instructions: 'Cite original sources.', capabilities: ['research-skill'], parts: [] }
   const room = { id: 'room', name: 'Project', members: ['bot'] }

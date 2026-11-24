@@ -23,6 +23,7 @@ const { isRobotAvatar } = await import('../src/client/robot-avatars.js')
 const { SHELL_CSS, botOwnCss } = await import('../src/client/styles.js')
 const { BotMark, BotAvatar } = await import('../src/client/mark.js')
 const { DICTIONARY, installLocale } = await import('../src/client/i18n.js')
+const { installBranding } = await import('../src/client/branding.js')
 
 test('curated robot avatars are distinct 160 px PNGs small enough for the Bot avatar field', () => {
   assert.equal(manifest.length, 16)
@@ -95,18 +96,18 @@ test('the shared avatar editor picks and reopens robots in creation and editing'
   }
   await act(async () => root.render(React.createElement(CreateBot, createProps)))
   const modelNote = () => document.querySelector('.bt-model-trigger').closest('.bt-field').querySelector('.bt-note').textContent
-  assert.match(modelNote(), /Add a provider and a model in Seal Harness first/)
+  assert.match(modelNote(), /Add a provider and a model in DSH first/)
   await act(async () => document.querySelector('.bt-model-trigger').click())
-  assert.equal(document.querySelector('.bt-model-none').textContent, 'No models are set up in Seal Harness yet.')
+  assert.equal(document.querySelector('.bt-model-none').textContent, 'No models are set up in DSH yet.')
   const disposeLocale = installLocale({
     register: () => () => {}, bind: () => key => DICTIONARY.zh[key] ?? key,
     getLocale: () => ({ active: 'zh' }),
   })
   try {
     await act(async () => root.render(React.createElement(CreateBot, createProps)))
-    assert.match(modelNote(), /请先在 Seal Harness 里添加服务商和模型/)
+    assert.match(modelNote(), /请先在 DSH 里添加服务商和模型/)
     assert.doesNotMatch(modelNote(), /DeepSeek Harness/)
-    assert.equal(document.querySelector('.bt-model-none').textContent, 'Seal Harness 里还没有设置模型。')
+    assert.equal(document.querySelector('.bt-model-none').textContent, 'DSH 里还没有设置模型。')
   } finally { disposeLocale() }
   await act(async () => root.render(null))
   await act(async () => root.render(React.createElement(CreateBot, createProps)))
@@ -128,6 +129,8 @@ test('the shared avatar editor picks and reopens robots in creation and editing'
   assert.equal(document.querySelector('[data-catalog]').dataset.shape, 'image')
   assert.equal(document.querySelector('img').getAttribute('src'), catalog[0].image)
   assert.equal(document.querySelector('svg'), null, 'website artwork is used directly without redrawing face layers')
+  const branding = installBranding('seal')
+  t.after(branding.dispose)
   await act(async () => root.render(React.createElement(BotAvatar, { bot: { id: 'main', avatar: { image: globalThis.__SEAL_DOT_ICON__ } }, size: 60, main: true })))
   assert.deepEqual([...document.querySelectorAll('[data-seal-part]')].map(node => node.dataset.sealPart).sort(), ['body', 'eyes', 'fin', 'mouth'])
   assert.equal(document.querySelectorAll('.bt-badge-main').length, 1)

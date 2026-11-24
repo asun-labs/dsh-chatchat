@@ -1,6 +1,7 @@
 import { createElement as h, useLayoutEffect, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { FALLBACK_SIDEBAR_WIDTH } from './frame-layout.js'
+import { brandImage } from './branding.js'
 
 const NATIVE_DEFAULT_WIDTH = 280
 
@@ -52,7 +53,9 @@ export function registerPanel(ctx, options, Panel, integration = {}) {
   ctx.slots.inject('main', () => ctx.slots.register({ name: 'main', key: options.id }, Main))
   ctx.slots.inject('sidebar.panellist', () => ctx.slots.register({
     name: 'sidebar.panellist', id: options.id, label: options.label, order: options.order,
-  }, ({ size = 18 }) => h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, 'aria-hidden': true },
+  }, ({ size = 18 }) => brandImage()
+    ? h('img', { width: size, height: size, src: brandImage(), alt: '', draggable: false })
+    : h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, 'aria-hidden': true },
     h('rect', { x: 4, y: 7, width: 16, height: 13, rx: 3 }),
     h('path', { d: 'M12 3v4M8 12h1m6 0h1M9 16h6' }))))
 }

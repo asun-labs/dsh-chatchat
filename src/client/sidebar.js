@@ -5,6 +5,7 @@ import { isMainOf, sealAgentSessions } from './sources.js'
 import { currentPart, previewOf, relativeShort } from './text.js'
 import { PlusIcon, SearchIcon, SidebarIcon, GaugeIcon, ClockIcon, GearIcon, PinMarkIcon, ConnectorIcon, CloudDownloadIcon, SignInIcon, SignOutIcon, SlidersIcon, ChevronRightIcon, DotsIcon, FolderIcon } from './icons.js'
 import { lookOf, MAIN_LOOK } from './characters.js'
+import { currentBrand, currentAgentName } from './branding.js'
 import { botState, BotMark, BotAvatar, RoomAvatar } from './mark.js'
 import { AgentBadge } from './agent-badge.js'
 import { reducedMotion } from './activity-row.js'
@@ -223,12 +224,13 @@ function AgentRow({ agent, actions, useSessions, useSessionStatus, useUi, wide, 
   const unread = sessions.some(session => session.unread) || (marked && !active)
   useMarkedUnread(agent.id, active, marked, actions)
   const preview = sessions[0] === undefined ? t('New session') : agentSessionTitle(sessions[0])
-  const label = ['Seal Agent', running ? t('Working') : '', unread ? t('Unread activity') : ''].filter(Boolean).join(', ')
+  const name = currentAgentName(agent)
+  const label = [name, running ? t('Working') : '', unread ? t('Unread activity') : ''].filter(Boolean).join(', ')
   const open = active && wide
   return h('div', { className: 'bt-agent' },
     h('button', {
       type: 'button', className: 'bt-row', 'aria-label': label, 'aria-current': active ? 'page' : undefined,
-      'data-agent-id': agent.id, title: wide ? undefined : 'Seal Agent',
+      'data-agent-id': agent.id, title: wide ? undefined : name,
       draggable: wide && onDragStart ? true : undefined,
       onDragStart: wide && onDragStart ? event => onDragStart(event, agent.id) : undefined,
       onClick: () => actions.openAgent(agent.id),
@@ -236,7 +238,7 @@ function AgentRow({ agent, actions, useSessions, useSessionStatus, useUi, wide, 
     },
     h('span', { className: `bt-agent-ava${running ? ' bt-run' : ''}` }, h(BotMark, { look: MAIN_LOOK, size: wide ? 28 : 32 })),
     wide ? h('span', { className: 'bt-row-body' },
-      h('span', { className: 'bt-row-name' }, 'Seal Agent'),
+      h('span', { className: 'bt-row-name' }, name),
       preview ? h('span', { className: 'bt-row-preview' }, preview) : null) : null,
     wide && unread && !active ? h('span', { className: 'bt-unread', 'aria-hidden': true })
       : !wide && unread && !active ? h('span', { className: 'bt-dot', 'aria-hidden': true }) : null),
@@ -844,9 +846,9 @@ export function TeamSidebar(props) {
         ? renderLooseEntries(ungrouped, '__none__')
         : !embedded ? ungrouped.map(entry => renderSidebarEntry(entry, rowProps, markedUnread, onDragStart)) : null,
       !embedded ? renderSections(sections) : null,
-      h('section', { className: 'bt-seal-folder', 'aria-label': 'Seal Agent' },
-        h('button', { type: 'button', className: 'bt-seal-folder-head', 'aria-label': 'Seal Agent', 'aria-expanded': sealOpen, title: 'Seal Agent', onClick: () => setSealOpen(open => !open) },
-          h(FolderIcon), wideContent ? h('span', null, 'Seal Agent') : null,
+      h('section', { className: 'bt-seal-folder', 'aria-label': currentBrand().agentName },
+        h('button', { type: 'button', className: 'bt-seal-folder-head', 'aria-label': currentBrand().agentName, 'aria-expanded': sealOpen, title: currentBrand().agentName, onClick: () => setSealOpen(open => !open) },
+          h(FolderIcon), wideContent ? h('span', null, currentBrand().agentName) : null,
           wideContent ? h('span', { className: 'bt-seal-folder-count' }, sealSessions.length) : null),
         sealOpen && wideContent ? h('div', { className: 'bt-seal-folder-sessions' },
           sealSessions.map(session => h('button', { key: session.id, type: 'button', className: 'bt-agent-sub-row',
@@ -1262,7 +1264,7 @@ export function BrandMark({ size = 24 }) {
   return h('span', { className: 'bt-brand-whale' }, h(BotMark, { look: MAIN_LOOK, size }))
 }
 export function BrandName() {
-  return h('span', { style: { fontWeight: 600, fontSize: 14 } }, 'Seal Bot')
+  return h('span', { style: { fontWeight: 600, fontSize: 14 } }, currentBrand().botName)
 }
 
 // With the whale holding the settings seat, the Bot row is just the account menu;

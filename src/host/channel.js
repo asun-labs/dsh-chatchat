@@ -7,6 +7,7 @@ import { handoffReply, questionReply, viewReply } from './parts.js'
 import { validateViewAnswer } from 'deep-view/core'
 import { COLORS, EXTRA_COLORS, ROUTE } from './constants.js'
 import { assertRequestIdentity, installIdentityBoundary } from './identity-boundary.js'
+import { agentDisplayName } from '../shared/branding.js'
 
 const LANGUAGES = { zh: 'Chinese (简体中文)', en: 'English' }
 const RUN_STATS = ['sessionStats', 'tokenUsage', 'contextPressure']
@@ -42,6 +43,7 @@ export function install(rt) {
   const modelsKey = () => `${rt.cachedCatalog().map(entry => `${entry.ref}${entry.needsKey ? '!' : ''}${entry.reasoning ? `:${JSON.stringify(entry.reasoning)}` : ''}`).join(',')}|${rt.cachedDefault() ?? ''}`
   const view = () => ({
     revision: state.revision,
+    branding: rt.branding.id,
     workspaceId: state.workspaceId ?? null,
     // `mainBotId` is the first Main Bot, which the sidebar shows as its tile.
     mainBotId: state.mainBotIds[0] ?? null,
@@ -76,7 +78,7 @@ export function install(rt) {
     // model-visible history; the side panel reads them here.
     sideChats: rt.sideView?.() ?? {},
     // The team's DSH Agent (at most one): plain dsh Sessions, not Bots.
-    agents: Object.values(state.agents),
+    agents: Object.values(state.agents).map(agent => ({ ...agent, name: agentDisplayName(agent, rt.branding) })),
     // Sidebar sections that group Bots, group chats and the DSH Agent by workflow.
     sections: state.sections ?? [],
     // Key names and who may use them; values never leave the host.
@@ -231,8 +233,8 @@ export function install(rt) {
           await rt.loadSecrets()
           const answer = liveAnswer()
           if (body.since === state.revision && (body.models === undefined || body.models === modelsKey())) {
-            if (body.live === answer.key) return ok({ revision: state.revision, unchanged: true, liveKey: answer.key })
-            return ok({ revision: state.revision, unchanged: true, liveKey: answer.key, ...answer.value })
+            if (body.live === answer.key) return ok({ revision: state.revision, branding: rt.branding.id, unchanged: true, liveKey: answer.key })
+            return ok({ revision: state.revision, branding: rt.branding.id, unchanged: true, liveKey: answer.key, ...answer.value })
           }
           return ok({ ...view(), liveKey: answer.key, ...answer.value })
         }

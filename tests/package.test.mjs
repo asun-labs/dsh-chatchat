@@ -113,7 +113,7 @@ test('precompiled client API works without an active core Client Loader row', ()
   assert(requested.includes('react'))
   const lifecycleReached = new Error('public Client lifecycle reached')
   assert.throws(() => module.exports.apply({ effect(_install, label) {
-    assert.equal(label, 'seal-dot: interface copy')
+    assert.equal(label, 'chatchat: host brand')
     throw lifecycleReached
   } }, { registerPanel() {} }), error => error === lifecycleReached)
 })

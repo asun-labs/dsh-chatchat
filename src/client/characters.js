@@ -1,4 +1,5 @@
 import { INKS, GRADIENTS, isHex, inkFill } from './inks.js'
+import { brandImage } from './branding.js'
 
 // -------------------------------------------------------------------------
 // Characters: Seal Bot's own avatars, small 3D models seen from a
@@ -36,7 +37,7 @@ export const PICKER_COLUMNS = 5
 export const DEFAULT_SHAPES = ['star', 'moon', 'gumdrop', 'peanut', 'bunny', 'kitty', 'acorn']
 export const FALLBACK_SHAPE = 'gumdrop'
 // The team's first Main Bot, and the plugin's own mark in the sidebar.
-export const MAIN_LOOK = Object.freeze({ shape: 'whale', color: 'deepseek', image: __SEAL_DOT_ICON__ })
+export const MAIN_LOOK = Object.freeze({ shape: 'whale', color: 'deepseek', get image() { return brandImage() } })
 // Character colors in picker order. Black, the gradients, and the dull gray and brown
 // are never defaults; the user must pick them.
 export const CHARACTER_COLORS = ['black', 'brown', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'violet', 'magenta', 'gray', 'aurora']

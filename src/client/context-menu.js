@@ -7,6 +7,7 @@ import { BotMark, RoomAvatar } from './mark.js'
 import { useEscape } from './overlay-hooks.js'
 import { stepMenuFocus, useViewport, viewBottom } from './motion.js'
 import { t } from './i18n.js'
+import { currentAgentName } from './branding.js'
 
 const SECTION_COLORS = ['blue', 'orange', 'green', 'violet', 'rose']
 
@@ -216,7 +217,7 @@ function AgentMenu({ menu, roster, actions, leaving }) {
           [t('Archive'), TrashIcon, () => actions.archiveAgentSession(agent.id, menu.id), true],
         ],
       ]
-  return h('div', { ref, className: 'bt-menu', role: 'menu', 'aria-label': menu.kind === 'agent' ? 'Seal Agent' : t('Session actions'), style: place, 'data-leaving': leaving || undefined },
+  return h('div', { ref, className: 'bt-menu', role: 'menu', 'aria-label': menu.kind === 'agent' ? currentAgentName(agent) : t('Session actions'), style: place, 'data-leaving': leaving || undefined },
     groups.map((group, index) => h(Fragment, { key: index },
       index > 0 ? h('div', { className: 'bt-menu-sep', role: 'separator' }) : null,
       group.map(([label, Icon, run, danger, checked]) => h('button', {

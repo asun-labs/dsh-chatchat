@@ -15,6 +15,7 @@ export function assetDefines() {
   return {
     'process.env.NODE_ENV': JSON.stringify('production'),
     __SEAL_DOT_ICON__: JSON.stringify(`data:image/png;base64,${readFileSync(join(root, 'assets/seal-dot.png')).toString('base64')}`),
+    __DSH_BOT_ICON__: JSON.stringify(`data:image/svg+xml;base64,${readFileSync(join(root, 'assets/dsh-host.svg')).toString('base64')}`),
     __SEAL_BOT_ROBOT_AVATARS__: JSON.stringify(avatars),
   }
 }
@@ -35,7 +36,8 @@ export async function buildClient({ write = true, library = false } = {}) {
     define: assetDefines(),
     ...library ? {} : {
       banner: { js: `window.__ModuleLoader__.load({ id: ${JSON.stringify(manifest.name)}, factory: (require) => {\nvar module = { exports: {} }; var exports = module.exports;` },
-      footer: { js: 'return module.exports; } });' },
+      // 原生 Loader 第二参是同步配置；宿主接入回调只由 client-api 显式传入。
+      footer: { js: 'return { ...module.exports, apply: (ctx) => module.exports.apply(ctx) }; } });' },
     },
   })
 }

@@ -9,7 +9,7 @@ import { format } from 'node:util'
 import { createRuntime } from './runtime-profile.mjs'
 import { fakeContext } from './fake-ctx.js'
 
-const SEAL_AVATAR = `data:image/png;base64,${readFileSync(new URL('../assets/seal-dot.png', import.meta.url)).toString('base64')}`
+const HOST_AVATAR = `data:image/svg+xml;base64,${readFileSync(new URL('../assets/dsh-host.svg', import.meta.url)).toString('base64')}`
 
 // DSH's settings and credentials for a DeepSeek route that takes an API key. A key set
 // or removed is announced the way DSH announces it. `records` are the stored records
@@ -372,7 +372,7 @@ test('a new team starts with a DeepSeek-blue whale as its Main Bot', async (t) =
   const main = team.bots.find(bot => bot.id === team.mainBotId)
   assert.equal(main.name, 'Chief')
   assert.equal(main.color, undefined)
-  assert.deepEqual(main.avatar, { image: SEAL_AVATAR })
+  assert.deepEqual(main.avatar, { image: HOST_AVATAR })
 
   // Other Bots keep no stored look, so the client picks one from the id.
   const writer = (await call('create-bot', { name: 'Writer', role: '写作' })).value
@@ -427,7 +427,7 @@ test('another Bot takes the Main Bot place in one step', async (t) => {
   assert.deepEqual(team.mainBotIds, [writer.id])
   assert.equal(team.mainBotId, writer.id)
   // The whale stays with the Bot it was given to.
-  assert.deepEqual(team.bots.find(bot => bot.id === chief).avatar, { image: SEAL_AVATAR })
+  assert.deepEqual(team.bots.find(bot => bot.id === chief).avatar, { image: HOST_AVATAR })
   // The old Main Bot can now be deleted, and no new Chief is made in its place.
   assert.equal((await call('delete-bot', { id: chief })).ok, true)
   const after = (await call('state', {})).value
@@ -1243,7 +1243,7 @@ test('a photo in the team\'s data is refused, and one in the team workspace ther
   const tool = avatar => rt.teamTools.find(d => d.name === 'update_bot').execute({ avatar }, exec)
   writeFileSync(join(home, 'photo.png'), PNG_BYTES)
   assert.match(await tool(join(home, 'photo.png')), /is in DeepSeek Harness data, so it cannot be a Bot's photo/)
-  assert.equal((await call('state', {})).value.bots.find(bot => bot.id === chief).avatar?.image, SEAL_AVATAR)
+  assert.equal((await call('state', {})).value.bots.find(bot => bot.id === chief).avatar?.image, HOST_AVATAR)
   // The default team workspace lies in the team's data, and the Bots' own files are there.
   const workspace = ctx.workspaceRegistry.get((await call('state', {})).value.workspaceId)?.path ?? join(home, 'workspace')
   mkdirSync(workspace, { recursive: true })
@@ -1268,7 +1268,7 @@ test('a photo that cannot be read changes nothing, and a non-Main Bot cannot set
   const mine = { agent: { id: writer.id } }
   // Another Bot's photo is a Main Bot's to change, as its other settings are.
   assert.match(await rt.teamTools.find(d => d.name === 'update_bot').execute({ bot: 'Chief', avatar: PNG_DATA_URL }, mine), /^Only a Main Bot can change another Bot/)
-  assert.equal((await call('state', {})).value.bots.find(bot => bot.id === chief).avatar?.image, SEAL_AVATAR)
+  assert.equal((await call('state', {})).value.bots.find(bot => bot.id === chief).avatar?.image, HOST_AVATAR)
   // Its own it may set; a later bad photo leaves the good one alone.
   assert.equal(await rt.teamTools.find(d => d.name === 'update_bot').execute({ avatar: PNG_DATA_URL }, mine), 'Updated Writer.')
   assert.equal((await call('state', {})).value.bots.find(bot => bot.id === writer.id).avatar.image, PNG_DATA_URL)

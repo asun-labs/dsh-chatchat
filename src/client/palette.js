@@ -1,5 +1,6 @@
 import { createElement as h, Fragment, useEffect, useState } from 'react'
 import { MAIN_LOOK } from './characters.js'
+import { currentBrand, currentAgentName } from './branding.js'
 import { isMainOf } from './sources.js'
 import { currentPart, stripHeader } from './text.js'
 import { PlusIcon, SearchIcon, PeopleIcon, CloseIcon, GearIcon } from './icons.js'
@@ -61,12 +62,12 @@ export function CommandPalette({ start, token, roster, actions, useSessions }) {
     })),
   ]
   if (people.length) sections.push([t('Bots'), people])
-  const agents = (roster.agents ?? []).filter(() => matchesName('Seal Agent')).map(agent => ({
-    key: agent.id, avatar: h('span', { className: 'bt-palette-agent' }, h(BotMark, { look: MAIN_LOOK, size: 24 })), title: 'Seal Agent',
+  const agents = (roster.agents ?? []).filter(agent => matchesName(currentAgentName(agent))).map(agent => ({
+    key: agent.id, avatar: h('span', { className: 'bt-palette-agent' }, h(BotMark, { look: MAIN_LOOK, size: 24 })), title: currentAgentName(agent),
     subtitle: t('Plain dsh session'),
     run: () => actions.openAgent(agent.id),
   }))
-  if (agents.length) sections.push(['Seal Agent', agents])
+  if (agents.length) sections.push([currentBrand().agentName, agents])
   const messages = JSON.parse(found).map(([id, turn, snippet]) => {
     const bot = roster.byId[id]
     const room = roster.roomsById[id]

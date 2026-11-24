@@ -2,6 +2,7 @@
 // Every Bot is one root Session; the roster, rooms, and the bot-to-bot exchange log live
 // in one JSON file under DSH_HOME so they survive restarts without new Session event types.
 import { join } from 'node:path'
+import { hostBranding } from './src/host/brand.js'
 import * as diagnostics from './src/host/diagnostics.js'
 import * as store from './src/host/store.js'
 import * as models from './src/host/models.js'
@@ -70,11 +71,13 @@ export function apply(ctx, config = {}) {
 }
 
 export function createRuntime(ctx, config = {}) {
+  const branding = hostBranding(config)
   const dshHome = folders.dshHomeOf(process.env.DSH_HOME)
   const home = config.home ?? join(dshHome, config.dataDirectory ?? 'dsh-chatchat')
   const rt = {
     ctx,
     config,
+    branding,
     dshHome,
     home,
     statePath: join(home, 'state.json'),
@@ -82,7 +85,7 @@ export function createRuntime(ctx, config = {}) {
     // Bot Session's own scope, never globally (see shareBotTools).
     teamTools: [],
     defaults: {
-      mainName: config.mainName ?? 'Seal Bot',
+      mainName: config.mainName ?? branding.botName,
       mainRole: config.mainRole ?? 'Team Leader',
     },
   }

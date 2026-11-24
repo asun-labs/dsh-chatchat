@@ -1,15 +1,13 @@
 // Roster: creating, changing, and deleting Bots and group chats, the Main Bot role, and
 // the first Main Bot of a new team.
 import { randomUUID } from 'node:crypto'
-import { readFileSync } from 'node:fs'
 import { mkdir } from 'node:fs/promises'
-import { BRAND_NAME, migrateBrandNames } from './brand.js'
+import { migrateBrandNames } from './brand.js'
 import { MAX_AVATAR_IMAGE, ROOM_MAX_MEMBERS, ROOM_MODES, ROOM_NAME_MAX, ROOM_NOTICE_MAX, SECTION_COLORS, SECTION_NAME_MAX } from './constants.js'
 import { currentColor, isColor, normalize, unquote } from './text.js'
 import { nameProblem } from '../shared/mentions.js'
 
 const BROWSER_GRANT_KINDS = new Set(['post', 'upload', 'download', 'delete', '*'])
-const SEAL_AVATAR = `data:image/png;base64,${readFileSync(new URL('../../assets/seal-dot.png', import.meta.url)).toString('base64')}`
 const HOSTNAME = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(?:\.(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?))*$/
 
 const OWN_RULES = 'Where your instructions say otherwise, follow them.'
@@ -68,7 +66,7 @@ export function install(rt) {
     }
     const path = rt.defaultTeamFolder()
     await mkdir(path, { recursive: true })
-    const workspace = await ctx.workspaceRegistry.resolveByPath(path) ?? await ctx.workspaceRegistry.create(path, BRAND_NAME)
+    const workspace = await ctx.workspaceRegistry.resolveByPath(path) ?? await ctx.workspaceRegistry.create(path, rt.branding.botName)
     state.workspaceId = workspace.id
     await rt.save()
     return workspace.id
@@ -187,7 +185,7 @@ export function install(rt) {
     return holdName('bot', cleanName, () => buildBot(cleanName, options))
   }
 
-  async function buildBot(cleanName, { role = '', instructions = '', color, brief = '', createdBy, main = false, avatar, model, effort, workDir, copyOf, pickModel = false, section, sectionId, template }) {
+  async function buildBot(cleanName, { role = '', instructions = '', color, brief = '', createdBy, main = false, avatar, model, effort, workDir, copyOf, pickModel = false, section, sectionId, template, brandDefaults }) {
     const cleanAvatarValue = cleanAvatar(avatar)
     // The model is fixed at creation, so a later change of the DSH default leaves it alone.
     const modelRef = model ? await rt.resolveModel(model) : pickModel ? undefined : await rt.defaultBotModel()
@@ -222,6 +220,7 @@ export function install(rt) {
         createdBy: createdBy ?? null,
         capabilities: [],
         ...(template ? { template } : {}),
+        ...(brandDefaults ? { brandDefaults } : {}),
       }
       if (main) state.mainBotIds.push(id)
       const creator = rt.botOf(createdBy)
@@ -361,7 +360,7 @@ export function install(rt) {
     })
   }
 
-  async function updateBot(id, patch, actorId, fromSessionId) {
+  async function updateBot(id, patch, actorId, fromSessionId, keepBrandDefaults = false) {
     const bot = rt.botOf(id)
     if (bot === undefined) throw new Error('Unknown Bot')
     if (patch.browserGrants !== undefined && actorId !== undefined) {
@@ -414,6 +413,7 @@ export function install(rt) {
       const problem = next === bot.name ? undefined : nameProblem(next)
       if (problem !== undefined) throw new Error(problem)
       bot.name = next
+      if (bot.brandDefaults && !keepBrandDefaults) bot.brandDefaults.name = false
       const agent = await rt.resolveAgent(rt.chatOf(id))
       await ctx.sessionTitle.rename(agent.session, next)
       await followMemberNames(Object.values(state.rooms).filter(room => room.members.includes(id)))
@@ -431,6 +431,7 @@ export function install(rt) {
       const avatar = cleanAvatar(patch.avatar)
       if (avatar) bot.avatar = avatar
       else delete bot.avatar
+      if (bot.brandDefaults && !keepBrandDefaults) bot.brandDefaults.avatar = false
     }
     if (patch.model !== undefined) {
       // A failure that blocked the Bot was its old model's (turns.js).
@@ -950,7 +951,9 @@ export function install(rt) {
     brandMigration ??= migrateBrandNames({
       workspace: ctx.workspaceRegistry?.get?.(state.workspaceId),
       mainBots: state.mainBotIds.map(id => rt.botOf(id)),
-      renameBot: (id, name) => updateBot(id, { name }),
+      brand: rt.branding,
+      renameBot: (id, name) => updateBot(id, { name }, undefined, undefined, true),
+      updateAvatar: (id, avatar) => updateBot(id, { avatar }, undefined, undefined, true),
       updateRole: (id, role) => updateBot(id, { role }),
     }).catch(error => rt.warn('seal-bot: could not migrate the old display name: %s', error))
     await brandMigration
@@ -958,7 +961,8 @@ export function install(rt) {
     if (state.mainBotIds.some(id => rt.botOf(id))) return
     // Only the team's first Main Bot is stored as the DeepSeek whale; other Bots get a
     // look from their id, and a Bot made Main Bot later keeps its own.
-    bootstrapping ??= createBot({ name: defaults.mainName, role: defaults.mainRole, main: true, avatar: { image: SEAL_AVATAR }, pickModel: true })
+    bootstrapping ??= createBot({ name: defaults.mainName, role: defaults.mainRole, main: true, avatar: { image: rt.branding.image },
+      brandDefaults: { name: defaults.mainName === rt.branding.botName, avatar: true }, pickModel: true })
       .finally(() => { bootstrapping = null })
     await bootstrapping
   }

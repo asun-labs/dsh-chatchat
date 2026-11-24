@@ -1,5 +1,6 @@
 import { createElement as h, startTransition, useEffect, useMemo, useRef, useState } from 'react'
 import { colorOf, MAIN_LOOK } from './characters.js'
+import { currentAgentName } from './branding.js'
 import { GRADIENTS, paintCss } from './inks.js'
 import { BotAvatar, BotMark, RoomAvatar } from './mark.js'
 import { CalendarIcon, ChatsIcon, ChevronLeftIcon, ChevronRightIcon } from './icons.js'
@@ -123,7 +124,7 @@ function ownerFace(owner, roster) {
   }
   if (owner.kind === 'agent') {
     return {
-      kind: 'agent', name: owner.name && owner.name !== 'DSH Agent' ? owner.name : 'Seal Agent', sub: owner.deleted ? t('Deleted') : '',
+      kind: 'agent', name: currentAgentName(owner), sub: owner.deleted ? t('Deleted') : '',
       paint: 'var(--bt-us-rest)', glyph: size => glyphBox(size, ChatsIcon),
     }
   }

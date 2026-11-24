@@ -163,10 +163,10 @@ test('legacy display names migrate without changing custom Bot names or historie
   const renamed = []
   const renameBot = async (id, name) => { renamed.push([id, name]); main.name = name }
   await migrateBrandNames({ workspace, mainBots: [main, custom], renameBot })
-  assert.equal(workspace.title, 'Seal Bot')
-  assert.deepEqual(renamed, [['main', 'Seal Bot']])
+  assert.equal(workspace.title, 'DSH Bot')
+  assert.deepEqual(renamed, [['main', 'DSH Bot']])
   await migrateBrandNames({ workspace, mainBots: [main, custom], renameBot })
-  assert.deepEqual(renamed, [['main', 'Seal Bot']])
+  assert.deepEqual(renamed, [['main', 'DSH Bot']])
   assert.equal(custom.name, '11')
 })
 
