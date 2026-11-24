@@ -39,7 +39,7 @@ export function CreateBotTemplate({ roster, actions, start, onBack, onCreated })
       h('button', { type: 'button', className: 'bt-icon-btn', 'aria-label': t('Back'), disabled: busy, onClick: selected ? () => setSelected(null) : onBack }, h(ChevronLeftIcon)),
       h('strong', null, t('Create Bot from template')),
       h('button', { type: 'button', className: 'bt-icon-btn', 'aria-label': t('Close'), disabled: busy, onClick: onBack }, h(CloseIcon))),
-    h('div', { className: 'bt-create-body' }, h('div', { className: 'bt-create-card' },
+    h('div', { className: selected ? 'bt-create-body' : 'bt-create-body bt-template-body' }, h('div', { className: selected ? 'bt-create-card' : 'bt-create-card bt-template-catalog' },
       h('p', { className: 'bt-note' }, t('Template settings are copied. This Bot and the original expert can be edited independently.')),
       selected ? h('div', null,
         h('div', { className: 'bt-create-preview' }, h(BotMark, { look: { image: selected.avatar }, size: 52 }), h('strong', null, selected.displayName)),

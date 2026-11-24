@@ -15,7 +15,17 @@ import { DSH_NARROW } from './frame-layout.js'
 // CONVERSATION_CSS re-skins the shell's own conversation DOM and styles what only
 // the conversation renders.
 export const SHELL_CSS = `
-.bt-template-tabs{display:flex;gap:12px;margin:12px 0}.bt-template-list{display:grid;gap:12px;margin-top:16px}.bt-template-item{display:flex;align-items:center;gap:14px;padding:16px;text-align:left;color:inherit;background:var(--bt-card,#242424);border:1px solid var(--bt-border,#444);border-radius:12px}.bt-template-item>span:last-child{display:grid;gap:8px}.bt-template-tabs [aria-selected=true]{background:var(--bt-hover,#393939)}
+.bt-template-body{container-type:inline-size}
+.bt-create-card.bt-template-catalog{max-width:1120px;align-self:flex-start}
+.bt-template-tabs{display:flex;gap:12px;margin:12px 0}
+.bt-template-list{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:20px}
+.bt-template-item{display:flex;align-items:flex-start;gap:14px;min-width:0;padding:20px;text-align:left;color:inherit;background:var(--bt-card,#242424);border:1px solid var(--bt-line-2);border-radius:12px;cursor:pointer}
+.bt-template-item:hover{background:var(--bt-hover)}
+.bt-template-item>span:last-child{display:grid;gap:10px;min-width:0;overflow-wrap:anywhere}
+.bt-template-item .bt-note{margin:0;line-height:1.6}
+.bt-template-tabs [aria-selected=true]{background:var(--bt-hover,#393939)}
+@container (min-width:620px){.bt-template-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container (min-width:940px){.bt-template-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
 ${sealMascotStyles}
 body{--bt-im-telegram:#229ed9;--bt-im-weixin:#07c160;--bt-im-feishu:#3370ff;--bt-im-dingtalk:#1e88e5;--bt-im-wecom:#0082ef;--bt-im-qq:#e03e3e;--bt-im-discord:#5865f2;--bt-im-slack:#4a154b;--bt-im-mark-ink:#ffffff;--bt-qr-paper:#ffffff;--bt-qr-ink:#141414;--bt-ink:#141414;--bt-danger:#e02135;--bt-ink-2:rgba(20,20,20,.6);--bt-ink-3:rgba(20,20,20,.36);--bt-bubble:#eeeeee;--bt-sidebar:#f7f7f7;--bt-main:#fcfcfc;--bt-line:rgba(20,20,20,.08);--bt-line-2:rgba(20,20,20,.15);--bt-line-weak:rgba(20,20,20,.1);--bt-hover:rgba(119,119,119,.09);--bt-active:rgba(119,119,119,.17);--bt-card:#ffffff;--bt-accent:#4d6bfe;--bt-green:#00c972;--bt-star:#ff9800;--bt-user:#070707;--bt-user-ink:#fcfcfc;--bt-tag-bg:rgba(20,20,20,.06);--bt-tag-ink:rgba(20,20,20,.56);--bt-knob:#ffffff;--bt-glass-bg:color-mix(in srgb,var(--bt-main) 78%,transparent);--bt-glass-border:rgba(255,255,255,.72);--bt-glass-rim:rgba(20,20,20,.09);--bt-glass-shadow:0 8px 28px -6px rgba(0,0,0,.08),0 2px 6px -1px rgba(0,0,0,.04),inset 0 1px 0 rgba(255,255,255,.82);--bt-accent-soft:color-mix(in srgb,var(--bt-accent) 14%,transparent);--bt-danger-soft:color-mix(in srgb,var(--bt-danger) 14%,transparent);--bt-danger-glow:color-mix(in srgb,var(--bt-danger) 24%,transparent);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;--bt-font:var(--dsw-font-family,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif)}
 /* iOS waits out a double-tap zoom on buttons; the plugin's own controls never zoom. */
