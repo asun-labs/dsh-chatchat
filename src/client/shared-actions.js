@@ -25,6 +25,7 @@ export function installSharedSettings(ctx, actions, integration = {}) {
       return
     }
     actions.closeSettings()
+    actions.returnToNative?.()
     shell.actions.openSection('models')
   }
   actions.openModels = openModels

@@ -49,7 +49,7 @@ const layout = `
 .seal-bot-sidebar{position:relative}
 `
 
-export function EmbeddedBotPanel({ Sidebar, HeaderTools, onLeaveOfficeMode, actions }) {
+export function EmbeddedBotPanel({ Sidebar, HeaderTools, onLeaveOfficeMode, standalone = false, actions }) {
   const [sidebar, setSidebar] = useState(null)
   const [chat, setChat] = useState(null)
   // Bot 独立模式只随整个页面进入/离开。
@@ -59,8 +59,8 @@ export function EmbeddedBotPanel({ Sidebar, HeaderTools, onLeaveOfficeMode, acti
   }, [actions])
   useLayoutEffect(() => {
     if (!sidebar || !chat) return undefined
-    actions.mountSurface({ sidebar, chat, HeaderTools, onLeave: onLeaveOfficeMode })
-  }, [sidebar, chat, HeaderTools, actions, onLeaveOfficeMode])
+    actions.mountSurface({ sidebar, chat, HeaderTools, standalone, onLeave: onLeaveOfficeMode })
+  }, [sidebar, chat, HeaderTools, standalone, actions, onLeaveOfficeMode])
   return <>
     <Sidebar><aside className="seal-bot-sidebar" ref={setSidebar} aria-label="Bot 与群聊" /></Sidebar>
     <div className="seal-bot-layout">
@@ -100,6 +100,7 @@ export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, acti
       return () => { active = false; reference.release() }
     }, [sessionId, listed])
     useLayoutEffect(() => {
+      if (seat.standalone) return undefined
       const resize = () => {
         const rect = seat.sidebar.getBoundingClientRect()
         // 宿主侧栏的内边距仍放置顶部按钮；浮层从实际会话区开始，不能覆盖它们。
@@ -127,19 +128,20 @@ export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, acti
       actions,
     }
     const Provider = props.SessionProvider
+    const returnLabel = seat.standalone ? '返回 DSH 原生界面' : '返回办公'
     const back = typeof seat.onLeave === 'function'
-      ? <button type="button" className="bt-round seal-bot-back" aria-label="返回办公" title="返回办公" onClick={seat.onLeave}><ChevronLeftIcon /></button>
+      ? <button type="button" className={`bt-round ${seat.standalone ? 'bt-native-return' : 'seal-bot-back'}`} aria-label={returnLabel} title={returnLabel} onClick={seat.onLeave}><ChevronLeftIcon /></button>
       : null
     return <>
       <style>{layout}</style>
       {createPortal(<>
-        {(!wide || !seat.HeaderTools) && back}
-        <TeamSidebar {...portable} wide={wide} embedded HeaderTools={seat.HeaderTools} leadingTool={back} />
+        {!seat.standalone && (!wide || !seat.HeaderTools) && back}
+        <TeamSidebar {...portable} wide={wide} embedded={!seat.standalone} HeaderTools={seat.HeaderTools} leadingTool={back} />
       </>, seat.sidebar)}
       {ready && ready.sessionId === sessionId ? createPortal(<Provider session={ready.reference}>
         {props.renderSlot('seal.bot.session', {})}
       </Provider>, seat.chat) : null}
-      <Overlays {...portable} embedded />
+      <Overlays {...portable} embedded={!seat.standalone} />
       <ErrorToast {...portable} />
       <DeepSeekSignIn {...portable} />
     </>

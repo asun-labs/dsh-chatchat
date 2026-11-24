@@ -60,79 +60,21 @@ test('embedded package retains the original legal notices', () => {
   assert.match(readFileSync(join(root, 'third-party/ds-bot/NOTICE'), 'utf8'), /Copyright 2026 Fei2411/)
 })
 
-test('standalone integration uses public DSH panel/sidebar slots and releases its sidebar on leaving', async t => {
+test('explicit host integration owns panel registration', async () => {
   const require = createRequire(import.meta.url)
   const { build } = require('esbuild')
-  const React = require('react')
-  const { act } = React
-  const { createRoot } = require('react-dom/client')
-  const { JSDOM } = require('jsdom')
   const { runInNewContext } = await import('node:vm')
-  const result = await build({ entryPoints: [join(root, 'src/client/integration.jsx')], bundle: true, format: 'cjs', platform: 'node', write: false, external: ['react', 'react-dom'] })
+  const result = await build({ entryPoints: [join(root, 'src/client/integration.jsx')], bundle: true, format: 'cjs', platform: 'node', write: false })
   const module = { exports: {} }
   runInNewContext(result.outputFiles[0].text, { module, exports: module.exports, require })
-  const { registerPanel } = module.exports
-  const page = new JSDOM('<main></main><aside></aside>')
-  const previous = { window: globalThis.window, document: globalThis.document, act: globalThis.IS_REACT_ACT_ENVIRONMENT }
-  Object.assign(globalThis, { window: page.window, document: page.window.document, IS_REACT_ACT_ENVIRONMENT: true })
-  const rows = []
-  const selected = []
-  let sidebarWidth = 280
-  const layoutListeners = new Set()
-  const layoutStore = {
-    getSnapshot: () => ({ layoutInfo: { sidebar: sidebarWidth } }),
-    subscribe(listener) { layoutListeners.add(listener); return () => layoutListeners.delete(listener) },
-    actions: { setSidebar(width) { sidebarWidth = width; for (const listener of layoutListeners) listener() } },
-  }
-  const ctx = { layout: { selectPanel: id => selected.push(id) }, slots: {
-    inject: (_name, factory) => factory(),
-    entries: name => name === 'root' ? [{ store: { create: () => layoutStore } }] : [],
-    register(options, component) {
-      const row = { options, component }
-      rows.push(row)
-      return () => { const at = rows.indexOf(row); if (at >= 0) rows.splice(at, 1) }
-    },
-  } }
-  const Panel = ({ Sidebar, HeaderTools, onLeaveOfficeMode }) => {
-    assert.equal(typeof HeaderTools, 'function')
-    assert.equal(onLeaveOfficeMode, undefined, 'native navigation does not need a synthetic return action')
-    return React.createElement(Sidebar, null, React.createElement('span', null, 'Bots and groups'))
-  }
-  const mainRoot = createRoot(document.querySelector('main'))
-  const sideRoot = createRoot(document.querySelector('aside'))
-  t.after(async () => {
-    await act(async () => { mainRoot.unmount(); sideRoot.unmount() })
-    Object.assign(globalThis, { window: previous.window, document: previous.document, IS_REACT_ACT_ENVIRONMENT: previous.act })
-    page.window.close()
-  })
-  registerPanel(ctx, { id: 'seal-dot', label: 'Bot', order: 15 }, Panel)
-  assert.equal(rows.find(row => row.options.name === 'sidebar.panellist').options.id, 'seal-dot')
-  await act(async () => mainRoot.render(React.createElement(rows.find(row => row.options.name === 'main').component)))
-  assert.equal(sidebarWidth, 272)
-  layoutStore.actions.setSidebar(0)
-  assert.equal(sidebarWidth, 0)
-  layoutStore.actions.setSidebar(280)
-  assert.equal(sidebarWidth, 272, 'reopening uses the Bot default')
-  await act(async () => sideRoot.render(React.createElement(rows.find(row => row.options.name === 'sidebar.workspaces').component)))
-  assert.equal(document.querySelector('aside').textContent, 'Bots and groups')
-  assert.deepEqual(selected, [])
-  await act(async () => mainRoot.unmount())
-  assert.equal(sidebarWidth, 280, 'leaving restores the native default')
-  assert.equal(layoutListeners.size, 0)
-  assert.equal(rows.some(row => row.options.name === 'sidebar.workspaces'), false)
-  assert.equal(rows.some(row => row.options.name === 'sidebar.session.action'), false)
   const calls = []
-  const beforeBridge = rows.length
-  registerPanel(ctx, { id: 'host-bot' }, Panel, { registerPanel: (...args) => calls.push(args) })
+  const ctx = {}
+  const Panel = () => null
+  module.exports.registerPanel(ctx, { id: 'host-bot' }, Panel, { registerPanel: (...args) => calls.push(args) })
   assert.equal(calls.length, 1)
   assert.equal(calls[0][0], ctx)
   assert.equal(calls[0][1].sidebarDefaultWidth, 272)
   assert.equal(calls[0][2], Panel)
-  assert.equal(rows.length, beforeBridge, 'a host-provided panel does not also register the standalone sidebar')
-  const ownSettings = () => {}
-  const actions = { openSettings: ownSettings }
-  installSharedSettings(ctx, actions)
-  assert.equal(actions.openSettings, ownSettings)
 })
 
 test('Bot prompt providers resolve the active DSH scope so each Bot keeps its own identity', () => {

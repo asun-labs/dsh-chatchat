@@ -97,3 +97,8 @@ export function embeddedSurface(storage = globalThis.localStorage) {
   writeMode('agent', storage)
   return { mode: 'agent', plain: false }
 }
+
+export function standaloneSurface(storage = globalThis.localStorage) {
+  writeMode('bot', storage)
+  return { mode: 'bot', plain: false }
+}

@@ -70,4 +70,8 @@ test('native model setup uses the current native settings store instead of the t
   actions.openModels()
   actions.openHarnessOnboarding('deepseek-official')
   assert.deepEqual(calls, ['close-bot-settings', ['native', 'models'], 'close-bot-settings', ['native', 'models']])
+  calls.length = 0
+  actions.returnToNative = () => calls.push('native-surface')
+  actions.openModels()
+  assert.deepEqual(calls, ['close-bot-settings', 'native-surface', ['native', 'models']])
 })

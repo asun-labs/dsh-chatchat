@@ -784,7 +784,6 @@ export function TeamSidebar(props) {
   }, [])
   const tools = wideContent
     ? h('div', { className: 'bt-side-top' },
-        embedded ? null : h('span', { className: 'bt-brand' }, h(BrandName)),
         embedded ? null : h(UpdateButton, { useUpdate: props.useUpdate, actions }),
         h('label', { className: 'bt-sidebar-search' },
           h(SearchIcon),
@@ -798,7 +797,7 @@ export function TeamSidebar(props) {
         embedded ? null : h('button', { type: 'button', className: 'bt-round bt-side-collapse', 'aria-label': t('Collapse sidebar'), title: t('Collapse sidebar'), onClick: onToggle }, h(SidebarIcon)),
         main ? h(BotRow, { ...rowProps, bot: main, marked: markedUnread[main.id] === true }) : roster.ready ? null : h('div', { className: 'bt-hint' }, bootFailed ? bootHint() : t('Setting up your Main Bot…')),
         h('span', { className: 'bt-rail-sep', 'aria-hidden': true }))
-  const top = embedded && wideContent && props.HeaderTools
+  const top = (wideContent || !embedded) && props.HeaderTools
     ? h(props.HeaderTools, { leadingTool: props.leadingTool }, tools)
     : tools
   // The foot stands in for the shell's hidden footer: the account avatar, and on

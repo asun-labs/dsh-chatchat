@@ -1,6 +1,8 @@
 import { call } from './api.js'
-import { currentBrand, installBranding } from './branding.js'
+import { currentBrand, installBranding, brandImage } from './branding.js'
 import { createElement as h } from 'react'
+import { installStandaloneShell, installStandaloneLauncher } from './standalone-shell.jsx'
+import { installFrameWatch } from './frame-watch.js'
 import { registerPanel } from './integration.jsx'
 import { createBotSidebarSession } from './session-sidebar.js'
 import { EmbeddedBotPanel, installEmbeddedShell } from './embedded-shell.jsx'
@@ -44,7 +46,7 @@ import { USAGE_CSS } from './usage-page.js'
 import { SCHEDULE_CSS } from './schedules.js'
 import { STORAGE, migrateStorage } from './storage.js'
 import { noteLeft, setUnread, sharedMap, toggleReaction } from './shared-map.js'
-import { embeddedSurface, freePriority, groupsFor, surfaceGroups, writeMode } from './surface.js'
+import { standaloneSurface, embeddedSurface, freePriority, groupsFor, surfaceGroups, writeMode } from './surface.js'
 import { installLocale, language, t } from './i18n.js'
 import { noteClientError, quietly } from './diagnostics.js'
 import { steerQueued } from './enter-steer.js'
@@ -87,7 +89,8 @@ export function apply(ctx, integration = {}) {
   // Bot mode paints the whole team surface; Agent mode withdraws every slot and
   // style so the shell's own interface returns. `plain` stays false until a Bot-mode
   // view hosts a plain session, which drops only the conversation replacements.
-  const surface = createSource(embeddedSurface())
+  const standalone = typeof integration.registerPanel !== 'function'
+  const surface = createSource(standalone ? standaloneSurface() : embeddedSurface())
   const embeddedView = createSource({ sessionId: null })
   // DSH Agent Session ids from the last pull, so a reload already knows the main
   // view is a plain Session before the team answers.
@@ -747,10 +750,16 @@ export function apply(ctx, integration = {}) {
   actions.mountSurface = botSurface.mount
   actions.enterBotSurface = botSurface.enter
   actions.leaveBotSurface = botSurface.leave
-  function DotPanel({ Sidebar, HeaderTools, onLeaveOfficeMode }) {
-    return h(EmbeddedBotPanel, { Sidebar, HeaderTools, onLeaveOfficeMode, actions })
+  function DotPanel({ Sidebar, HeaderTools, onLeaveOfficeMode, standalone }) {
+    return h(EmbeddedBotPanel, { Sidebar, HeaderTools, onLeaveOfficeMode, standalone, actions })
   }
-  registerPanel(ctx, { id: 'seal-dot', label: 'Bot', order: 15, icon: 'superagent', description: `${currentBrand().botName} 团队智能体与群聊`, officeModeTitle: currentBrand().botName }, DotPanel, integration)
+  if (!standalone) registerPanel(ctx, { id: 'seal-dot', label: 'Bot', order: 15, icon: 'superagent', description: `${currentBrand().botName} 团队智能体与群聊`, officeModeTitle: currentBrand().botName }, DotPanel, integration)
+  if (standalone) {
+    actions.returnToNative = () => actions.setSurface('agent')
+    installStandaloneLauncher(ctx, actions, ({ size = 18 }) => h('img', {
+      src: brandImage(), width: size, height: size, alt: '', draggable: false,
+    }))
+  }
   // The queue dock's per-session verbs, supplied the way the shell's own dock
   // injects them (the session facade and the conversation service).
   const queueFace = (sessionId) => ({
@@ -1097,6 +1106,8 @@ export function apply(ctx, integration = {}) {
         ...SHELL_SHEETS.map(([text, tag]) => () => installCompiledStyles(botOwnCss(text), tag)),
         () => installTheme({ tokens: false }),
         () => installFrameSync(),
+        standalone && (() => installFrameWatch(frame)),
+        standalone && (() => installStandaloneShell(ctx, DotPanel, actions)),
         installRightPanelCoordination,
       ],
       conversation: installConversation,

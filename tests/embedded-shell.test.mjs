@@ -179,6 +179,7 @@ test('original surface shares native Session stores, keeps default transcript an
   assert.equal(frame.getSnapshot().contentLeft, 380, 'overlays start beyond the padded host sidebar, not at its inner outlet edge')
   assert.ok(document.querySelector('[data-team-sidebar]'), 'Bot sidebar renders before a session is selected')
   assert.ok(document.querySelector('.seal-bot-back'), 'an explicit host return callback retains its button')
+  assert.equal(document.querySelector('.seal-bot-back').getAttribute('aria-label'), '返回办公', 'the host bridge retains its own return destination')
   await act(async () => root.render(React.createElement(seat, { ...props, seat: { ...seatProps, onLeave: undefined }, renderSlot: renderSession })))
   assert.equal(document.querySelector('.seal-bot-back'), null, 'native navigation has no return button')
   await act(async () => root.render(React.createElement(seat, { ...props, seat: seatProps, renderSlot: renderSession })))
