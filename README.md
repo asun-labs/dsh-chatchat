@@ -1,6 +1,6 @@
 # DSH ChatChat
 
-DSH 团队智能体与群聊插件。每个 Bot 使用原生 DSH 会话，提供团队、群聊、长期记忆、原生消息与输入、文件交付和侧栏视图。独立安装使用 DSH 原生面板；在 Seal Harness 中显示为 Bot / Seal Bot。
+DSH 团队智能体与群聊插件。每个 Bot 使用原生 DSH 会话，提供团队、群聊、长期记忆、原生消息与输入、文件交付和侧栏视图。独立安装启用后直接进入完整 ChatChat 界面；点击左上角返回按钮恢复 DSH 原生界面，原生侧栏上方与插件、自动化任务并列的 ChatChat 入口可再次进入。每次启动默认进入 ChatChat。Seal Harness 的显式宿主接入保持 Bot / Seal Bot 导航。
 
 源码仓库：[asun-labs/dsh-chatchat](https://github.com/asun-labs/dsh-chatchat)。独立预编译插件包位于本仓库的 [GitHub Releases](https://github.com/asun-labs/dsh-chatchat/releases)，不发布独立桌面安装器，也不要求 npm registry 包名已被发布。
 
@@ -26,7 +26,7 @@ Git 仓库仅保存源码、资源、锁文件与许可证，忽略 `lib/`、`of
 在 DSH 的插件管理器中添加版本化预编译包地址，例如：
 
 ```text
-https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.10/dsh-chatchat-0.1.10.tgz
+https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.11/dsh-chatchat-0.1.11.tgz
 ```
 
 也可以先下载并核对同版本的 `.sha256`，再选择本地 `.tgz` 文件安装。包声明原生 `dsh.bundle`，安装后的启用、停用和卸载由 DSH 现有插件管理器处理，不提供第二套插件管理。没有 HMR 的 Profile 在切换启用状态后按原生提示重启；停用不会删除 Bot 数据。当前 DSH 对 tarball 来源不提供原生自动查新或一键升级：更换版本时先通过插件管理器停用并移除旧包，再安装明确的新版本 URL；按原生提示停止 Profile 或重启，保留的数据目录会继续使用。
