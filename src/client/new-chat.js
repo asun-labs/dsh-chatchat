@@ -98,7 +98,7 @@ export function NewChat({ mode, sectionId = null, paneLeft, roster, actions }) {
   })
   const options = []
   if (!group && picked.length === 0 && mode !== 'search' && wanted === '') {
-    options.push({ key: 'new', icon: h(PlusIcon), label: t('Create new Bot'), run: createBot })
+    options.push({ key: 'new', icon: h(PlusIcon), label: t('New Bot — custom'), run: createBot })
     if (roster.botTemplates) options.push({ key: 'template', icon: h(PlusIcon), label: t('New Bot — from template'), run: () => setDraft({ template: true, fromList: true, sectionId }) })
     options.push({ key: 'section', icon: h(FolderIcon), label: t('New section'), run: () => run(async () => {
       const section = await actions.saveSection({})

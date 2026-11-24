@@ -9,6 +9,7 @@ const ZH = {
   'For example: write product proposals, clarify requirements, and produce actionable plans.': '例如：负责撰写产品方案、梳理需求，输出可执行的实施计划。',
   'Describe what this Bot does and how it should work. You can edit this in Bot settings.': '说明这个 Bot 负责什么、如何完成工作，创建后可在 Bot 设置中修改。',
   'New Bot — from template': '新建 Bot－选择从模板中创建',
+  'New Bot — custom': '新建 Bot - 自定义',
   'Create Bot from template': '从模板创建 Bot',
   'Choose a template': '选择专家模板',
   'Template defaults': '模板默认配置',
