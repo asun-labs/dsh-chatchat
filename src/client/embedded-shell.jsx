@@ -71,6 +71,27 @@ export function EmbeddedBotPanel({ Sidebar, HeaderTools, onLeaveOfficeMode, stan
 
 export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, actions }) {
   const target = createSource(null)
+  // 引用随会话子树持有；快速切回旧会话时不能复用父组件中已释放的 ready。
+  function SessionContent({ sessionId, Provider, renderSlot }) {
+    const [reference, setReference] = useState(null)
+    useEffect(() => {
+      let active = true
+      let retained, unbind, off
+      const acquire = () => {
+        if (!active || retained || !ctx.sessions.list.getSnapshot().byId?.[sessionId]) return
+        off?.(); off = null
+        retained = ctx.sessions.retain(sessionId, { source: 'sealBotSurface' })
+        unbind = actions.bindSidebarSession(sessionId)
+        void retained.ready.then(() => { if (active) setReference(retained) })
+          .catch(error => { if (active) actions.reportError(error, 'surface-session') })
+      }
+      // 目录只负责首次准入；会话打开后不因目录刷新短暂缺项而释放引用或工作栏。
+      off = ctx.sessions.list.subscribe(acquire)
+      acquire()
+      return () => { active = false; off?.(); unbind?.(); retained?.release() }
+    }, [sessionId])
+    return reference ? <Provider session={reference}>{renderSlot('seal.bot.session', {})}</Provider> : null
+  }
   function SessionBody({ renderSlot, renderFactorySlot }) {
     return <div className="seal-bot-session" data-seal-bot-session>
       <div className="seal-bot-header">
@@ -88,17 +109,7 @@ export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, acti
     const list = props.useSessions(value => value)
     const fallback = team.byId[team.mainBotId]
     const sessionId = selected.sessionId ?? (fallback ? currentPart(fallback) : undefined)
-    const listed = sessionId !== undefined && list.byId?.[sessionId] !== undefined
-    const [ready, setReady] = useState(null)
     const [wide, setWide] = useState(true)
-    useEffect(() => {
-      if (!listed) return undefined
-      let active = true
-      const reference = ctx.sessions.retain(sessionId, { source: 'sealBotSurface' })
-      void reference.ready.then(() => { if (active) setReady({ sessionId, reference }) })
-        .catch(error => { if (active) actions.reportError(error, 'surface-session') })
-      return () => { active = false; reference.release() }
-    }, [sessionId, listed])
     useLayoutEffect(() => {
       if (seat.standalone) return undefined
       const resize = () => {
@@ -117,9 +128,6 @@ export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, acti
       window.addEventListener('resize', resize)
       return () => { observer.disconnect(); window.removeEventListener('resize', resize) }
     }, [seat])
-    useEffect(() => {
-      if (listed) return actions.bindSidebarSession(sessionId)
-    }, [sessionId, listed])
     const displayList = useMemo(() => botSessionList(list, sessionId), [list, sessionId])
     const portable = {
       ...props,
@@ -136,11 +144,9 @@ export function installEmbeddedShell(ctx, { face, view, frame, sidebarPref, acti
       <style>{layout}</style>
       {createPortal(<>
         {!seat.standalone && (!wide || !seat.HeaderTools) && back}
-        <TeamSidebar {...portable} wide={wide} embedded={!seat.standalone} HeaderTools={seat.HeaderTools} leadingTool={back} />
+        <TeamSidebar {...portable} selectedSessionId={sessionId} wide={wide} embedded={!seat.standalone} HeaderTools={seat.HeaderTools} leadingTool={back} />
       </>, seat.sidebar)}
-      {ready && ready.sessionId === sessionId ? createPortal(<Provider session={ready.reference}>
-        {props.renderSlot('seal.bot.session', {})}
-      </Provider>, seat.chat) : null}
+      {sessionId !== undefined ? createPortal(<SessionContent key={sessionId} sessionId={sessionId} Provider={Provider} renderSlot={props.renderSlot} />, seat.chat) : null}
       <Overlays {...portable} embedded={!seat.standalone} />
       <ErrorToast {...portable} />
       <DeepSeekSignIn {...portable} />

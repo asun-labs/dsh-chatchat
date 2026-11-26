@@ -26,7 +26,7 @@ const bundle = await build({
     }
     build.onLoad({ filter: /(?:sidebar|header|overlays|feedback|model-menu)\.js$/ }, args => ({
       contents: args.path.endsWith('sidebar.js')
-        ? `import React from 'react'; export function TeamSidebar({wide}){return React.createElement('div',{'data-team-sidebar':wide?'open':'rail'})}`
+        ? `import React from 'react'; export function TeamSidebar({wide,selectedSessionId}){return React.createElement('div',{'data-team-sidebar':wide?'open':'rail','data-selected-session':selectedSessionId})}`
         : `export function ${components[args.path.split(/[\\/]/).at(-1)]}(){return null}`,
     }))
   } }],
@@ -91,13 +91,14 @@ test('original surface shares native Session stores, keeps default transcript an
   const frame = createSource({ sidebarWidth: 280 })
   const pref = createSource('open')
   const modes = []
+  const catalog = createSource({ byId: { bot: {}, room: {} } })
   const ctx = {
     slots: {
       inject: (_, install) => { const off = install(); releases.push(off); return off },
       entries: name => core.entries(name), subscribe: (name, fn) => core.subscribe(name, fn),
       register: (options, Component) => core.register(options, Component),
     },
-    sessions: { retain(id) {
+    sessions: { list: catalog, retain(id) {
       let resolve
       const reference = { id, ready: new Promise(done => { resolve = done }), releases: 0,
         release() { this.releases++ }, resolve() { resolve() } }
@@ -153,9 +154,12 @@ test('original surface shares native Session stores, keeps default transcript an
   const root = createRoot(document.querySelector('main'))
   const props = {
     useRoster: fn => fn(roster.getSnapshot()),
-    useSessions: fn => fn({ byId: { bot: {}, room: {} } }),
+    useSessions: fn => fn(catalog.getSnapshot()),
     useSessionRetainInfo: (_, fn) => fn({ retainedBy: {} }),
-    SessionProvider: ({ session, children }) => React.createElement('div', { 'data-session': session.id }, children),
+    SessionProvider: ({ session, children }) => {
+      assert.equal(session.releases, 0, 'SessionProvider must never receive a released reference')
+      return React.createElement('div', { 'data-session': session.id }, children)
+    },
   }
   let factoryCalls = 0
   const renderedSlots = []
@@ -212,11 +216,25 @@ test('original surface shares native Session stores, keeps default transcript an
   assert.deepEqual(modes, ['bot'], 'sidebar changes must not leave and re-enter Bot mode')
   assert.equal(references[0].releases, 0)
   await act(async () => view.set({ sessionId: 'room' }))
+  assert.equal(document.querySelector('[data-team-sidebar]').dataset.selectedSession, 'room')
   assert.equal(references[0].releases, 1)
   assert.equal(document.querySelector('[data-native-content]'), null)
-  await act(async () => root.unmount())
+  await act(async () => view.set({ sessionId: 'bot' }))
+  assert.equal(document.querySelector('[data-native-content]'), null, 'returning before the next session opens waits for a fresh reference')
   assert.equal(references[1].releases, 1)
-  references[1].resolve()
+  await act(async () => references[1].resolve())
+  assert.equal(document.querySelector('[data-native-content]'), null, 'a late previous opening cannot replace the selected session')
+  await act(async () => references[2].resolve())
+  assert.equal(document.querySelector('[data-session]').dataset.session, 'bot')
+  await act(async () => { catalog.set({ byId: { room: {} } }); root.render(React.createElement(seat, { ...props, seat: seatProps, renderSlot: renderSession })) })
+  assert.equal(references[2].releases, 0, 'catalog refresh does not release the displayed session')
+  assert.ok(document.querySelector('[data-native-content]'))
+  assert.equal(document.querySelector('[data-team-sidebar]').dataset.selectedSession, 'bot', 'catalog refresh preserves the explicit sidebar selection')
+  await act(async () => { catalog.set({ byId: { bot: {}, room: {} } }); root.render(React.createElement(seat, { ...props, seat: seatProps, renderSlot: renderSession })) })
+  assert.equal(references.length, 3, 'catalog refresh keeps the same reference and conversation')
+  assert.equal(document.querySelector('[data-session]').dataset.session, 'bot')
+  await act(async () => root.unmount())
+  assert.equal(references[2].releases, 1)
   surface.leave()
   assert.deepEqual(modes, ['bot', 'agent'])
   removeHeader()

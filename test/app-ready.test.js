@@ -75,6 +75,17 @@ const sidebarProps = roster => ({
 })
 const returnProps = (mode, roster) => ({ wide: true, actions: {}, useSurface: pick => pick({ mode }), useRoster: pick => pick(roster) })
 
+test('an explicitly selected embedded Bot is kept while its native catalog row is temporarily absent', () => {
+  const timers = []
+  const { TeamSidebar } = page(undefined, {}, { setTimeout: run => { timers.push(run); return timers.length }, clearTimeout() {} })
+  const product = { id: 'product', name: 'Product manager' }
+  const roster = { ...TEAM, bots: [main, product], byId: { main, product } }
+  const opened = []
+  mount(TeamSidebar)({ ...sidebarProps(roster), selectedSessionId: 'product', actions: { landOn: id => opened.push(id) } })
+  timers.forEach(run => run())
+  assert.deepEqual(opened, [], 'a missing native row must not schedule navigation away from the selected Bot')
+})
+
 // The team column's content sits inside the frame's column, under a Fragment.
 const drawsSide = node => node !== null && typeof node === 'object'
   && (node.props?.className === 'bt-side' || (node.props?.children ?? []).flat().some(drawsSide))

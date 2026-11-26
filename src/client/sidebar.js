@@ -535,7 +535,7 @@ export function TeamSidebar(props) {
     [sections, order],
   )
   useListGlide(listRef, wideContent, glideKey)
-  useLandOnMainBot(roster, useSessions, actions)
+  useLandOnMainBot(roster, useSessions, actions, props.selectedSessionId)
   useReportReady(roster.ready, roster)
   const [dragId, setDragId] = useState(null)
   const [dropTarget, setDropTarget] = useState(null)
@@ -1194,10 +1194,11 @@ function glideOnto(mark, from) {
 // The view always lands on a Bot rather than an empty New Session page.
 // When a Bot's chat moves on to a fresh part, the shell clears the view of the part
 // it archived; the chat then goes on in the Bot's current part instead.
-function useLandOnMainBot(roster, useSessions, actions) {
+function useLandOnMainBot(roster, useSessions, actions, selectedSessionId) {
   const mainView = useSessions((list) => {
-    const row = Object.values(list.byId).find(session => (session?.retainedBy?.mainView ?? 0) > 0)
-    return row ? `${row.id}|${row.blank ? 1 : 0}` : ''
+    // 嵌入页的选中项由独立会话视图持有，原生目录短暂缺项不代表用户清空了选择。
+    const id = selectedSessionId ?? Object.values(list.byId).find(session => (session?.retainedBy?.mainView ?? 0) > 0)?.id
+    return id ? `${id}|${list.byId[id]?.blank ? 1 : 0}` : ''
   })
   const lastBot = useRef(null)
   useEffect(() => {

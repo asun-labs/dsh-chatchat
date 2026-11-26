@@ -58,7 +58,7 @@ test('an empty signed-out Bot surface keeps its sidebar and return action withou
     inject(_name, install) { const release = install(); releases.push(release); return release },
     register: (options, Component) => core.register(options, Component),
     entries: name => core.entries(name), subscribe: (name, listener) => core.subscribe(name, listener),
-  }, sessions: { retain() { retains++; assert.fail('an empty surface must not retain a session') } } }
+  }, sessions: { list: createSource({ byId: {} }), retain() { retains++; assert.fail('an empty surface must not retain a session') } } }
   let bindings = 0
   const actions = { setSurface() {}, bindSidebarSession() { bindings++; assert.fail('an unlisted session must not reach the native sidebar') }, reportError: assert.fail }
   const view = createSource({ sessionId: undefined })
