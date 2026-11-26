@@ -27,11 +27,94 @@ runInNewContext(bundle.outputFiles[0].text, {
   },
   queueMicrotask,
 })
-const { ChatRows, ThinkingRow, syncGroupChains } = module.exports
+const { AssistantCell, ChatRows, ThinkingRow, syncGroupChains } = module.exports
 
 const roster = { byId: { b: { id: 'b', name: 'Writer' } }, roomsById: {} }
 const MINUTE = 60_000
-const shape = rows => [...rows].map(row => (row.props.className === 'bt-time-sep' ? 'clock' : row.type.name === 'Bubbles' ? `bot:${row.props.texts.join('+')}` : row.type.name))
+const shape = rows => [...rows].map(row => {
+  if (row.type === 'fragment') row = row.children.find(child => child?.type?.name === 'Bubbles')
+  return row.props.className === 'bt-time-sep' ? 'clock' : row.type.name === 'Bubbles' ? `bot:${row.props.texts.join('+')}` : row.type.name
+})
+
+const named = (tree, name) => tree?.children?.find(child => child?.type?.name === name)
+const avatar = { image: 'data:image/png;base64,cGhvdG8=' }
+const bot = { id: 'writer', name: 'Document Writer', avatar, color: 'blue', parts: ['writer', 'part-2'] }
+const team = prefs => ({ byId: { writer: bot, 'part-2': bot }, roomsById: {}, exchangeTurns: {}, prefs })
+const step = (number, blocks, status = 'settled') => ({ turn: 1, step: number, time: 150000, blocks, status })
+const reply = (data, { prefs, steps = [data], groupPart = 'response', sessionId = 'part-2' } = {}) => AssistantCell({
+  node: { data }, sessionId, groupPart,
+  useRoster: select => select(team(prefs)), useTurnSteps: () => steps, useTurnContext: () => [], actions: {},
+})
+
+test('live and restored private replies show their real Bot name, avatar and clock in both layouts', () => {
+  for (const layout of ['bubble', 'flat']) for (const status of ['running', 'settled']) {
+    const cell = reply(step(1, [{ kind: 'text', text: 'My answer says lead, but that is not my identity.' }], status), { prefs: { layout } })
+    const head = named(cell, 'SpeakerHead')
+    assert(head, `${layout}/${status}: reply has a visible speaker header`)
+    assert.equal(head.props.bot, bot, 'identity comes from the part-indexed roster, never response text')
+    const content = head.type(head.props)
+    assert(content.children.includes(bot.name))
+    assert.equal(named(content.children[0], 'BotMark').props.bot.avatar, avatar)
+    assert.equal(head.props.time, 150000)
+    assert.equal(named(cell, 'Bubbles').props.time, undefined, 'clock is shown once in the header')
+  }
+})
+
+test('split reasoning/response rows avoid duplicate speaker headers around a single reply', () => {
+  const steps = [step(1, [{ kind: 'reasoning', text: 'Thinking' }]), step(2, [{ kind: 'text', text: 'Answer' }])]
+  for (const layout of ['bubble', 'flat']) {
+    const cells = steps.flatMap(data => ['reasoning', 'response'].map(groupPart => reply(data, { steps, groupPart, prefs: { layout, thinking: true } })))
+    assert.equal(cells.filter(cell => named(cell, 'SpeakerHead')).length, 1)
+    const hidden = steps.map(data => reply(data, { steps, prefs: { layout, thinking: false } }))
+    assert.equal(hidden.filter(cell => named(cell, 'SpeakerHead')).length, 1)
+  }
+})
+
+test('a visible response keeps its own identity when earlier text or reasoning is outside the replay page', () => {
+  for (const layout of ['bubble', 'flat']) {
+    for (const earlier of [[{ kind: 'reasoning', text: 'Earlier thought' }], [{ kind: 'text', text: 'Earlier reply' }]]) {
+      for (const current of [[{ kind: 'text', text: 'Current reply' }], [{ kind: 'reasoning', text: 'Current thought' }, { kind: 'text', text: 'Current reply' }]]) {
+        const steps = [step(1, earlier), step(2, current)]
+        const cell = reply(steps[1], { steps, groupPart: 'response', prefs: { layout, thinking: true } })
+        assert.equal(named(cell, 'SpeakerHead')?.props.bot, bot, `${layout}: a partially mounted response identifies its owner`)
+        const thought = reply(steps[1], { steps, groupPart: 'reasoning', prefs: { layout, thinking: true } })
+        assert.equal(named(thought, 'SpeakerHead'), undefined, 'a split reasoning cell does not repeat its response header')
+      }
+    }
+    const steps = [step(1, [{ kind: 'text', text: 'First step reply' }]), step(2, [{ kind: 'text', text: 'Second step reply' }])]
+    assert.equal(steps.map(data => reply(data, { steps, prefs: { layout } })).filter(cell => named(cell, 'SpeakerHead')).length, 2)
+    const reasoningOnly = [step(1, [{ kind: 'reasoning', text: 'Still thinking' }], 'running')]
+    assert.equal(named(reply(reasoningOnly[0], { steps: reasoningOnly, groupPart: 'reasoning', prefs: { layout, thinking: true } }), 'SpeakerHead')?.props.bot, bot)
+  }
+})
+
+test('historical private reply blocks keep the correct part owner identity without parsing response text', () => {
+  for (const layout of ['bubble', 'flat']) {
+    const rows = ChatRows({ items: [{ kind: 'bot', text: 'lead', time: 150000 }], sessionId: 'part-2', roster: team({ layout }), actions: {} })
+    const head = named(rows[0], 'SpeakerHead')
+    assert(head, `${layout}: restored reply has a speaker header`)
+    assert.equal(head.props.bot, bot)
+    assert.equal(head.props.bot.avatar, avatar)
+    assert.equal(head.props.time, 150000)
+  }
+})
+
+test('group and restored group replies place the source Bot avatar beside its name in both layouts', () => {
+  for (const layout of ['bubble', 'flat']) {
+    const roster = { ...team({ layout }), roomsById: { room: { id: 'room', admin: 'writer' } } }
+    const [row] = ChatRows({ items: [{ kind: 'post', botId: 'writer', name: 'old saved name', text: 'Answer', time: 150000 }], sessionId: 'room', roster, actions: {} })
+    const rendered = row.type(row.props)
+    const header = rendered.children[0]
+    assert(header.children.includes(bot.name))
+    assert.equal(header.children[0]?.type, 'button', `${layout}: avatar stays beside the sender name`)
+    assert.equal(named(header.children[0], 'BotMark').props.bot, bot)
+    assert.equal(named(rendered, 'Bubbles').props.lead, undefined, 'avatar is not duplicated below the reply')
+    const [gone] = ChatRows({ items: [{ kind: 'post', botId: 'removed-bot', name: 'Archived Researcher', text: 'Answer', time: 150000 }], sessionId: 'room', roster, actions: {} })
+    const unknownHeader = gone.type(gone.props).children[0]
+    assert(unknownHeader.children.includes('Archived Researcher'))
+    assert.equal(named(unknownHeader.children[0], 'BotMark').props.bot.id, 'removed-bot')
+  }
+})
 
 test('a Bot\'s messages in a row are one block', () => {
   const items = [

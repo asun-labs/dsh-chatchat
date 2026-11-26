@@ -89,17 +89,21 @@ const assistantProps = (data = {}, rosterPrefs) => ({
 })
 const bubbles = node => expand(node, ['Bubbles', 'Bubble', 'SpeakerHead'])
 
-test('a Bot reply in its own chat shows when it went out under the bubbles', () => {
-  const [when] = times(bubbles(AssistantCell(assistantProps())))
-  assert.equal(when.props.className, 'bt-utime')
-  assert.equal(typeof when.props.title, 'string')
-  assert.equal(typeof when.children[0], 'string')
+test('a Bot reply keeps its timestamp beside its speaker identity in either layout', () => {
+  for (const layout of ['bubble', 'flat']) {
+    const rendered = bubbles(AssistantCell(assistantProps({}, { layout })))
+    const [when] = find(rendered, node => node.props?.className === 'bt-group-time')
+    assert(when, layout)
+    assert.equal(typeof when.props.title, 'string')
+    assert.equal(typeof when.children[0], 'string')
+    assert.equal(times(rendered).length, 0, 'header time is not duplicated under the bubbles')
+  }
 })
 
-test('a reply without a real time, and the flat layout whose head already shows one, draw no extra time', () => {
-  assert.equal(times(bubbles(AssistantCell(assistantProps({ time: undefined })))).length, 0)
-  const flat = bubbles(AssistantCell(assistantProps({}, { layout: 'flat' })))
-  // The speaker head keeps the turn's one time; nothing repeats it under the bubbles.
-  assert.equal(find(flat, node => node.props?.className === 'bt-group-time').length, 1)
-  assert.equal(times(flat).length, 0)
+test('a Bot reply without a real timestamp does not invent one in the header or beneath the bubbles', () => {
+  for (const time of [undefined, 'later']) {
+    const rendered = bubbles(AssistantCell(assistantProps({ time })))
+    assert.equal(find(rendered, node => node.props?.className === 'bt-group-time').length, 0)
+    assert.equal(times(rendered).length, 0)
+  }
 })

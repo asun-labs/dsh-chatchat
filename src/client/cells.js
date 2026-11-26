@@ -40,7 +40,7 @@ const mdLabels = () => ({ code: { copyLabel: t('Copy'), copiedLabel: t('Copied')
 // row, so it lines up with the bubble whether or not reactions hang below it.
 // `fold`: past what a bubble folds (fold.js); `whole`: the last text is only the start
 // of its message (see useFold). `time` marks the bubbles' message below them; a caller
-// whose own head already shows one (the flat speaker line, the group name row) leaves it unset.
+// whose own head already shows one (the speaker line or the group name row) leaves it unset.
 export function Bubbles({ texts, roster, selfId, actions, streaming, sessionId, msgKey, useUi, lead, mentions, fold = FOLD_AT, whole, time }) {
   const onClick = (event) => {
     const target = mentionTarget(event)
@@ -287,11 +287,12 @@ export function AssistantCell({ node, groupPart, sessionId, openFile, fileMentio
   const activity = groupPart === 'response' ? [] : stepActivity(data)
   if (texts.length === 0 && !reasoning && relays.length === 0 && activity.length === 0) return h(CellEmpty)
   const selfId = roster.byId[sessionId]?.id ?? sessionId
-  // The flat layout heads a reply with who speaks, once per Turn: in the step that opens
-  // it, in that step's reasoning part when the reasoning shows there.
-  const speaker = layoutOf(roster.prefs) === 'flat' ? roster.byId[sessionId] : undefined
-  const head = speaker !== undefined && opensReply(steps, data, shown)
-    && (reasoning !== '' || (texts.length > 0 && !(groupPart === 'response' && shown && turnReasoning(steps, data) !== '')))
+  // Identify each visible reply even when earlier steps are outside the replay page.
+  // Split reasoning/response cells share the response header; while a Turn only
+  // thinks, the visible reasoning row carries its one header instead.
+  const speaker = roster.byId[sessionId]
+  const hasReply = members.some(step => step.blocks.some(block => block.kind === 'text' && block.text.trim() !== ''))
+  const head = speaker !== undefined && (texts.length > 0 || (!hasReply && reasoning !== '' && opensReply(steps, data, shown)))
   return h(Fragment, null,
     relays.map(relay => {
       const source = relay.source
@@ -334,7 +335,7 @@ function EventLine({ prefix, bots, joiner = t('and'), onOpen, whole = false }) {
   return h('div', { className: 'bt-event' }, parts)
 }
 
-// The flat layout's head over a Bot's reply in its own chat: avatar, name, time.
+// A Bot's reply header in either layout: avatar, name, time.
 function SpeakerHead({ bot, time }) {
   return h('div', { className: 'bt-group-name' },
     h('span', { className: 'bt-lead' }, h(BotMark, { bot, size: 22 })), bot.name,
@@ -372,9 +373,8 @@ function scheduleGroupChains(flow) {
   })
 }
 
-// One Bot message inside a group chat: avatar, name (with its group role), when it ran
-// and how long it took, bubble. The flat layout moves the avatar from beside the last
-// bubble to the head of the name row, so the text below runs the whole width.
+// Keep the source Bot's avatar beside its name in both layouts, including restored
+// group posts. The message body never supplies its speaker identity.
 function GroupMessage({ bot, text, texts = [text], room, roster, actions, msgKey, useUi, whole, time, duration }) {
   const ref = useRef(null)
   useLayoutEffect(() => {
@@ -390,11 +390,11 @@ function GroupMessage({ bot, text, texts = [text], room, roster, actions, msgKey
   const flat = layoutOf(roster.prefs) === 'flat'
   const took = Number.isFinite(duration) && duration >= 1000 ? elapsedLabel(duration) : undefined
   return h('div', { ref, className: 'bt-group-msg', 'data-bot-id': bot.id },
-    h('span', { className: 'bt-group-name', style: flat ? undefined : { color: inkText(colorOf(bot)) } }, flat ? lead : null, bot.name,
+    h('span', { className: 'bt-group-name', style: flat ? undefined : { color: inkText(colorOf(bot)) } }, lead, bot.name,
       room?.admin === bot.id ? h('span', { className: 'bt-group-role' }, t('Admin')) : null,
       Number.isFinite(time) ? h('span', { className: 'bt-group-time', title: clockLabel(time) }, messageClock(time)) : null,
       took ? h('span', { className: 'bt-group-took', title: t('Ran for {duration}', { duration: took }) }, took) : null),
-    h(Bubbles, { texts, roster, selfId: bot.id, actions, sessionId: room?.id, msgKey, useUi, lead: flat ? null : lead, whole }))
+    h(Bubbles, { texts, roster, selfId: bot.id, actions, sessionId: room?.id, msgKey, useUi, whole }))
 }
 
 // A centered event line that names a group chat and opens it.
@@ -614,7 +614,7 @@ function chatRow(row, key, { sessionId, selfId, roster, actions, useUi, onBtwDel
     case 'view': return h(WidgetCell, { key, sessionId, callId: row.callId, args: { text: name => name === 'title' ? row.title : undefined, value: name => name === 'view' ? row.view : undefined }, done: true, isError: false, roster, actions })
     case 'bot': {
       const bubbles = h(Bubbles, { key, texts: row.texts, roster, selfId, actions, sessionId: useUi ? sessionId : undefined, msgKey: useUi ? `${sessionId}:${row.time}` : undefined, useUi, fold: FOLD_HUGE })
-      const speaker = layoutOf(roster.prefs) === 'flat' ? roster.byId[selfId] : undefined
+      const speaker = roster.byId[selfId]
       return speaker ? h(Fragment, { key }, h(SpeakerHead, { bot: speaker, time: row.time }), bubbles) : bubbles
     }
     case 'files': return h('div', { key, 'data-bt-history-files': '' }, renderSlot(historyFilesSlot, { delivery: row }))

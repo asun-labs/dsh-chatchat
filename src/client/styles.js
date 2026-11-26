@@ -245,23 +245,23 @@ body{--bt-msg-w:.8;--bt-flat-w:1}
 .bt-bubble{max-width:min(calc(var(--bt-msg-w) * 100%),calc(100% - 82px));background:var(--bt-bubble);color:var(--bt-ink);border-radius:18px;padding:7px 12px;font-size:var(--dsh-content-font-size,14px);line-height:calc(var(--dsh-content-font-size,14px) + 10px);box-sizing:border-box;overflow-wrap:anywhere;text-wrap:pretty;text-autospace:normal}
 .bt-msg:not(:first-child)>.bt-msg-line>.bt-bubble{border-start-start-radius:6px}
 .bt-msg:not(:last-child)>.bt-msg-line>.bt-bubble{border-end-start-radius:6px}
-.bt-bubble [class*="_markdown"]>*+*{margin-top:10px}
-.bt-bubble [class*="_markdown"]{color:inherit!important;font-size:inherit!important;line-height:inherit!important}
+/* compact Markdown defaults to tertiary text. Its public variant attribute keeps
+   this bubble-only override in botOwnCss, unlike native hashed-class selectors. */
+.bt-bubble [data-markdown-variant=compact]>*+*{margin-top:10px}
+.bt-bubble [data-markdown-variant=compact]{color:inherit!important;font-size:inherit!important;line-height:inherit!important}
 .bt-bubble p{margin:0}
 .bt-bubble p + p{margin-top:6px}
 .bt-bubble ul,.bt-bubble ol{margin:4px 0;padding-left:20px}
-.bt-bubble [class*="_markdown"] li+li{margin-top:6px}
-.bt-bubble [class*="_markdown"] li::marker{color:var(--bt-ink-2)}
+.bt-bubble [data-markdown-variant=compact] li+li{margin-top:6px}
+.bt-bubble [data-markdown-variant=compact] li::marker{color:var(--bt-ink-2)}
 /* line-height:1 keeps the monospace line box from making an inline code line taller. */
-.bt-bubble [class*="_markdown"] :not(pre)>code{line-height:1;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.bt-bubble [data-markdown-variant=compact] :not(pre)>code{line-height:1;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .bt-bubble :is(img,video),.bt-ububble :is(img,video),[data-chat-flow] [class*="_bubble"] :is(img,video){max-width:100%;height:auto}
 .bt-bubble a[href^="${MENTION_ORIGIN}"]{text-decoration:none;font-weight:400;cursor:pointer;white-space:nowrap}
 .bt-bubble a[href^="${MENTION_ORIGIN}"]::before{content:"";display:inline-block;width:16px;height:16px;margin-right:3px;vertical-align:-3px;background:currentColor;-webkit-mask:${DEFAULT_MASK} center/contain no-repeat;mask:${DEFAULT_MASK} center/contain no-repeat}
 .bt-group-msg{display:flex;flex-direction:column;gap:4px;margin:16px 0 0}
 .bt-group-msg:first-child{margin-top:0}
 .bt-group-msg[data-chain-prev]{margin-top:4px}
-.bt-group-msg[data-chain-prev]>.bt-group-name{display:none}
-body:not([data-bt-layout=flat]) .bt-group-msg[data-chain-next] .bt-lead{visibility:hidden}
 body:not([data-bt-layout=flat]) .bt-group-msg[data-chain-prev]>.bt-astack>.bt-msg:first-child>.bt-msg-line>.bt-bubble{border-start-start-radius:6px}
 body:not([data-bt-layout=flat]) .bt-group-msg[data-chain-next]>.bt-astack>.bt-msg:last-child>.bt-msg-line>.bt-bubble{border-end-start-radius:6px}
 [data-chat-flow]>[data-chat-group-key][data-bt-chain-next]{padding-bottom:2px!important;margin-bottom:0!important}
