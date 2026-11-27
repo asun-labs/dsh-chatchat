@@ -4,6 +4,8 @@
 
 <h1 align="center">DSH ChatChat</h1>
 
+<p align="center"><strong>简体中文</strong> · <a href="README.en.md">English</a></p>
+
 <p align="center">
   <strong>把独立的 Bot，组织成一起工作的 AI 团队。</strong><br>
   为 DSH 带来专属 Bot、多人群聊与清晰的团队侧栏，沿用原生会话与工作能力。
