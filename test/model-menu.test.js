@@ -97,7 +97,7 @@ test('an unavailable model offers the same provider groups', () => {
 test('an empty catalog offers setup choices, and a ready model needs no choice dock', () => {
   const { tree } = dock([])
   assert.deepEqual(nodes(tree, node => node.type === 'button').map(button => button.children[0]), [
-    'Enter a DeepSeek API key', 'Open settings to set up a custom model',
+    'Open settings to set up a custom model',
   ])
   assert.equal(dock(models, { model: models[0].ref }).tree, null)
   assert.equal(dock(models, { ready: false }).tree, null)
@@ -173,7 +173,7 @@ test('models that need an API key are no choice', () => {
   const buttons = tree => nodes(tree, node => node.type === 'button').map(button => button.children[0])
   assert.deepEqual(buttons(dock([...keyless, models[1]], { harness: false }).tree), ['DeepSeek Flash'])
   // Without the host's key endpoint, DSH's own settings take the key.
-  assert.deepEqual(buttons(dock(keyless).tree), ['Enter a DeepSeek API key', 'Open settings to set up a custom model'])
+  assert.deepEqual(buttons(dock(keyless).tree), ['Open settings to set up a custom model'])
 })
 
 test('the first choice asks for the missing API key through the host', () => {

@@ -44,6 +44,9 @@ test('model guidance appears proactively, opens setup, and clears after an expli
   const actions = {
     refreshModels() { refreshes++ },
     openModels() { setup++ },
+    canSignIn: () => true,
+    signIn() { assert.fail('empty-model guidance must not offer DeepSeek account login') },
+    openHarnessOnboarding() { assert.fail('empty-model guidance must not offer the DeepSeek API key entry') },
     updateBot(id, patch) {
       roster.set(state => ({ ...state, byId: { ...state.byId, [id]: { ...state.byId[id], ...patch } } }))
       return Promise.resolve()
@@ -55,6 +58,7 @@ test('model guidance appears proactively, opens setup, and clears after an expli
   assert.equal(document.querySelector('.bt-model-dock'), null)
   await act(async () => roster.set(state => ({ ...state, ready: true })))
   assert.match(document.querySelector('.bt-model-dock').textContent, /don't have a model yet/)
+  assert.deepEqual([...document.querySelectorAll('.bt-model-chip')].map(button => button.textContent), ['Open settings to set up a custom model'])
   assert.equal(refreshes, 1)
   await act(async () => document.querySelector('.bt-model-chip').click())
   assert.equal(setup, 1)

@@ -424,7 +424,7 @@ export function ModelChoiceDock({ sessionId, useRoster, actions, inheritDefaultM
         ? t("Hi, I'm {name}. I don't have a model yet. How do you want to set one up?", { name: bot.name })
         : t("Hi, I'm {name}. Pick a model for me first. You can change it later in my details.", { name: bot.name })
   const choices = usable.length === 0
-    ? setupChoices(actions).map(([label, run]) => h('button', { key: label, type: 'button', className: 'bt-model-chip', onClick: run }, label))
+    ? (manage ? h('button', { type: 'button', className: 'bt-model-chip', onClick: manage }, t('Open settings to set up a custom model')) : null)
     : [
         ...groupModels(usable).map(([provider, list]) => h('div', { key: list[0].provider ?? provider, className: 'bt-model-choice-group', role: 'group', 'aria-label': provider },
           h('div', { className: 'bt-model-choice-provider', 'aria-hidden': true }, provider),
@@ -481,17 +481,6 @@ export function ModelKeyCard({ model, actions, onSaved }) {
 
 // Where the providers are set up: the Models page of Settings.
 export const manageModels = actions => actions.openModels ?? (actions.openSettings ? () => actions.openSettings('models') : undefined)
-
-// Ways to get a first model. The DeepSeek sign-in exists only where the shell carries
-// its account plugin; the API key uses the shell's own editor.
-function setupChoices(actions) {
-  const custom = manageModels(actions)
-  return [
-    actions.canSignIn?.() ? [t('Sign in to DeepSeek'), () => actions.signIn()] : null,
-    actions.openHarnessOnboarding ? [t('Enter a DeepSeek API key'), () => actions.openHarnessOnboarding('deepseek-official')] : null,
-    custom ? [t('Open settings to set up a custom model'), () => custom()] : null,
-  ].filter(Boolean)
-}
 
 // The shell's own DeepSeek sign-in dialog, borrowed from its account plugin: the
 // plugin's model sign-in entry renders here with the plugin's own operations.
