@@ -61,7 +61,7 @@
 打开 DSH 插件管理器，添加 [Releases](https://github.com/asun-labs/dsh-chatchat/releases) 中对应版本的 `.tgz` 下载地址。例如：
 
 ```text
-https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.15/dsh-chatchat-0.1.15.tgz
+https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.16/dsh-chatchat-0.1.16.tgz
 ```
 
 也可下载 `.tgz` 与同版本 `.sha256`，核对后从本地文件安装。普通用户安装预编译包即可，无需编译源码。

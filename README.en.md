@@ -61,7 +61,7 @@ ChatChat currently targets the **DSH 0.2.2-rc.3 SDK**. Configure the models and 
 Open the DSH plugin manager and add the versioned `.tgz` URL from [GitHub Releases](https://github.com/asun-labs/dsh-chatchat/releases). For example:
 
 ```text
-https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.15/dsh-chatchat-0.1.15.tgz
+https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.16/dsh-chatchat-0.1.16.tgz
 ```
 
 You can also download the `.tgz` and matching `.sha256`, verify the checksum, and install from a local file. Prebuilt packages require no source compilation.
