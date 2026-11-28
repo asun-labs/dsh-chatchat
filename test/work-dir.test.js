@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { homedir, hostname, tmpdir } from 'node:os'

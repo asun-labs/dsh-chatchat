@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Local agents: ordinary Bots whose model route is a local agent CLI (Devin
 // CLI, Claude Code, Codex, ACP agents). install() scans for the CLIs, registers
 // one DSH LLM adapter for the routes it found, keeps the custom agents and the
@@ -112,7 +115,7 @@ export function install(rt) {
     },
     probeCwd: () => mkdtempSync(join(tmpdir(), 'dsb-probe-')),
     toolsFor: (options) => {
-      // Only Seal Bot's own team tools cross the bridge; the CLI keeps its own.
+      // Only DSH ChatChat's own team tools cross the bridge; the CLI keeps its own.
       const names = new Set([...rt.teamTools.map(def => def.name), 'approve_agent_action'])
       return (options.tools ?? []).filter(tool => names.has(tool.name))
     },
@@ -157,7 +160,7 @@ export function install(rt) {
   // Helpers the rest of the host asks.
 
   const isLocalAgentRef = ref => isLocalAgentRoute(splitRef(ref)?.provider ?? '')
-  // What a ref runs on: the local agent's route, or 'model' for Seal Bot's own models.
+  // What a ref runs on: the local agent's route, or 'model' for DSH ChatChat's own models.
   // Two refs with the same answer share a conversation; two with different ones never do.
   const engineOf = (ref) => {
     if (!ref) return undefined

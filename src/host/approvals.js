@@ -1,6 +1,9 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Approvals. A member's group Session is hidden, so DSH's approval card never shows
-// there and the turn would wait forever: Seal Bot answers those requests itself, from
-// the group chat. A Bot's own chat keeps DSH's card, but Seal Bot can answer those too
+// there and the turn would wait forever: DSH ChatChat answers those requests itself, from
+// the group chat. A Bot's own chat keeps DSH's card, but DSH ChatChat can answer those too
 // (IM chats, the phone app): the request is raced — whichever side answers first wins,
 // and the other card withdraws.
 import { randomUUID } from 'node:crypto'

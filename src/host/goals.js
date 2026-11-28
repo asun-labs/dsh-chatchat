@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Group goals: one outcome the whole group works toward, checked stage by stage.
 // The state lives on the room (room.goal, archived into room.pastGoals), the admin
 // runs it with the group_goal tool, the user steers it from the goal endpoints,
@@ -419,7 +422,7 @@ const DUTY_DRAFT = [
   '2. List the decisions only the user can make. Ask them in one message, numbered, each with your recommended answer, so the user can reply "as recommended". Skip this when nothing is open.',
   '3. Then call group_goal start: the objective, how to check it is done (commands, tests, files, evidence), the rules to keep, and the stages in order, each with its own check and its tasks for named members.',
 ].join('\n')
-const NUDGE_LINE = 'Goal check from Seal Bot: nothing is running in this group and the goal is not finished. Take the next step now: hand out the current stage\'s tasks that are not done, check a stage whose members have reported, or complete the goal if every stage passed. If you are waiting for the user, reply [PASS].'
+const NUDGE_LINE = 'Goal check from DSH ChatChat: nothing is running in this group and the goal is not finished. Take the next step now: hand out the current stage\'s tasks that are not done, check a stage whose members have reported, or complete the goal if every stage passed. If you are waiting for the user, reply [PASS].'
 const RESUME_LINE = 'The user resumed the goal. Take the next step now.'
 
 export function install(rt) {
@@ -511,7 +514,7 @@ export function install(rt) {
   // Every non-task change is a group event: a notice in the log the members read,
   // and a goal reply in every running round of the room for the client.
   const announce = (room, reply) => {
-    rt.logRoom?.(room, { who: 'Seal Bot', kind: 'notice', reason: 'goal', ...reply })
+    rt.logRoom?.(room, { who: 'DSH ChatChat', kind: 'notice', reason: 'goal', ...reply })
     for (const round of rt.roomProgress.values()) {
       if (round.roomId === room.id) round.replies.push({ kind: 'goal', ...reply, time: Date.now() })
     }
@@ -624,7 +627,7 @@ export function install(rt) {
     goal.revision += 1
     goal.updatedAt = Date.now()
     await rt.save()
-    await queueGoalRelay(room, 'nudge', '[Goal check]', 'Seal Bot')
+    await queueGoalRelay(room, 'nudge', '[Goal check]', 'DSH ChatChat')
   }
 
   // Member work can outlive the round it grew out of; the round-end check then

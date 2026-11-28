@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Which computer tools exist and how much each call can touch. `kind` maps onto the
 // Bot levels: view allows observe, background adds background, foreground adds
 // foreground. A call nothing recognizes counts as foreground: better refused than
@@ -30,7 +33,7 @@ const DRIVER_OBSERVE = new Set([
 // Tools that exist to bring a window to the user or to take over the visible pointer.
 
 // Raising windows and moving the visible cursor are foreground; so is session
-// escalation. Anything the driver adds that Seal Bot does not know fails closed to
+// escalation. Anything the driver adds that DSH ChatChat does not know fails closed to
 // foreground — never silently allowed.
 const DRIVER_BACKGROUND = new Set([
   'launch_app', 'kill_app', 'set_window_frame', 'invoke_menu', 'click', 'double_click',

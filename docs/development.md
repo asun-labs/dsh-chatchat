@@ -1,6 +1,6 @@
 # 开发与验证
 
-[返回首页](../README.md) · [Seal 集成](seal-integration.md)
+[返回首页](../README.md) · [宿主加载与兼容](host-integration.md)
 
 ## 开发与构建
 

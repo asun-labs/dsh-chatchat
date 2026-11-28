@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Bot browsers in DSH Desktop and the desktop app: per Bot, a tab strip of pages. Each tab
 // is one Electron webview in the Bot's own storage partition (`browser.acquire('bot:<id>')`
 // on either one's bridge — the same key always yields the same partition, so cookies and logins

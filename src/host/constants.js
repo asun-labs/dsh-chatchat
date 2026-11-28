@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Fixed values shared by the host modules: colors, OCR settings, the client route, and
 // the limits on messages, group chats, and chat reads.
 

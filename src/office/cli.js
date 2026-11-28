@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // seal-dot Office CLI: inspect, check and edit .docx/.pptx/.xlsx packages without
 // installing anything. Bundled into ../office.js by `npm run build`.
 // Exit codes: 0 ok, 1 findings remain, 2 usage or failure. `--json` on any

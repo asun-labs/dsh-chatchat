@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createSource } from '../src/client/sources.js'

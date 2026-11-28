@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Prompt: one section whose text depends only on the rendering Session's own Bot
 // record, so the prefix stays byte-stable across turns and roster changes.
 import { promptSessionId } from './prompt-context.js'
@@ -50,7 +53,7 @@ export function install(rt) {
     if (bot !== undefined) {
       return [
         '# Your identity',
-        `You are ${bot.name}, a Bot on the user's team in Seal Bot.${bot.role ? ` Your role: ${bot.role}.` : ''}`,
+        `You are ${bot.name}, a Bot on the user's team in DSH ChatChat.${bot.role ? ` Your role: ${bot.role}.` : ''}`,
         'Your current Bot profile defines your identity. Treat earlier DeepSeek Harness Team identity snapshots and any conflicting assistant introductions as historical. Continue as this Bot.',
         bot.instructions ? `\n${bot.instructions}` : '',
         '',

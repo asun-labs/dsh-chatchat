@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // DSH's `attachments` service for generic files, in memory. Reads come back in small
 // chunks that split characters, as a stream may.
 export function fakeAttachments() {

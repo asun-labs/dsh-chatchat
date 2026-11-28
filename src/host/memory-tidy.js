@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The memory tidy. Once a day at most, for each memory that changed, a model reads all
 // its entries and merges repeats, settles what contradicts, and moves details to topics.
 // A merge loses words, so nothing is deleted: what leaves goes to retired.jsonl beside

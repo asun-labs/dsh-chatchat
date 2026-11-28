@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Secrets: keys the user types into a card for a Bot. A value lives only in
 // secrets.json (mode 600) and in this process; Bots use it as $DSH_SECRET_<NAME> in
 // their shell, tool results lose it before they are saved, and every model request
@@ -180,7 +183,7 @@ export function install(rt) {
 
   // Resolves once secrets.json holds the current map; rejects when the write failed.
   const persist = () => {
-    if (blocked !== undefined) return Promise.reject(new Error(`The secrets file ${path} could not be read (${blocked}). Seal Bot does not change it; fix or move the file and reload.`))
+    if (blocked !== undefined) return Promise.reject(new Error(`The secrets file ${path} could not be read (${blocked}). DSH ChatChat does not change it; fix or move the file and reload.`))
     const readOnly = rt.readOnly()
     if (readOnly !== undefined) return Promise.reject(new Error(readOnly))
     const snapshot = JSON.stringify({ version: 1, secrets: [...secrets.values()] }, null, 2)
@@ -547,7 +550,7 @@ export function install(rt) {
       try {
         unregister = sub.shellEnv.register({
           name: 'seal-dot-secrets',
-          variables: Object.fromEntries(list.map(secret => [envName(secret.name), { description: `Seal Bot secret ${secret.name}${secret.purpose ? `: ${secret.purpose}` : ''}` }])),
+          variables: Object.fromEntries(list.map(secret => [envName(secret.name), { description: `DSH ChatChat secret ${secret.name}${secret.purpose ? `: ${secret.purpose}` : ''}` }])),
           resolve: resolveEnv,
         })
       } catch (error) {

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The live feed: a Server-Sent Events stream of what changes, for a window that draws
 // the team itself (the desktop app) instead of polling.
 //   revision  the team was saved: ask for `state` again

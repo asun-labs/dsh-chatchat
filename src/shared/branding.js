@@ -1,14 +1,13 @@
-const profiles = Object.freeze({
-  dsh: Object.freeze({ id: 'dsh', hostName: 'DSH', botName: 'DSH Bot', agentName: 'DSH Agent' }),
-  seal: Object.freeze({ id: 'seal', hostName: 'Seal Harness', botName: 'Seal Bot', agentName: 'Seal Agent' }),
-})
+const profile = Object.freeze({ id: 'dsh', hostName: 'DSH', botName: 'DSH Bot', agentName: 'DSH Agent' })
 
 export function brandProfile(id = 'dsh') {
-  if (!Object.hasOwn(profiles, id)) throw new Error('Unknown ChatChat host brand')
-  return profiles[id]
+  // Older hosts may still pass their former branding option. It no longer
+  // changes the plugin's identity, but must not prevent those hosts loading it.
+  if (id !== 'dsh' && id !== 'seal') throw new Error('Unknown ChatChat host brand')
+  return profile
 }
 
 export function agentDisplayName(agent, brand) {
   const name = agent?.name
-  return !name || Object.values(profiles).some(profile => profile.agentName === name) ? brand.agentName : name
+  return !name || ['DSH Agent', 'Seal Agent'].includes(name) ? brand.agentName : name
 }

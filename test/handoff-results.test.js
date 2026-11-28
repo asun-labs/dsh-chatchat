@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The result of work a Bot handed on, when it is longer than state.json keeps: the
 // whole result has to survive a restart, so the Bot that asked for it gets all of it.
 import assert from 'node:assert/strict'

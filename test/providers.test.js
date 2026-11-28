@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { Config as PiAiConfig } from '@deepseek-ai/dsh-llm-pi-ai'
@@ -114,10 +117,10 @@ test('a saved API key goes to the provider\'s reference and frees its models', a
   await assert.rejects(rt.setProviderKey('deepseek-account', 'sk-test'), /deepseek-account takes no API key here/)
 })
 
-test('a key set outside Seal Bot is not overwritten or removed', async () => {
+test('a key set outside DSH ChatChat is not overwritten or removed', async () => {
   const { rt, writes } = dsh({ keys: { DEEPSEEK_API_KEY: 'k' }, readOnly: ['DEEPSEEK_API_KEY'] })
-  await assert.rejects(rt.setProviderKey('deepseek-official', 'sk-test'), /set outside Seal Bot/)
-  await assert.rejects(rt.clearProviderKey('deepseek-official'), /set outside Seal Bot/)
+  await assert.rejects(rt.setProviderKey('deepseek-official', 'sk-test'), /set outside DSH ChatChat/)
+  await assert.rejects(rt.clearProviderKey('deepseek-official'), /set outside DSH ChatChat/)
   assert.deepEqual(writes, [])
   assert.deepEqual(row(await rt.providersView(), 'deepseek-official').key, { configured: true, writable: false })
 })

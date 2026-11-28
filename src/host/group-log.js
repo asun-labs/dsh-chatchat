@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // What was said in each group, kept for as long as the group is. A room's own log holds
 // the latest lines for the interface and the members' turns; the memory review and a
 // source that points back at a message need the ones that have left it.

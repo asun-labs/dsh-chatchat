@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Diagnostics: what went wrong on this host, kept where the user can see it and report it.
 // DSH mounts no exporter for ctx.logger once it has started, so warnings would otherwise
 // reach only stderr. Entries are kept in memory and in <home>/logs/diagnostics.jsonl, so
@@ -66,7 +69,7 @@ export function reportMarkdown({ facts, client = {}, entries = [], clientEntries
   const lines = [
     '| | |',
     '|---|---|',
-    row('Seal Bot', facts.botVersion),
+    row('DSH ChatChat', facts.botVersion),
     row('DSH', facts.dshVersion),
     row('Surface', client.surface),
     row('OS', facts.os),

@@ -1,4 +1,7 @@
-// The LlmAdapter that serves every local-agent route. A Seal Bot Bot whose model
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
+// The LlmAdapter that serves every local-agent route. A DSH ChatChat Bot whose model
 // is one of these routes answers through a local agent CLI instead of a model
 // API: the loop, Sessions, tools and approvals are the ordinary ones; this
 // adapter turns each request into a prompt for the CLI session the Session is
@@ -83,7 +86,7 @@ export class LocalAgentAdapter extends LlmAdapter {
     return driver
   }
 
-  // What Seal Bot knows of a route without starting its CLI: the CLI's default, what a
+  // What DSH ChatChat knows of a route without starting its CLI: the CLI's default, what a
   // probe found, and what a Bot runs on. DSH and the catalog ask this for every route.
   async listModels(route) {
     if (engineOf(route, this.deps.customAgents()) === undefined) return []
@@ -136,7 +139,7 @@ export class LocalAgentAdapter extends LlmAdapter {
   }
 
   // ---------------------------------------------------------------------------
-  // The live bridge for one Seal Bot Session.
+  // The live bridge for one DSH ChatChat Session.
   async liveFor(options) {
     const sessionId = String(options.sessionId)
     let live = this.live.get(sessionId)

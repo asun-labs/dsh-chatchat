@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Roster: creating, changing, and deleting Bots and group chats, the Main Bot role, and
 // the first Main Bot of a new team.
 import { randomUUID } from 'node:crypto'
@@ -52,7 +55,7 @@ export function install(rt) {
   let bootstrapping = null
   let brandMigration = null
 
-  // The team folder is Seal Bot's own: deleted, it is made again before a Session needs it.
+  // The team folder is DSH ChatChat's own: deleted, it is made again before a Session needs it.
   async function keepTeamFolder() {
     const team = rt.teamFolder()
     if (team !== undefined) await mkdir(team, { recursive: true }).catch(error => rt.warn('seal-dot: team folder %s not made again: %s', team, error))
@@ -387,7 +390,7 @@ export function install(rt) {
       : await rt.resolveModel(patch.model)
     // What a Bot runs on changes only from its settings, after the user confirmed: every
     // conversation of the Bot starts a new part for it. A Bot without a model runs on the
-    // one it last ran on, and one that never ran runs on Seal Bot's models.
+    // one it last ran on, and one that never ran runs on DSH ChatChat's models.
     const engineBefore = rt.engineOf === undefined ? undefined : rt.engineOfBot(bot) ?? 'model'
     if (modelRef === null && engineBefore !== undefined && engineBefore !== 'model') throw new Error(`${bot.name} runs on a local agent and keeps a model of it`)
     const engineChanged = !!modelRef && engineBefore !== undefined && rt.engineOf(modelRef) !== engineBefore

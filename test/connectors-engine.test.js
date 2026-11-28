@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Engine-level connector tests: OAuth pieces on fake fetches, the gateway on a
 // real node:http upstream, and mail on fake transports. No network leaves the
 // test process (fakes listen on 127.0.0.1 or answer in memory).

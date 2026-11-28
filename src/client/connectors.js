@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Settings → Connectors: connected rows, a catalog with search and categories,
 // an Add menu, and the mailbox. One row component draws the mark, name, status
 // and the expanding panels (browser sign-in, device code, key/token, client).

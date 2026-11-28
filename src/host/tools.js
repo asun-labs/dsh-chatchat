@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Team tools: the roster, bot-to-bot messages, group chat settings and posts, and the
 // question and view cards. Group rounds and reading chats are in groups.js.
 import { randomUUID } from 'node:crypto'
@@ -14,7 +17,7 @@ import { checkShownView, showViewDescription, showViewParameters } from 'deep-vi
 export const output = { schema: { type: 'string' }, render: (_args, value) => [{ type: 'text', text: String(value) }] }
 export const GROUP_REF = { type: 'string', required: true, description: 'Exact group chat name from list_bots' }
 const BLOCKING_QUESTION_TOOL = 'ask_user_question'
-// Seal Bot has its own group goals; DSH's session goal still does not survive conversation parts.
+// DSH ChatChat has its own group goals; DSH's session goal still does not survive conversation parts.
 const GOAL_TOOLS = ['create_goal', 'update_goal', 'get_goal']
 // DSH's delegation tools start child agents the user cannot watch or stop, and they
 // end with the conversation part that started them; Bots hand work to other Bots.
@@ -30,7 +33,7 @@ const HIDDEN_TOOLS = HIDDEN_TOOL_GROUPS.flat()
 const HIDDEN_SECTIONS = new Set([...HIDDEN_TOOLS.map(name => `tool:${name}`), 'tool:goal', 'team:policy'])
 const GOAL_REFUSAL = 'Bot chats do not run /goal. To give a group a goal, use Set a goal in its + menu.'
 // DSH 0.2.2's schedule tools can deliver to a new Session, which is outside the team and
-// has no Bot; a Bot's tasks deliver to its own chat, which Seal Bot moves on with each part.
+// has no Bot; a Bot's tasks deliver to its own chat, which DSH ChatChat moves on with each part.
 const SCHEDULE_TARGET_TOOLS = ['schedule_create', 'schedule_edit']
 const SCHEDULE_TARGET_REFUSAL = 'A Bot’s scheduled tasks run in its own chat. Use target "this_session".'
 const DELEGATION_REFUSAL = 'Bots do not start subagents, teammates or workflows. Do the work yourself, or hand it to another Bot with message_bot.'
@@ -213,7 +216,7 @@ export function install(rt) {
       const answer = (outcome) => {
         if (outcome.status === 'replay') return outcome.receipt
         if (outcome.status === 'conflict') refuse(`Not sent: request_id "${name}" was already used for a different request. A request_id names one request; send this one under a new name.`)
-        if (outcome.status === 'uncertain') refuse(`Not sent again: the outcome of request_id "${name}" is not known (the delivery failed, or Seal Bot restarted while it was in flight), so it was not sent again. Check whether ${target.name} got it before sending it under a new name.`)
+        if (outcome.status === 'uncertain') refuse(`Not sent again: the outcome of request_id "${name}" is not known (the delivery failed, or DSH ChatChat restarted while it was in flight), so it was not sent again. Check whether ${target.name} got it before sending it under a new name.`)
         if (outcome.status === 'expired') return `Nothing was sent again: request_id "${name}" was admitted before, but its receipt is no longer kept, so only the fact that it was sent is left. Send the work under a new request_id if it must be done again.`
         if (outcome.status === 'readonly') refuse(`Not sent: this window cannot save the Bot team, so it cannot record the request_id "${name}". Send it from the window that owns the team, or leave the request_id out.`)
         return outcome.receipt
@@ -329,7 +332,7 @@ export function install(rt) {
       role: { type: 'string', required: true, description: 'Two-to-four character role label shown under the name' },
       instructions: { type: 'string', required: true, description: 'What this Bot is responsible for and how it should work' },
       brief: { type: 'string', description: 'Why the user wants it, passed to the new Bot as its first context' },
-      model: { type: 'string', description: 'Model the Bot runs on, as provider/model or a model id. Only when the user names one; otherwise the team default model from Seal Bot settings, or the model you run on.' },
+      model: { type: 'string', description: 'Model the Bot runs on, as provider/model or a model id. Only when the user names one; otherwise the team default model from DSH ChatChat settings, or the model you run on.' },
       effort: { type: 'string', description: 'Thinking level for the model, as list_bot_models shows it. Only when the user names one.' },
       work_dir: WORK_DIR_PARAM,
       section: SECTION_PARAM,
@@ -369,7 +372,7 @@ export function install(rt) {
       instructions: { type: 'string', description: 'Replacement instructions' },
       color: { type: 'string', description: `One of ${[...COLORS, ...EXTRA_COLORS].join(', ')}` },
       avatar: { ...AVATAR_PARAM, description: `${AVATAR_PARAM.description} An empty string removes the photo and shows the Bot's character again.` },
-      model: { type: 'string', description: 'Move the Bot to another model, as provider/model or a model id. It stays on what it runs on: only the user moves a Bot between Seal Bot models and a local agent CLI, or between two CLIs, in its settings.' },
+      model: { type: 'string', description: 'Move the Bot to another model, as provider/model or a model id. It stays on what it runs on: only the user moves a Bot between DSH ChatChat models and a local agent CLI, or between two CLIs, in its settings.' },
       effort: { type: 'string', description: 'Thinking level for the Bot\'s model, as list_bot_models shows; an empty string returns to the model\'s default' },
       work_dir: { ...WORK_DIR_PARAM, description: `${WORK_DIR_PARAM.description}; an empty string returns it to the team workspace` },
       section: { ...SECTION_PARAM, description: `${SECTION_PARAM.description}; an empty string removes the Bot from its section (Main Bot only)` },
@@ -1181,7 +1184,7 @@ export function install(rt) {
       try {
         const item = await rt.capabilitySave(args, { botId: self })
         const approval = item.kind === 'mcp' && item.transport === 'stdio' && !item.approved
-          ? ' The user must allow this MCP server in Seal Bot settings before it can work.'
+          ? ' The user must allow this MCP server in DSH ChatChat settings before it can work.'
           : ''
         return `Saved ${item.name}. Bots with it attached use the change from their next message.${approval}`
       } catch (error) { return error.message }
@@ -1223,7 +1226,7 @@ export function install(rt) {
             : attached ? [attached] : []
           const approvals = members
             .filter(item => item.kind === 'mcp' && item.transport === 'stdio' && item.approved !== true)
-            .map(item => ` The user must allow ${item.name} in Seal Bot settings before it can work.`)
+            .map(item => ` The user must allow ${item.name} in DSH ChatChat settings before it can work.`)
             .join('')
           return `${verb} ${args.name} ${args.bot ? `to ${result.bot}` : 'to yourself'}. Changes apply from ${result.bot}'s next message.${endpoint === 'attach' ? approvals : ''}`
         } catch (error) { return error.message }

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Turns: what each Bot Session is doing now (for its mascot), which turns another Bot
 // triggered, the waiters and inboxes of group rounds, and routing a finished turn's reply.
 //

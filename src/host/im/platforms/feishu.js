@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Feishu / Lark: the long connection speaks protobuf pbbp2 frames — control
 // pings answered with pong, data frames ACKed by sending the frame back with a
 // {"code":200} payload and a biz_rt header; split payloads reassemble by

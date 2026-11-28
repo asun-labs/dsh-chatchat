@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Request identities: a request a Bot names itself is sent once, however often it repeats it.
 //
 // message_bot merges what the recipient has not read yet, but a request that was read and

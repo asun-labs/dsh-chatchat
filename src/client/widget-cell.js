@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, useRef, useState } from 'react'
 import { MarkdownText } from './dsh-primitives.js'
 import { CellEmpty } from './cell-empty.js'

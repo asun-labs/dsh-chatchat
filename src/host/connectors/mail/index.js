@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The mailbox connector: mail accounts (IMAP+SMTP app password, or Gmail with
 // Google sign-in) in state.connectors.mail.accounts, the mail_* Bot tools, the
 // send card, and the mail-* endpoints. Transports come from transport.js;
@@ -518,7 +521,7 @@ export function install(rt, host) {
       if (url.pathname !== '/callback') { res.writeHead(404); res.end(); return }
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
       if (!url.searchParams.get('code')) {
-        res.end('<p style="font-family:sans-serif">Google sign-in did not finish — go back to Seal Bot and try again.</p>')
+        res.end('<p style="font-family:sans-serif">Google sign-in did not finish — go back to DSH ChatChat and try again.</p>')
         rt.warn('seal-dot: mail Google sign-in failed: %s', url.searchParams.get('error') ?? 'no code')
         return
       }

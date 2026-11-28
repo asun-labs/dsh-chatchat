@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Telegram Bot API adapter: getUpdates long polling in, sendMessage out. Parts of the
 // protocol mapping follow dsh-im (MIT, © 2026 xmanrui — see NOTICE).
 import { chunkTelegram } from '../format.js'

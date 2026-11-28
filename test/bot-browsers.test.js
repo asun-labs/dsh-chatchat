@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { browserAddress, createBotBrowsers, PREVIEW_SCRIPT, READ_PAGE_SCRIPT, serveBrowserReads } from '../src/client/bot-browsers.js'

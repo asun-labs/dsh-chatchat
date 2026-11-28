@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // In a Bot's private chat a user steer must reach the Bot at once, not at the
 // next DSH step boundary. Two mechanisms:
 //  - a foreground shell call detaches into the jobs registry on a steer and
@@ -79,7 +82,7 @@ export function install(rt) {
   const noticeOf = (name, command, text) => createUserMessage({
     content: [{ type: 'text', text }],
     // Same source as DSH's job-completion notice so every chat renders it the
-    // same way, and Seal Bot's routing ignores it.
+    // same way, and DSH ChatChat's routing ignores it.
     source: { kind: 'tool-jobs', form: 'notice', summary: boundContextSummary(`${name} ${command} …`) },
   })
 

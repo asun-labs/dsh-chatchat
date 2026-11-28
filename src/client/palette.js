@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, Fragment, useEffect, useState } from 'react'
 import { MAIN_LOOK } from './characters.js'
 import { currentBrand, currentAgentName } from './branding.js'

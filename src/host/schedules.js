@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Scheduled tasks. DSH's schedule service stores each task with the Session it belongs
 // to and, when it is due, sends its prompt to that Session as a new message. This
 // module lists the team's tasks for Settings, creates and removes them there, and moves

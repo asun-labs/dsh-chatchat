@@ -226,3 +226,14 @@ DSH ChatChat includes adaptations extracted from Seal Harness.
 Additional mascot renderer license and provenance: third-party/seal-harness/.
 The DSH host icon is from DeepSeek Harness, Copyright (c) 2026 DeepSeek,
 under the MIT License. See third-party/deepseek-harness/LICENSE and PROVENANCE.md.
+
+==============================================================================
+DSH ChatChat modifications
+==============================================================================
+
+Modifications Copyright (c) 2026 DSH ChatChat contributors.
+Independently maintained at https://github.com/asun-labs/dsh-chatchat.
+Based on DS-Bot: https://github.com/Fei-Craft/DS-Bot.
+See MODIFICATIONS.md for the scope of changes. Upstream and third-party
+copyrights and licenses remain applicable to their respective work.
+Avatar sources and permissions: assets/avatar-catalog/PROVENANCE.md.

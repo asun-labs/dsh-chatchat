@@ -38,7 +38,7 @@ function fixture(t, home, branding) {
   } }
 }
 
-test('standalone DSH and Seal Host create their own default Bot and native Agent', async t => {
+test('standalone and legacy hosts create the independent default Bot and native Agent', async t => {
   for (const id of ['dsh', 'seal']) {
     const home = mkdtempSync(join(tmpdir(), 'chatchat-brand-'))
     const { rt, stop, call } = fixture(t, home, id)
@@ -46,18 +46,18 @@ test('standalone DSH and Seal Host create their own default Bot and native Agent
       await rt.bootstrap()
       const bot = rt.botOf(rt.state.mainBotIds[0])
       assert.equal(bot.name, brandProfile(id).botName)
-      assert.equal(bot.avatar.image, DEFAULT_AVATARS[id])
+      assert.equal(bot.avatar.image, DEFAULT_AVATARS.dsh)
       assert.equal((await rt.addAgent()).name, brandProfile(id).agentName)
       const snapshot = (await call('state', {})).value
-      assert.equal(snapshot.branding, id)
+      assert.equal(snapshot.branding, 'dsh')
       const thin = (await call('state', { since: snapshot.revision, models: snapshot.modelsKey, live: snapshot.liveKey })).value
       assert.equal(thin.unchanged, true)
-      assert.equal(thin.branding, id, 'cached rosters retain authoritative Host branding')
+      assert.equal(thin.branding, 'dsh', 'cached rosters retain the independent plugin identity')
     } finally { await stop(); removeFixtureHome(home) }
   }
   assert.equal(hostBranding().id, 'dsh')
   assert.equal(hostBranding({ integrated: true, identityService: 'anotherIdentity' }).id, 'dsh')
-  assert.equal(hostBranding({ integrated: true, identityService: 'sealHarnessIdentity' }).id, 'seal')
+  assert.equal(hostBranding({ integrated: true, identityService: 'sealHarnessIdentity' }).id, 'dsh')
   assert.throws(() => hostBranding({ branding: 'unknown' }), /Unknown/)
 })
 
@@ -88,7 +88,7 @@ test('default branding migrates once and custom name/avatar survive another host
   } finally { await current.stop(); removeFixtureHome(home) }
 })
 
-test('Client labels and icons follow the host without replacing interpolated user names', () => {
+test('Client labels and icons stay independent without replacing interpolated user names', () => {
   const globals = { seal: globalThis.__SEAL_DOT_ICON__, dsh: globalThis.__DSH_BOT_ICON__ }
   globalThis.__SEAL_DOT_ICON__ = DEFAULT_AVATARS.seal
   globalThis.__DSH_BOT_ICON__ = DEFAULT_AVATARS.dsh
@@ -98,7 +98,7 @@ test('Client labels and icons follow the host without replacing interpolated use
       try {
         const brand = brandProfile(id)
         assert.equal(t('Add Seal Agent'), `Add ${brand.agentName}`)
-        assert.equal(brandImage(), DEFAULT_AVATARS[id])
+        assert.equal(brandImage(), DEFAULT_AVATARS.dsh)
         assert.equal(t('Message {name}', { name: 'Seal Bot' }), 'Message Seal Bot')
         assert.equal(hostText('Seal Bot is still loading this chat.'), `${brand.botName} is still loading this chat.`)
         assert.equal(hostText('User named Seal Bot'), 'User named Seal Bot')
@@ -141,7 +141,7 @@ test('official DSH avatar is pinned and ships with its license and matching Host
   assert.equal(JSON.parse(assetDefines().__SEAL_DOT_ICON__), DEFAULT_AVATARS.seal)
 })
 
-test('default workspace titles follow both host brands, migrate once, and preserve custom titles', async () => {
+test('default workspace titles stay independent, migrate once, and preserve custom titles', async () => {
   for (const id of ['dsh', 'seal']) {
     for (const title of ['Seal Dot', 'Seal Bot', 'DSH Bot', '我的项目']) {
       const edits = []

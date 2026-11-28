@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The connector catalog: services that publish a remote MCP server (or need no
 // server, like the mailbox). Each entry is plain data: name, category, address,
 // and how it signs in. `about` is our own one-line text.
@@ -11,7 +14,7 @@
 // `headers` are extra static headers; `whoami` reads the account name after
 // sign-in for the row.
 
-// The OAuth client id Seal Bot is registered as on GitHub. Filled in at release;
+// The OAuth client id DSH ChatChat is registered as on GitHub. Filled in at release;
 // overridable for development. Empty keeps the pasted-token form only.
 export const GITHUB_CLIENT_ID = process.env.SEAL_DOT_GITHUB_OAUTH_CLIENT_ID ?? 'Ov23liin4waZGLSJJgn5'
 

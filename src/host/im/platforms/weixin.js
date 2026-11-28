@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // WeChat iLink: a QR login creates the connection — get_bot_qrcode, then a
 // get_qrcode_status long poll until the owner confirms on their phone; the
 // reply carries bot_token, ilink_bot_id, ilink_user_id and the base URL.

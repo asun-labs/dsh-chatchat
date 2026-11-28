@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Store: the saved team (state.json), its migrations, the lock that keeps a second dsh
 // host on the same data from writing it, and the indexes that map a Session to the Bot
 // or group chat it belongs to.
@@ -62,7 +65,7 @@ export function install(rt) {
     }
   }
   const readOnly = () => {
-    if (stuck !== undefined) return `The Bot team file ${statePath} could not be read (${stuck}). Seal Bot does not change it; fix or move the file and reload.`
+    if (stuck !== undefined) return `The Bot team file ${statePath} could not be read (${stuck}). DSH ChatChat does not change it; fix or move the file and reload.`
     if (holder === undefined) return undefined
     const where = holder.pid ? `pid ${holder.pid}${holder.host ? ` on ${holder.host}` : ''}` : 'unknown process'
     return `The Bot team in ${home} is open in another dsh (Web or Desktop, ${where}). This window shows the team but cannot change it; close the other one and reload.`
@@ -104,7 +107,7 @@ export function install(rt) {
       stuck = undefined
       return parsed
     }
-    stuck = 'saved by a newer Seal Bot; update Seal Bot'
+    stuck = 'saved by a newer DSH ChatChat; update DSH ChatChat'
     return undefined
   }
 
@@ -378,7 +381,7 @@ export function install(rt) {
     const run = writing.then(async () => {
       checkIdentity()
       // Re-check writability once the queued write runs: an adopt queued before
-      // it may have made this host read-only (e.g. a file a newer Seal Bot wrote).
+      // it may have made this host read-only (e.g. a file a newer DSH ChatChat wrote).
       if (stuck !== undefined || holder !== undefined) {
         if (required) throw new Error(`This host cannot save the Bot team: ${readOnly()}`)
         warnReadOnly()

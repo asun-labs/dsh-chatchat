@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync, mkdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -186,7 +189,7 @@ const until = async (check, ms = 3000) => {
 
 const text = message => message.content.map(block => block.text ?? '').join('\n')
 const inboxTexts = agent => [...agent.inbox.nextStep, ...agent.inbox.nextTurn].map(text)
-const PAUSE = 'Seal Bot paused your turn for a context check. Go on with it now from where you stopped.'
+const PAUSE = 'DSH ChatChat paused your turn for a context check. Go on with it now from where you stopped.'
 const said = (id, body, exchangeId) => ({ id, role: 'user', content: [{ type: 'text', text: body }], source: { kind: 'user', ...(exchangeId ? { exchangeId } : {}) } })
 // A folder outside the team workspace asks for approval once; then the move is allowed.
 const services = {

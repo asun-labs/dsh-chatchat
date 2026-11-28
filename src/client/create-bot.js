@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, useEffect, useRef, useState } from 'react'
 import { BotMark } from './mark.js'
 import { AvatarEditor } from './bot-settings.js'

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // QQ open platform: an app access token from appId+secret, then a Discord-like
 // gateway (hello, heartbeat, identify, resume, reconnect, invalid session) for
 // C2C and group @ messages. Sends are passive replies carrying the inbound

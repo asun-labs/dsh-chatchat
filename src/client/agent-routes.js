@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Local-agent routes and their badge marks, kept free of React so plain modules
 // (the create-Bot payload, tests) can use them. An agent shows its own logo
 // (agent-logos.js); the monogram is for agents without one.

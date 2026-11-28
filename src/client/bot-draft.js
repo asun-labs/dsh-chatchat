@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Plain helpers for the Create Bot form and the Runs on card, kept free of React so tests can load them.
 import { agentAvatar, isLocalRoute, modelsFor, routeOf } from './agent-routes.js'
 import { t } from './i18n.js'

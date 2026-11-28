@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Models. Every Bot runs on one model of its own, fixed when it is created and changed
 // only in its settings or by a Main Bot. The team's first Main Bot has none until the
 // user picks one in its chat. The Session keeps the selection durably.
@@ -148,7 +151,7 @@ export function install(rt) {
   }
 
   // A local agent's model, by its full ref only, so a short name never moves a Bot onto
-  // a CLI. Its CLI is asked only when Seal Bot does not know the model yet.
+  // a CLI. Its CLI is asked only when DSH ChatChat does not know the model yet.
   async function resolveLocalModel(ref) {
     const { provider, model } = splitRef(ref)
     const known = await ctx.llm.listModels(provider).catch(() => [])

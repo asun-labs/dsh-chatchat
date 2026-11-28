@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Interface copy follows the DSH language. Keys are the English text; `zh` maps them.
 // Copy is looked up at render time and every slot outlet re-renders on a language
 // switch, so nothing caches a translated string.
@@ -1683,6 +1686,17 @@ const HOST_ZH = {
   '{name} waits for the computer': '{name} 等你停手',
 }
 Object.assign(ZH, HOST_ZH)
+
+// Keep old message keys readable while current Host messages name this plugin.
+for (const [key, value] of Object.entries(ZH)) {
+  if (key.includes('Seal Bot')) ZH[key.replaceAll('Seal Bot', 'DSH ChatChat')] = value.replaceAll('Seal Bot', 'DSH ChatChat')
+}
+for (const [pattern, template] of [...HOST_ERRORS]) {
+  if (pattern.source.includes('Seal Bot')) HOST_ERRORS.push([
+    new RegExp(pattern.source.replaceAll('Seal Bot', 'DSH ChatChat'), pattern.flags),
+    template.replaceAll('Seal Bot', 'DSH ChatChat'),
+  ])
+}
 
 const fill = (text, params) => (params
   ? text.replace(/\{(\w+)\}/g, (match, name) => (name in params ? String(params[name]) : match))

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Memory: what a Bot keeps across all its conversations, as Markdown in the Agent
 // Memory Repo format (github.com/AgentMemoryRepo/agentmemoryrepo): one entry per
 // bullet line ending in `[key: value; …]` metadata, and a MEMORY.md entry point whose
@@ -127,7 +130,7 @@ export function install(rt) {
   // writing over what could not be read, the way store.js treats a broken state.json.
   const unreadable = (path, error) => {
     rt.warn('seal-dot: unreadable memory file %s: %s', path, error)
-    throw Object.assign(new Error(`Memory file ${path} could not be read (${error?.code ?? error?.message}). Seal Bot leaves it as it is; fix or move the file.`), { code: 'memory/unreadable' })
+    throw Object.assign(new Error(`Memory file ${path} could not be read (${error?.code ?? error?.message}). DSH ChatChat leaves it as it is; fix or move the file.`), { code: 'memory/unreadable' })
   }
   const readText = (path) => {
     try {

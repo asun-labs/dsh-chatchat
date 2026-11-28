@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, startTransition, useEffect, useMemo, useRef, useState } from 'react'
 import { colorOf, MAIN_LOOK } from './characters.js'
 import { currentAgentName } from './branding.js'

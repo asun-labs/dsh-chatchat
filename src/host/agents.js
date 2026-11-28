@@ -1,5 +1,8 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The DSH Agent: a team's one plain dsh entry, listed beside the Bots but not one of
-// them. Its Sessions are ordinary root Sessions in the Seal Bot workspace, so they get
+// them. Its Sessions are ordinary root Sessions in the DSH ChatChat workspace, so they get
 // the whole dsh conversation surface and none of the team tools.
 import { randomUUID } from 'node:crypto'
 import { AGENT_SESSION_TITLE_MAX } from './constants.js'

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // 优先显式 SDK 安装根，其次独立 dev/harness，最后使用本包开发依赖。
 import { existsSync } from 'node:fs'
 import { registerHooks } from 'node:module'

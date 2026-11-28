@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The Claude Code engine: one process per session, stream-json both ways.
 // stdin takes user/control JSON messages; stdout streams the assistant's
 // events until a `result` ends the turn.
@@ -93,7 +96,7 @@ class ClaudeSession {
       args.push('--mcp-config', JSON.stringify({
         mcpServers: { dsbot: { type: 'http', url: mcp.url, headers: { Authorization: `Bearer ${mcp.token}` } } },
       }))
-      // Seal Bot's own team tools need no approval, as for a model-backed Bot:
+      // DSH ChatChat's own team tools need no approval, as for a model-backed Bot:
       // toolsFor() already narrowed what this Bot may call.
       args.push('--allowedTools', 'mcp__dsbot')
     }

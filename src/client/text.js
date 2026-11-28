@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // -------------------------------------------------------------------------
 // Text helpers
 import { dateLocale, t } from './i18n.js'

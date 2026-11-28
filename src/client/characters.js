@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { INKS, GRADIENTS, isHex, inkFill } from './inks.js'
 import { brandImage } from './branding.js'
 

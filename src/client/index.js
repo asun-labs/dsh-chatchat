@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { call } from './api.js'
 import { currentBrand, installBranding, brandImage } from './branding.js'
 import { createElement as h } from 'react'

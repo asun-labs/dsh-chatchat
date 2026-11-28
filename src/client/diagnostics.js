@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // What went wrong in this browser, for Settings → Feedback and the report it builds.
 // Calls whose failures the interface swallows (polls, previews) still land here.
 import { t, language } from './i18n.js'

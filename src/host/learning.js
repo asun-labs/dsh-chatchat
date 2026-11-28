@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Learning from work. After a long turn a Bot's chat is marked for review. When the
 // team has been idle for a while, and at most every few hours, one background pass
 // reads what was said since the last pass and asks whether it taught a skill worth

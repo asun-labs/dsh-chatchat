@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The Models page of a window that has no DSH settings of its own: the model providers
 // DSH serves, with their API keys and models, and the providers it can add. DSH keeps
 // all of it; a key only ever travels from these inputs to the host.

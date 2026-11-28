@@ -1,9 +1,12 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Usage ledger: the tokens each model call in this DSH spent, for the Usage page.
 //
 // A call that a Session logs (one assistant settlement per attempt) is read from that
 // log, so calls made before this ledger existed count too. A call outside every log (a
 // checkpoint, a handoff note, the steward, an image reading, DSH titles and compaction)
-// is metered while it streams, from the time Seal Bot runs. Rows go to usage.sqlite; like
+// is metered while it streams, from the time DSH ChatChat runs. Rows go to usage.sqlite; like
 // the chat index it is derived from the logs, and deleting it loses only the metered
 // calls and the names of deleted Bots.
 //
@@ -569,7 +572,7 @@ export function install(rt) {
     }
   }
 
-  // Seal Bot tags the requests it makes outside a Session with the Session they serve.
+  // DSH ChatChat tags the requests it makes outside a Session with the Session they serve.
   const tags = new WeakMap()
   const tagUsage = (messages, tag) => {
     if (messages !== null && typeof messages === 'object') tags.set(messages, tag)
@@ -579,7 +582,7 @@ export function install(rt) {
     const tag = from !== null && typeof from === 'object' ? tags.get(from) : undefined
     if (tag !== undefined) tagUsage(to, tag)
   }
-  // Seal Bot's own requests name the Session they serve, as some routes require, so
+  // DSH ChatChat's own requests name the Session they serve, as some routes require, so
   // `sessionId` alone does not make a request that Session's own round; the tag does.
   const ownRequest = options => tags.has(options?.messages)
   // Owner and group use are journaled with the call itself: a Bot or room that

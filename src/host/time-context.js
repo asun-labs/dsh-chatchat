@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 
 const SOURCE = 'seal-dot-time-context'

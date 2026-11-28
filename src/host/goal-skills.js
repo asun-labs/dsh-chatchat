@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The seal-dot goal skill `goal-grill`: how the admin aligns a group goal with the
 // user before writing it. Registered when a `skills` service exists, like the
 // Office skills, so the plugin runs the same everywhere.

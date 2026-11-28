@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, useLayoutEffect, useRef } from 'react'
 
 // A cell that draws nothing marks itself, so the row or seat wrapping it can tell a

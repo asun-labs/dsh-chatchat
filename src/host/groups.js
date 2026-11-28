@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Group chats: the room log, members' group Sessions, rounds and @mentions, round
 // reports, and the group tools (group_relay, read_own_chat, read_group_chat).
 //
@@ -287,7 +290,7 @@ export function install(rt) {
   // the round is.
   const noteFailure = (room, name, failure) => {
     ensureRoomLog(room)
-    appendRoom(room, { who: 'Seal Bot', kind: 'notice', reason: 'failed', names: [name], detail: failureLine(failure) })
+    appendRoom(room, { who: 'DSH ChatChat', kind: 'notice', reason: 'failed', names: [name], detail: failureLine(failure) })
   }
 
   async function roomFolderNotice(roomId, folder) {
@@ -295,7 +298,7 @@ export function install(rt) {
     if (room === undefined || folder === undefined || room.workDir !== folder || room.folderNotice === folder) return
     ensureRoomLog(room)
     room.folderNotice = folder
-    appendRoom(room, { who: 'Seal Bot', kind: 'notice', reason: 'folder', path: folder })
+    appendRoom(room, { who: 'DSH ChatChat', kind: 'notice', reason: 'folder', path: folder })
     const text = noticeText({ reason: 'folder', path: folder })
     for (const round of rt.roomProgress.values()) {
       if (round.roomId === room.id) round.replies.push({ kind: 'folder', text, time: Date.now() })
@@ -756,7 +759,7 @@ export function install(rt) {
     if (room.idlePaused === undefined || room.idlePaused.noticed === true) return
     room.idlePaused.noticed = true
     const names = callees.map(peer => peer.name)
-    appendRoom(room, { who: 'Seal Bot', kind: 'notice', reason: 'paused', idle: true, from: member.name, limit: ROOM_IDLE_RELAY_LIMIT, names })
+    appendRoom(room, { who: 'DSH ChatChat', kind: 'notice', reason: 'paused', idle: true, from: member.name, limit: ROOM_IDLE_RELAY_LIMIT, names })
     round.replies.push({ kind: 'paused', idle: true, botId: member.id, name: member.name, color: member.color, count: room.idlePaused.count ?? ROOM_IDLE_RELAY_LIMIT, limit: ROOM_IDLE_RELAY_LIMIT, names, time: Date.now() })
     void rt.save().catch(() => {})
   }
@@ -830,7 +833,7 @@ export function install(rt) {
     // An answer that came, or is still coming, means the round is not left silent.
     const answered = round.slots.some(slot => ['posted', 'working', 'waiting-approval'].includes(slot.status))
     if (alone && !answered) {
-      appendRoom(room, { who: 'Seal Bot', kind: 'notice', reason: 'admin-passed', names: [round.soleAdmin.name] })
+      appendRoom(room, { who: 'DSH ChatChat', kind: 'notice', reason: 'admin-passed', names: [round.soleAdmin.name] })
       // The round the user watched shows the same notice as one line of its replies.
       round.replies.push({ kind: 'admin-passed', botId: round.soleAdmin.id, name: round.soleAdmin.name, color: round.soleAdmin.color, time: Date.now() })
       await rt.save()
@@ -927,7 +930,7 @@ export function install(rt) {
         // The round moved on without this member: the log shows the call and then
         // silence, which reads as a lost message. The group is told the baton was
         // dropped, and what brings the member back.
-        appendRoom(room, { who: 'Seal Bot', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
+        appendRoom(room, { who: 'DSH ChatChat', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
       }
     }
     // A result the admin asked for reports its goal task; a failed model call puts it back.
@@ -1563,7 +1566,7 @@ export function install(rt) {
 
   // A group chat's own Session never consults the model: models drift from "only call
   // group_relay" (they message one member directly when the user names it), so the
-  // relay step is synthesized here. Auxiliary calls such as titles, and Seal Bot's own
+  // relay step is synthesized here. Auxiliary calls such as titles, and DSH ChatChat's own
   // calls for the room such as image readings, still reach the model.
   ctx.on('llm/stream', (options, next) => {
     if (options.sessionId === undefined || options.purpose !== undefined || rt.ownRequest(options)) return next()
@@ -1591,7 +1594,7 @@ export function install(rt) {
       // step ends with a line the user can read instead.
       if (!declared.has('group_relay') && !declared.has('run_code')) {
         rt.warn('seal-dot: group %s cannot relay: group_relay is not available in its Session', room.name)
-        const text = 'This group could not pass the message on: its relay tool is not available. Restart Seal Bot; if it keeps happening, report it.'
+        const text = 'This group could not pass the message on: its relay tool is not available. Restart DSH ChatChat; if it keeps happening, report it.'
         yield { type: 'block-start', index: 0, blockType: 'text' }
         yield { type: 'text-delta', index: 0, text }
         yield { type: 'block-end', index: 0, block: { type: 'text', text } }

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // WeCom intelligent robot: one long-lived WebSocket, a { cmd, headers: {
 // req_id }, body } protocol — aibot_subscribe authenticates, ping heartbeats,
 // aibot_msg_callback carries inbound messages answered through

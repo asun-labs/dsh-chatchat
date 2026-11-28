@@ -80,14 +80,14 @@ Voice, browser, MCP, and Computer Use features require the corresponding host se
 | --- | --- |
 | Install, enable, disable, or upgrade | [Installation and upgrades (中文)](docs/installation.md) |
 | Build, test, or package the source | [Development and verification (中文)](docs/development.md) |
-| Understand Seal's default installation, host adapters, and data compatibility | [Seal integration (中文)](docs/seal-integration.md) |
+| Load the plugin in another host and retain existing data | [Host loading and compatibility (中文)](docs/host-integration.md) |
 | See what changed in each version | [Release history](https://github.com/asun-labs/dsh-chatchat/releases) |
 | Report a problem or suggest an improvement | [GitHub Issues](https://github.com/asun-labs/dsh-chatchat/issues) |
 
-Standalone installations use **DSH** branding. Seal Harness supplies host adapters for **Seal** branding while retaining existing bots, groups, and conversation history. See the linked guides for development and host integration details.
+DSH ChatChat is an independently maintained and distributed DSH plugin. Other products can load its plugin package. See the linked guides for host integration and data compatibility.
 
 ---
 
 ## Sources and licenses
 
-Based on Fei2411/DS-Bot and distributed under Apache-2.0. See the root [LICENSE](LICENSE) and [NOTICE](NOTICE), and the upstream [LICENSE](third-party/ds-bot/LICENSE), [NOTICE](third-party/ds-bot/NOTICE), and [provenance](third-party/ds-bot/PROVENANCE.md). The local mascot renderer comes from Seal Harness and retains its MIT [license](third-party/seal-harness/LICENSE) and [provenance](third-party/seal-harness/PROVENANCE.md). Avatar sources and permission details are documented in the [avatar provenance](assets/avatar-catalog/PROVENANCE.md). Retained legacy identifiers and source notices do not imply shared data or distribution channels with other projects.
+Based on [DS-Bot](https://github.com/Fei-Craft/DS-Bot) under [Apache-2.0](LICENSE). See [our modifications](MODIFICATIONS.md) and [NOTICE](NOTICE) for changes, third-party copyrights and licenses.

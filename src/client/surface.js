@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { STORAGE } from './storage.js'
 
 // The plugin's surface mode: 'bot' paints the whole team interface over the shell,

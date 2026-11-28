@@ -1,5 +1,8 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // IM: talk to Bots from chat apps. A connection is one IM bot account bound to a Bot;
-// direct chats reach that Bot, platform group chats can be bound to a Seal Bot group.
+// direct chats reach that Bot, platform group chats can be bound to a DSH ChatChat group.
 // The platform adapters (im/platforms/) own the wire; this module owns pairing,
 // routing, cards and the send queues. Only the dsh holding the team lock connects.
 import { randomBytes, randomUUID } from 'node:crypto'
@@ -24,9 +27,9 @@ export function install(rt) {
   const zh = () => String(rt.uiLanguage?.() ?? '').startsWith('Chinese')
   const text = (key, values = {}) => {
     const line = {
-      requested: zh() ? '已向 Seal Bot 发出连接请求，请在电脑上的 Seal Bot 设置 → IM 里允许。' : 'A connection request was sent to Seal Bot; allow it in Settings → IM on the computer.',
-      unbound: zh() ? '这个 IM 机器人还没绑定 Bot，请在 Seal Bot 设置 → IM 里选一个。' : 'This IM bot is not bound to a Bot yet; pick one in Seal Bot Settings → IM.',
-      unboundGroup: zh() ? '这个群还没绑定，请在 Seal Bot 设置 → IM 里给它选一个群或 Bot。' : 'This group is not bound yet; pick a group or a Bot for it in Seal Bot Settings → IM.',
+      requested: zh() ? '已向 DSH ChatChat 发出连接请求，请在电脑上的 DSH ChatChat 设置 → IM 里允许。' : 'A connection request was sent to DSH ChatChat; allow it in Settings → IM on the computer.',
+      unbound: zh() ? '这个 IM 机器人还没绑定 Bot，请在 DSH ChatChat 设置 → IM 里选一个。' : 'This IM bot is not bound to a Bot yet; pick one in DSH ChatChat Settings → IM.',
+      unboundGroup: zh() ? '这个群还没绑定，请在 DSH ChatChat 设置 → IM 里给它选一个群或 Bot。' : 'This group is not bound yet; pick a group or a Bot for it in DSH ChatChat Settings → IM.',
       connected: zh() ? `已连接，现在可以和 ${values.target} 说话了。` : `Connected — you can talk to ${values.target} now.`,
       stopped: zh() ? '已停下。' : 'Stopped.',
       idle: zh() ? '现在没有在做的活。' : 'Nothing is running.',

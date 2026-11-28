@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { sealMascotStyles } from './mascot-styles.js'
 import { INKS } from './inks.js'
 import { DEFAULT_MASK } from './characters.js'

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { countCards, heldCardKey } from './sources.js'
 import { noteClientError } from './diagnostics.js'
 

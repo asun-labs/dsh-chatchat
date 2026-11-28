@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { rename } from 'node:fs/promises'
 import { setTimeout as delay } from 'node:timers/promises'
 import { assertRequestIdentity } from './identity-boundary.js'

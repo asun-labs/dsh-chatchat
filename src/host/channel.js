@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Client channel: the team view the browser renders, and the POST /api/bot endpoints.
 import { randomUUID } from 'node:crypto'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
@@ -13,7 +16,7 @@ const LANGUAGES = { zh: 'Chinese (简体中文)', en: 'English' }
 const RUN_STATS = ['sessionStats', 'tokenUsage', 'contextPressure']
 
 const invalid = message => Object.assign(new Error(message), { code: 'bot/invalid' })
-// Programming and file system errors are Seal Bot's own faults, logged with their stack;
+// Programming and file system errors are DSH ChatChat's own faults, logged with their stack;
 // any other error is a refusal whose message is meant for the user.
 const isInternal = error => error instanceof TypeError || error instanceof ReferenceError || error instanceof RangeError
   || error instanceof SyntaxError || (typeof error?.code === 'string' && /^E[A-Z_]+$/.test(error.code))
@@ -516,7 +519,7 @@ export function install(rt) {
         case 'mail-send-answer':
         case 'mail-sign-in-code':
           await rt.load()
-          if (!rt.connectorEndpoint) return fail('请使用 Seal 的连接器', 'seal-dot/managed-by-seal')
+          if (!rt.connectorEndpoint) return fail('请使用宿主的连接器', 'seal-dot/managed-by-seal')
           return ok(await rt.connectorEndpoint(endpoint, body))
         case 'capability-save':
         case 'capability-delete':
@@ -528,7 +531,7 @@ export function install(rt) {
         case 'schedule-create':
         case 'schedule-delete':
           await rt.load()
-          if (!rt.scheduleEndpoint) return fail('请使用 Seal 的自动化任务', 'seal-dot/managed-by-seal')
+          if (!rt.scheduleEndpoint) return fail('请使用宿主的自动化任务', 'seal-dot/managed-by-seal')
           return ok(await rt.scheduleEndpoint(endpoint, body))
         case 'memory-view':
         case 'memory-ask':
@@ -697,7 +700,7 @@ export function install(rt) {
         case 'im-login-start':
         case 'im-login-wait':
           await rt.load()
-          if (!rt.imEndpoint) return fail('请使用 Seal 的 IM 连接', 'seal-dot/managed-by-seal')
+          if (!rt.imEndpoint) return fail('请使用宿主的 IM 连接', 'seal-dot/managed-by-seal')
           return ok(await rt.imEndpoint(endpoint, body))
         case 'local-agents':
         case 'local-agent-models':

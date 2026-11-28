@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createHash } from 'node:crypto'
 import { encodeUrlComponent } from './secrets.js'
 import { own } from './store.js'

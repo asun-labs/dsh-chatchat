@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The memory review. When a conversation goes idle, a model reads what is new there
 // and keeps, changes, or removes entries, as a person would after a talk. A Bot's own
 // chat goes to its own memory, read by its model; a group chat goes to the group's

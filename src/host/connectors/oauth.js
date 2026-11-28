@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // OAuth sign-in for connectors, on the official MCP SDK auth helpers. Discovery:
 // an unauthenticated request → 401 WWW-Authenticate → protected-resource
 // metadata (well-known fallback; AS metadata on the MCP origin for older
@@ -76,7 +79,7 @@ export async function resolveClient(entry, discovery, redirectUri, fixedPort, st
   }
   if (typeof metadata?.registration_endpoint === 'string') {
     const clientMetadata = {
-      client_name: 'Seal Bot',
+      client_name: 'DSH ChatChat',
       redirect_uris: [redirectUri],
       grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],

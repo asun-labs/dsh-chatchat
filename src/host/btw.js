@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Aside cards (btw) are the earlier single-shot aside: the ask path is gone,
 // but existing cards stay readable until the user deletes them. This file keeps
 // their files, their turn placement, and the shared snapshot/model-call
@@ -10,7 +13,7 @@ import { dirname, join } from 'node:path'
 import { BlockAssembler } from '@deepseek-ai/dsh-llm'
 import { replaceFile } from './files.js'
 
-export const RESTART_ERROR = 'Seal Bot restarted before this answer finished.'
+export const RESTART_ERROR = 'DSH ChatChat restarted before this answer finished.'
 export const TOOL_ERROR = 'The model called a tool again after being told not to, so this aside was not answered.'
 export const EMPTY_ERROR = 'The model wrote nothing.'
 // Events that still belong to a turn. A model selection or a title does not.

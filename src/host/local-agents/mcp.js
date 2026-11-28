@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The loopback MCP server: one per CLI session, Streamable HTTP on 127.0.0.1
 // with a random port and a per-session bearer token. It serves only the DS
 // Bot team tools; every call is handed to the adapter, which emits it as a

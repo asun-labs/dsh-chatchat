@@ -1,7 +1,10 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // macOS attributes Screen Recording for an application nested in another signed application to
 // the outer one, so a grant to "DSH Computer Use" does nothing while the helper lies inside
-// Seal Bot.app (#1066). The provider runs a copy from outside the bundle: the copy keeps DeepSeek's
-// signature, so the grant stays with the helper and survives Seal Bot's own updates.
+// DSH ChatChat.app (#1066). The provider runs a copy from outside the bundle: the copy keeps DeepSeek's
+// signature, so the grant stays with the helper and survives DSH ChatChat's own updates.
 import { execFile } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { mkdir, readdir, readFile, rename, rm } from 'node:fs/promises'

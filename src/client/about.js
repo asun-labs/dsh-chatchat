@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Settings → About Seal Bot: the version, updates for Seal Bot and DSH, and the links to
 // the repository. The sidebar's cloud button shows the same update state.
 import { createElement as h, useEffect, useState } from 'react'

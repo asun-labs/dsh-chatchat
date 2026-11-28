@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Hand-offs: the work Bots give each other, and what each Bot is doing right now.
 //
 // A Bot's request to another Bot is a piece of work. What the recipient hands on while

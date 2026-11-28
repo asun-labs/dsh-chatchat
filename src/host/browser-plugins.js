@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The whole team uses one browser plugin. Each Bot still gets its own profile
 // directory, including the group Sessions where that Bot speaks.
 import { isAbsolute, join } from 'node:path'

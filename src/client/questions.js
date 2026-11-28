@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import { CloseIcon, CheckIcon } from './icons.js'
 import { CellEmpty } from './cell-empty.js'

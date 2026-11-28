@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Mailbox presets by address domain. "Other" takes hosts and ports from the user.
 export const PRESETS = [
   { id: 'qq', name: 'QQ Mail', domains: ['qq.com', 'foxmail.com'], imap: { host: 'imap.qq.com', port: 993, secure: true }, smtp: { host: 'smtp.qq.com', port: 465, secure: true } },
@@ -14,7 +17,7 @@ export const presetOf = (address) => {
 
 // 163 and 126 answer "Unsafe Login" without the IMAP ID command (RFC 2971);
 // sending it for every server that supports ID is harmless elsewhere.
-export const IMAP_ID = { name: 'seal-dot', version: '0.1', vendor: 'Seal Bot' }
+export const IMAP_ID = { name: 'seal-dot', version: '0.1', vendor: 'DSH ChatChat' }
 
 export const mailSecretName = (address, suffix) => {
   const safe = String(address ?? '').toUpperCase().replace(/[^A-Z0-9]/g, '_')

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Connector and mailbox marks. The SI paths are each service's logo from
 // Simple Icons 16.36.0 (CC0-1.0, https://simpleicons.org); Context7's mark is
 // the icon from upstash/context7 (MIT, public/context7-icon.svg). The remaining

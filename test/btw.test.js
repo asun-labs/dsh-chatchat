@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { hostname, tmpdir } from 'node:os'
@@ -281,7 +284,7 @@ test('a restart marks an aside that was still answering as failed', async (t) =>
   t.after(() => env.stop())
   const [live, old] = cardsOf(env.rt)
   assert.equal(live.status, 'failed')
-  assert.equal(live.error, 'Seal Bot restarted before this answer finished.')
+  assert.equal(live.error, 'DSH ChatChat restarted before this answer finished.')
   assert.equal(typeof live.finishedAt, 'number')
   assert.equal(live.question, 'Still going?')
   assert.equal(old.status, 'done')
@@ -289,7 +292,7 @@ test('a restart marks an aside that was still answering as failed', async (t) =>
   assert.equal(old.finishedAt, 11)
   const file = cardsFile(env.home)
   assert.equal(file[0].status, 'failed')
-  assert.equal(file[0].error, 'Seal Bot restarted before this answer finished.')
+  assert.equal(file[0].error, 'DSH ChatChat restarted before this answer finished.')
   assert.equal(file[1].status, 'done')
   const saved = JSON.parse(readFileSync(join(env.home, 'state.json'), 'utf8'))
   assert.equal('btwCards' in saved, false)
@@ -389,7 +392,7 @@ test('an earlier part page carries that part\'s cards, read from its file', asyn
   assert.equal(page.value.btw[0].id, 'there')
   // The owning host's lazy read still records the restart this file kept.
   assert.equal(page.value.btw[1].status, 'failed')
-  assert.equal(page.value.btw[1].error, 'Seal Bot restarted before this answer finished.')
+  assert.equal(page.value.btw[1].error, 'DSH ChatChat restarted before this answer finished.')
   const file = cardsFile(env.home, 'b1', 's-old')
   assert.equal(file[1].status, 'failed')
 })

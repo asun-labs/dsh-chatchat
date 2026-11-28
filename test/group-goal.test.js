@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -326,7 +329,7 @@ test('an idle round wakes the admin for a goal check; [PASS] waits for the user'
   await settle(() => host.agentOf('ga').calls.length === 2)
   const prompt = text(host.agentOf('ga').calls[1])
   assert.match(prompt, /goal check/)
-  assert.match(prompt, /Goal check from Seal Bot/)
+  assert.match(prompt, /Goal check from DSH ChatChat/)
   host.begin('ga')
   host.finish('ga', '[PASS]')
   await settle(() => check() !== undefined)

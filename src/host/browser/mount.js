@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Registers one browser plugin's tools. seal-dot passes a key function that resolves
 // the Bot; a standalone package can pass the Session id instead.
 import { rm } from 'node:fs/promises'

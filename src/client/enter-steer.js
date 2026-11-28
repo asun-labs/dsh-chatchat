@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Plain Enter on an empty composer while the Bot works submits nothing in the
 // shell. Seal Bot reads it as "steer my queued messages into the running turn" —
 // the queue dock's steer button for every queued row at once (#839).

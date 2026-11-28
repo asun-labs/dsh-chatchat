@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The DOM side of the frame layout in frame-layout.js: measuring the shell's
 // sidebar track, and the one CSS rule that writes the conversation column's
 // margins (our own column on the left, the Bot panel on the right).

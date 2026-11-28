@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { hostname, tmpdir } from 'node:os'
@@ -970,7 +973,7 @@ test('a memory file that cannot be read is left alone, and the section says so',
   t.after(() => stop())
   // A directory reads as EISDIR on every platform; no chmod games needed.
   mkdirSync(join(home, 'memory', 'bots', 'b2', 'MEMORY.md'), { recursive: true })
-  await assert.rejects(tool('remember', { text: 'Likes tea' }, 'b2'), /Memory file .*MEMORY\.md could not be read \(EISDIR\)\. Seal Bot leaves it as it is/)
+  await assert.rejects(tool('remember', { text: 'Likes tea' }, 'b2'), /Memory file .*MEMORY\.md could not be read \(EISDIR\)\. DSH ChatChat leaves it as it is/)
   assert.deepEqual(readdirSync(join(home, 'memory', 'bots', 'b2')), ['MEMORY.md'])
   // The prompt shows the failure instead of looking empty, and nothing is frozen.
   assert.match(section('b2'), /\(this memory could not be read: EISDIR\)/)

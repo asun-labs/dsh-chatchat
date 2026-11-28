@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The settings shell: Seal Bot holds `sidebar.settings`, the seat DSH's ui-settings-general
 // fills elsewhere (the bundle patch turns that row off). Holding the seat means declaring
 // its child slots, and only the declaring entry may render them, so DSH's own settings

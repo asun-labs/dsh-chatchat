@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Working folders: where a Bot's Sessions run. A group's folder holds for every member
 // there, else a Bot works in its own folder, else in the team workspace. A Session's
 // folder is fixed when it is made, so a change moves the conversation on to a fresh
@@ -52,7 +55,7 @@ export function install(rt) {
   // Where `input` leads from `base`, as a real path, the way DSH's working_directory resolves
   // a change; undefined when nothing is there.
   const folderAt = (base, input) => realpath(resolve(base, input)).catch(() => undefined)
-  // Where a Session works: the folder DSH has for it, else the one Seal Bot made it for.
+  // Where a Session works: the folder DSH has for it, else the one DSH ChatChat made it for.
   const sessionFolder = (session) => {
     const reported = session?.header === undefined ? undefined : ctx.get?.('workingDirectory')?.get?.(session) ?? session.header.cwd
     if (reported !== undefined) return reported

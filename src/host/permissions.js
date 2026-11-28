@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Permissions. A Bot's permission preset is its own: kept on the Bot and set on every
 // Session it speaks from, so a fresh part or a new group Session keeps it. A group may
 // set one preset for all its members there, in place of each member's own, as it may

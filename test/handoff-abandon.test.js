@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Waits a Bot gave up: one hand-off that will not come back is closed with an explicit
 // result, so the work above it goes on instead of waiting forever.
 import assert from 'node:assert/strict'

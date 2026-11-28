@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Newline-delimited JSON-RPC over a child process's stdio: requests we send,
 // answers and server-initiated requests we receive. Shared by the ACP and the
 // Codex app-server engines.
@@ -77,7 +80,7 @@ export class JsonRpcPeer {
 // Feeds stdout into a peer line by line; resolves when the process ends.
 export function wireProcess(child, peer) {
   // A write that meets a process on its way out fails with EPIPE. Its exit already
-  // ends what waits on it; an unheard stream error would take Seal Bot down.
+  // ends what waits on it; an unheard stream error would take DSH ChatChat down.
   child.stdin.on('error', () => {})
   let rest = ''
   child.stdout.setEncoding('utf8')

@@ -1,5 +1,8 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { SealMascot } from './mascot.js'
-import { currentBrand } from './branding.js'
+import { isLegacyMascot } from './branding.js'
 import { createElement as h, useEffect, useRef, useState } from 'react'
 import { fnv1a, lookOf, shapeId, shapeOf, MAIN_LOOK, MASK_ID, nextMarkSerial, characterMarkup } from './characters.js'
 import { reducedMotion } from './motion.js'
@@ -83,7 +86,7 @@ export function BotMark({ bot, look: given, size = 36, state = 'idle', live = fa
     onClick: pokeable ? () => setPoked(true) : undefined,
     onAnimationEnd: poked ? (event) => { if (/^bt-poke/.test(event.animationName)) setPoked(false) } : undefined,
   }
-  if (live && currentBrand().id === 'seal' && image && image === MAIN_LOOK.image) return h('span', common, h(SealMascot, { image, star: false }))
+  if (live && isLegacyMascot(image)) return h('span', common, h(SealMascot, { image, star: false }))
   if (image) return h('span', common, h('img', { className: 'bt-mark-img', src: image, alt: '', draggable: false, onError: () => setBroken(image) }))
   const box = shapeOf(look.shape).size
   return h('span', common, h('svg', { viewBox: `0 0 ${box} ${box}`, dangerouslySetInnerHTML: { __html: characterMarkup(look.shape, look.color).replaceAll(MASK_ID, maskId.current) } }))

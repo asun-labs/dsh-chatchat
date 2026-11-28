@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The connector gateway: one local HTTP server inside the plugin process. Every
 // remote connector's mcp-client mounts `http://127.0.0.1:<port>/c/<id>` with a
 // random per-process nonce, so no real credential ever reaches the mcp-client

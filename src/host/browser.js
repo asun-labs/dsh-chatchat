@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Bot browsers (DSH Desktop and the desktop app). Every Bot owns a browser panel there: an
 // Electron webview in its own storage partition, which the user steers. The page lives in
 // the app window, not here, so `read_browser` reaches it through the window: the client
@@ -146,7 +149,7 @@ export function createBrowserChannel({ now = Date.now, waitMs = WAIT_MS, staleMs
 
   function dispose() {
     for (const client of clients.values()) client.end?.()
-    for (const id of [...pending.keys()]) settle(id, { error: 'Seal Bot stopped before the page was read.' })
+    for (const id of [...pending.keys()]) settle(id, { error: 'DSH ChatChat stopped before the page was read.' })
     clients.clear()
     holds.clear()
   }
@@ -232,7 +235,7 @@ export function pageText(page, { from = 0, size = TEXT_PAGE, itemsMax = ITEMS_MA
   return lines.join('\n')
 }
 
-export const NO_BROWSER = 'Your browser panel is not open. It exists only in the desktop apps (DSH Desktop and Seal Bot): ask the user to click your name at the top of your chat, open the browser from there, and load the page.'
+export const NO_BROWSER = 'Your browser panel is not open. It exists only in the desktop apps (DSH Desktop and DSH ChatChat): ask the user to click your name at the top of your chat, open the browser from there, and load the page.'
 export const NO_PAGE = 'Your browser panel has no page open yet. Ask the user to load the page there first.'
 
 const OPEN_MAX = 64

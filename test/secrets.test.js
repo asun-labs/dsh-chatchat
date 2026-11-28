@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { randomBytes } from 'node:crypto'
 import { mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
@@ -182,7 +185,7 @@ test('a card saves a key the Bot never sees, and the shell gets it', async (t) =
   const live = bench.contributors.filter(entry => entry.live)
   assert.equal(live.length, 1)
   assert.deepEqual(Object.keys(live[0].variables), ['DSH_SECRET_DEMO_TOKEN'])
-  assert.equal(live[0].variables.DSH_SECRET_DEMO_TOKEN.description, 'Seal Bot secret DEMO_TOKEN: 测试')
+  assert.equal(live[0].variables.DSH_SECRET_DEMO_TOKEN.description, 'DSH ChatChat secret DEMO_TOKEN: 测试')
 
   // Asking again only names the variable.
   const again = await bench.tool('request_secret', { name: 'DEMO_TOKEN', purpose: 'x' }, 'b2')
@@ -379,7 +382,7 @@ test('a secrets file that cannot be read blocks every write instead of being ove
   const file = join(home, 'secrets.json')
   const denied = await bench.call('secret-set', { name: 'TEST_TOKEN', value: '12345678' })
   assert.equal(denied.ok, false)
-  assert.match(denied.error.message, /secrets\.json could not be read \(EISDIR\)\. Seal Bot does not change it/)
+  assert.match(denied.error.message, /secrets\.json could not be read \(EISDIR\)\. DSH ChatChat does not change it/)
   assert.ok(statSync(file).isDirectory())
   // While it stays unreadable, nothing is written; once it is gone, saving works.
   rmSync(file, { recursive: true })

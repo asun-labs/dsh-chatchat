@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { build } from 'esbuild'
 import { readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Tests for the seal-dot Office skill provider (src/host/office-skills.js).
 import { existsSync } from 'node:fs'
 import { sep } from 'node:path'

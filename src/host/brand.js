@@ -10,9 +10,8 @@ export const DEFAULT_AVATARS = Object.freeze({
 })
 
 export function hostBranding(config = {}) {
-  // 兼容旧 Seal 包装器；其他宿主不能因为同样启用 integrated 就被误认成 Seal。
-  const id = config.branding ?? (config.integrated && config.identityService === 'sealHarnessIdentity' ? 'seal' : 'dsh')
-  return { ...brandProfile(id), image: DEFAULT_AVATARS[id] }
+  const profile = brandProfile(config.branding ?? 'dsh')
+  return { ...profile, image: DEFAULT_AVATARS[profile.id] }
 }
 
 // Rename only records still carrying the product's old default name. Custom Bot

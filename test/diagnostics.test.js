@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import fsp from 'node:fs/promises'
@@ -70,7 +73,7 @@ test('warnings are kept, cleaned, written to the log, and read back after a rest
   assert.equal(second.code, 'RATE_LIMIT')
 
   const report = await rt.diagnostics.report({ client: { surface: 'Web', language: 'zh-CN', userAgent: 'Test/1' }, clientErrors: [{ time: 1, text: 'state: HTTP 502' }] })
-  assert.match(report.markdown, /\| Seal Bot \| \d+\.\d+\.\d+ \|/)
+  assert.match(report.markdown, /\| DSH ChatChat \| \d+\.\d+\.\d+ \|/)
   assert.match(report.markdown, /\| Surface \| Web \|/)
   assert.match(report.markdown, /\| Models \| deepseek\/deepseek-chat \|/)
   assert.match(report.markdown, /WARN host \[EACCES\] state write failed/)

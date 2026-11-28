@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The seal-dot Office skills: `office` (the routing skill, preferred over the
 // platform's own bundled router) and `office-tools` (the CLI that inspects,
 // checks and edits Office packages). Registered when a `skills` service exists;

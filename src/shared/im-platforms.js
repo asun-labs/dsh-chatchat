@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The IM platforms Seal Bot can connect to. The settings page draws the add form from
 // `fields`; `secret` fields are kept as Seal Bot secrets and never leave the host.
 // `buttons`: the platform can show card buttons (others answer with numbers).

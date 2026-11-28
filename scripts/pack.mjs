@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 import { root } from './build-client.mjs'
 
-const payload = ['index.js', 'web-search.js', 'office.js', 'office.js.map', 'lib', 'src', 'assets', 'third-party', 'LICENSE', 'NOTICE', 'README.md', 'cordis.patch.yml']
+const payload = ['index.js', 'web-search.js', 'office.js', 'office.js.map', 'lib', 'src', 'assets', 'third-party', 'LICENSE', 'NOTICE', 'MODIFICATIONS.md', 'README.md', 'README.en.md', 'cordis.patch.yml']
 
 // 发布包不执行安装脚本，不携带开发依赖；构建仅发生在插件维护者的打包阶段。
 export function releaseManifest(manifest) {

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // What a Bot runs on, as the user chooses it: the local agent cards of the Create Bot
 // form and the Runs on card of a Bot's settings. Changing it starts a new part of every
 // conversation of the Bot, so it asks first.

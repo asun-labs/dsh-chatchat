@@ -23,7 +23,7 @@ if (!english) installLocale({
   bind: () => key => dictionary[key] ?? key,
   getLocale: () => ({ active: 'zh-CN' }),
 })
-installBranding('dsh')
+installBranding(new URLSearchParams(location.search).get('branding') ?? 'dsh')
 const image = index => ({ image: ROBOT_AVATARS[index].image })
 const main = { id: 'main', name: 'DSH Bot', role: text('团队协调员', 'Team coordinator'), avatar: { image: brandImage() }, createdAt: 1 }
 const writer = { id: 'writer', name: text('内容编辑', 'Editor'), role: text('写作与表达', 'Writing and communication'), avatar: image(2), createdAt: 3,

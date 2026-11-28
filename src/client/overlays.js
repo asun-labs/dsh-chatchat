@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, Fragment, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CommandPalette } from './palette.js'

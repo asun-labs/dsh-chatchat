@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import fsp from 'node:fs/promises'
@@ -139,7 +142,7 @@ test('a state from a newer version remains untouched', async (t) => {
   const original = JSON.stringify({ version: 999, revision: 77, recoveryMarker: 'keep' })
   const { rt, statePath } = runtime(t, original)
   await rt.load()
-  assert.match(rt.readOnly(), /saved by a newer Seal Bot; update Seal Bot/)
+  assert.match(rt.readOnly(), /saved by a newer DSH ChatChat; update DSH ChatChat/)
   rt.state.prefs.marker = 'not saved'
   await rt.save()
   assert.equal(fs.readFileSync(statePath, 'utf8'), original)
@@ -329,7 +332,7 @@ test('a save writes nothing after adopting a file from a newer Seal Bot', async 
   fs.rmSync(join(home, 'state.lock'))
   rt.state.prefs.after = 'not saved'
   await rt.save()
-  assert.match(rt.readOnly(), /saved by a newer Seal Bot/)
+  assert.match(rt.readOnly(), /saved by a newer DSH ChatChat/)
   assert.equal(fs.readFileSync(statePath, 'utf8'), future)
   // The outside edit was still kept aside before it was adopted.
   const backups = fs.readdirSync(home).filter(name => name.startsWith('state.json.replaced-'))

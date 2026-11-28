@@ -25,6 +25,7 @@
     "third-party",
     "LICENSE",
     "NOTICE",
+    "MODIFICATIONS.md",
     "README.md",
     "cordis.patch.yml"
   ],

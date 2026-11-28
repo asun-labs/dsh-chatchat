@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The engines a local agent can run on. Each entry names its route, its display
 // name, how it starts, and which driver speaks its protocol: 'acp' (Agent
 // Client Protocol over stdio), 'codex' (the Codex app-server JSON-RPC), or
@@ -73,7 +76,7 @@ export function validateCustom({ name, command, args }) {
   return clean
 }
 
-// The permission preset Seal Bot gives the Bot, mapped to each driver's mode.
+// The permission preset DSH ChatChat gives the Bot, mapped to each driver's mode.
 // An ACP agent that lists its modes gets one of them or none: an agent with no
 // matching mode keeps its own (see acp.js).
 export const MODES = {

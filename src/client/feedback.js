@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Settings → Feedback: report a problem as a GitHub issue with the diagnostics filled
 // in, see the latest errors, and download the log. Also the toast for actions that
 // fail away from any form (menus, the palette).

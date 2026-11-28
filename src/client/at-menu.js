@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // -------------------------------------------------------------------------
 // The composer's "@" in a Bot's chat or a group chat: a Bot group that inserts
 // "@Name", and the chats that "+ → Reference a chat" opens in the same menu.

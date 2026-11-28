@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import { createElement as h, useCallback, useEffect, useRef, useState } from 'react'
 import { TrashIcon } from './icons.js'
 import { hostText, t } from './i18n.js'

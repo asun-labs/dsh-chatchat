@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // DingTalk stream mode: connections/open with the client credentials opens a
 // ticketed WebSocket; every frame is ACKed by echoing its messageId with
 // code 200, system pings get a pong, and the robot callback carries the

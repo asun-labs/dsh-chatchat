@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Images for text-only models. Every model may take images; before a Session request
 // reaches a model that cannot read them, each image becomes text from a vision model.
 // Texts are kept per attachment, so later requests repeat the same words and the

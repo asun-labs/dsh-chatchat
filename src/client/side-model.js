@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Side chats. `/side` is claimed only in a Bot's private chat. A group, an
 // attachment, or an empty question throws, so the draft stays and the line
 // never becomes a normal send. Until the roster is ready, Enter waits (or

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The Bot shell's frame geometry: the left column (open, avatar rail, drawer or
 // hidden), the Bot panel and the conversation share the window. The conversation
 // keeps at least MIN_CHAT px; the column folds to a rail of avatars before the

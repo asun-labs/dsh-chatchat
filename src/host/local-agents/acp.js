@@ -1,12 +1,15 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The Agent Client Protocol engine: one child process per route, ACP over
-// stdio. A process multiplexes sessions: each Seal Bot Session maps to one ACP
+// stdio. A process multiplexes sessions: each DSH ChatChat Session maps to one ACP
 // session, created or resumed with our loopback MCP server attached.
 import { JsonRpcPeer, wireProcess, EventQueue } from './jsonrpc.js'
 import { cleanEnv, spawnAgent } from './discover.js'
 import { acpMode } from './engines.js'
 
 const CLIENT = { name: 'seal-dot', version: '1' }
-// Seal Bot's loopback MCP server, which carries the Bot's team tools.
+// DSH ChatChat's loopback MCP server, which carries the Bot's team tools.
 const MCP_SERVER = 'dsbot'
 
 // Events a driver reports, normalized for the adapter:
@@ -112,7 +115,7 @@ export class AcpEngine {
       if (session === undefined) return Promise.reject({ code: -32603, message: 'unknown session' })
       const options = (params?.options ?? []).map(option => ({ optionId: option.optionId, name: option.name, kind: option.kind }))
       const call = callOf(session, params?.toolCall)
-      // Cursor and Devin ask before every MCP tool call. A call to Seal Bot's own server
+      // Cursor and Devin ask before every MCP tool call. A call to DSH ChatChat's own server
       // is approved once here: toolsFor() already narrowed what the Bot may call.
       // Other tools, and an agent that offers no one-time allow, still ask.
       const once = ownToolCall(call) ? options.find(option => option.kind === 'allow_once') : undefined
@@ -136,7 +139,7 @@ export class AcpEngine {
     return Promise.reject({ code: -32601, message: `method not found: ${method}` })
   }
 
-  // A new or resumed ACP session for one Seal Bot Session.
+  // A new or resumed ACP session for one DSH ChatChat Session.
   async open(dshSessionId, { cwd, mcp, resumeId, preset, model }) {
     const peer = await this.ensure()
     const session = this.sessionFor(dshSessionId)

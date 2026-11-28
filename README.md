@@ -80,14 +80,14 @@ https://github.com/asun-labs/dsh-chatchat/releases/download/v0.1.15/dsh-chatchat
 | --- | --- |
 | 安装、启停与升级 | [安装与升级](docs/installation.md) |
 | 编译源码、运行测试、打包发布 | [开发与验证](docs/development.md) |
-| Seal 默认安装、宿主适配与旧数据兼容 | [Seal 集成](docs/seal-integration.md) |
+| 将插件加载到其他宿主、旧数据兼容 | [宿主加载与兼容](docs/host-integration.md) |
 | 每个版本改了什么 | [发布记录](https://github.com/asun-labs/dsh-chatchat/releases) |
 | 报告问题或提出建议 | [GitHub Issues](https://github.com/asun-labs/dsh-chatchat/issues) |
 
-独立安装使用 **DSH** 品牌；Seal Harness 通过宿主适配显示 **Seal** 品牌，并保留已有 Bot、群聊与会话历史。源码开发和宿主接入的详细边界见对应文档。
+DSH ChatChat 是独立维护和发布的 DSH 插件。其他产品可以加载插件包，宿主接入与旧数据兼容的边界见对应文档。
 
 ---
 
 ## 来源与许可
 
-基于 Fei2411/DS-Bot 修改，采用 Apache-2.0；参见根 [LICENSE](LICENSE) 与 [NOTICE](NOTICE)、上游 [LICENSE](third-party/ds-bot/LICENSE)、[NOTICE](third-party/ds-bot/NOTICE) 和 [PROVENANCE.md](third-party/ds-bot/PROVENANCE.md)。本地 mascot renderer 来源于 Seal Harness，保留其 MIT [许可证](third-party/seal-harness/LICENSE) 和 [来源说明](third-party/seal-harness/PROVENANCE.md)。头像资源及其许可范围见 [头像来源](assets/avatar-catalog/PROVENANCE.md)。保留的旧标识和来源声明不表示与其他项目共享数据或发布渠道。
+基于 [DS-Bot](https://github.com/Fei-Craft/DS-Bot)，遵循 [Apache-2.0](LICENSE)。本项目的修改见[修改声明](MODIFICATIONS.md)，第三方版权与许可见 [NOTICE](NOTICE)。

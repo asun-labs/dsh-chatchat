@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // -------------------------------------------------------------------------
 // Small observable sources for the inject `hooks` compartment.
 

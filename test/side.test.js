@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { hostname, tmpdir } from 'node:os'
@@ -488,7 +491,7 @@ test('a restart marks an entry that was still answering as failed', async (t) =>
   t.after(() => env.stop())
   const [live, old] = chatOf(env.rt, 'chat').entries
   assert.equal(live.status, 'failed')
-  assert.equal(live.error, 'Seal Bot restarted before this answer finished.')
+  assert.equal(live.error, 'DSH ChatChat restarted before this answer finished.')
   assert.equal(typeof live.finishedAt, 'number')
   assert.equal(old.status, 'done')
   const file = chatsFile(env.home)

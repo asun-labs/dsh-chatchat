@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Finding agent CLIs and the environment they run in: PATH plus the user's
 // login-shell PATH plus the usual install folders, and an environment that
 // keeps their own sign-in but leaks nothing of ours.
@@ -123,7 +126,7 @@ export function launchOf(executable, args, { platform = process.platform, readFi
   if (shimmed !== undefined) return { file: shimmed.file, args: shimmed.script === undefined ? args : [shimmed.script, ...args] }
   // Another kind of batch file goes through cmd.exe, which only passes plain arguments intact.
   if (![executable, ...args].every(arg => CMD_SAFE.test(arg))) {
-    throw new Error(`${win32.basename(executable)} is a batch file that Seal Bot cannot start with these arguments. Point the agent at its .exe or Node script instead.`)
+    throw new Error(`${win32.basename(executable)} is a batch file that DSH ChatChat cannot start with these arguments. Point the agent at its .exe or Node script instead.`)
   }
   const line = [executable, ...args].map(arg => (arg === '' || arg.includes(' ') ? `"${arg}"` : arg)).join(' ')
   return { file: process.env.ComSpec ?? 'cmd.exe', args: ['/d', '/s', '/c', `"${line}"`], options: { windowsVerbatimArguments: true } }

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Browser storage keys. Values saved under the plugin's legacy names (dsh-bot-team, dsh-bot)
 // move to the current keys once, so a renamed install keeps its unread marks, reactions,
 // visits, theme, panel width and Bot browser tabs.

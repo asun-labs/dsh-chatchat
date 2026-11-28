@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Discord: the Gateway over a WebSocket and the REST API for sends. DMs have no
 // guild_id; a group message counts as a mention when the bot user is in
 // `mentions`. Buttons are components; interactions come back as

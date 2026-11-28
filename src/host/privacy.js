@@ -1,6 +1,9 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Private Bots. A private Bot reads the team like any Bot, but no other Bot reads it, and
 // what it sends out waits for the user. DSH does not fence reads, so this closes the
-// tools Seal Bot owns and checks the paths that the file tools and the shell are given;
+// tools DSH ChatChat owns and checks the paths that the file tools and the shell are given;
 // a shell can still reach any file the account can (see docs/plans).
 import { join, resolve } from 'node:path'
 import { within } from './folders.js'

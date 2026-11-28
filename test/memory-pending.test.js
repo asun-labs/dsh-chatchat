@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // A memory change that was interrupted.
 //
 // The faults come from the file system: a path that cannot be written (a directory

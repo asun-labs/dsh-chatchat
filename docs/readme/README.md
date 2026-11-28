@@ -16,4 +16,6 @@ node docs/readme/preview.mjs
 - `/?scene=create`：新建 Bot 表单。
 - `/?scene=team&lang=en` 与 `/?scene=create&lang=en`：对应的英文组件、演示数据与说明，保存为 `team.en.jpg` 与 `create-bot.en.jpg`。
 
+可追加 `&branding=seal` 检查旧宿主参数兼容：界面仍应显示插件默认的 DSH 名称和图标。
+
 从浏览器保存对应 JPEG，更新 `docs/media/` 内的展示图。预览仅绑定回环地址，所有数据驻留内存，不加载真实用户目录，不调用模型，不保存配置。结束后停止预览进程。服务也可用于检查本仓库 Markdown 渲染后的临时 HTML；临时页面不得提交。

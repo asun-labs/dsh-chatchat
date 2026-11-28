@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // One Chromium profile per Bot. A Bot's own chat and every group Session it speaks in
 // share this directory, so a new conversation part keeps the login. Another Bot never
 // opens it: profiles are not copied across the team.
@@ -79,7 +82,7 @@ function inspectWriteTarget(el, { url, mode, active = false }) {
   return kind ? action(kind, label) : null
 }
 
-// playwright-core ships with Seal Bot and drives the desktop app's own browser; a
+// playwright-core ships with DSH ChatChat and drives the desktop app's own browser; a
 // full playwright the user installed also brings its own Chromium build.
 async function loadChromium(playwrightUrl) {
   const loaded = playwrightUrl ? await import(playwrightUrl) : await import('playwright').catch(() => import('playwright-core'))

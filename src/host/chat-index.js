@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Reading a Bot's own chat: Session history pages, the SQLite FTS5 index, and the
 // search, latest, and around reads behind read_own_chat.
 //

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // The official marks of the agent CLIs Seal Bot drives, shown only to name the
 // agent a Bot runs on. The trademarks belong to their owners (see NOTICE).
 // Vector marks: Simple Icons 16.36.0 (CC0-1.0). Devin and OpenAI: the vendors' app icons.

@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Slack: Socket Mode over a WebSocket for inbound (xapp- token opens a
 // connection URL with apps.connections.open, every envelope must be ACKed,
 // disconnect frames mean reconnect), the Web API (xoxb- token) for sends and

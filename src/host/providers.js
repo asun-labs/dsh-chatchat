@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Model providers and their API keys, for a window that has no DSH Models page of its
 // own. DSH keeps all of it: a provider route in the settings of the adapter that serves
 // it, the route's key in DSH's credential store under the reference the route names.
@@ -149,7 +152,7 @@ export function install(rt) {
   }
 
   // Backfill compatibility defaults onto custom routes (and catalog routes pointed at a
-  // custom gateway) that were saved before Seal Bot wrote `compat`, or added through DSH's
+  // custom gateway) that were saved before DSH ChatChat wrote `compat`, or added through DSH's
   // own Models page. Explicit user settings win per field.
   let repairing = Promise.resolve()
   async function ensureCustomCompat() {
@@ -238,7 +241,7 @@ export function install(rt) {
   async function writableRef(provider) {
     const ref = keyRefs().get(provider)
     if (ref === undefined) throw invalid(`${provider} takes no API key here`)
-    if ((await usable().credentials.describe(ref)).writable === false) throw invalid(`The API key for ${provider} is set outside Seal Bot and cannot be changed here`)
+    if ((await usable().credentials.describe(ref)).writable === false) throw invalid(`The API key for ${provider} is set outside DSH ChatChat and cannot be changed here`)
     return ref
   }
 
@@ -272,7 +275,7 @@ export function install(rt) {
     const key = typeof body.key === 'string' && body.key.trim() !== '' ? checkKey(body.key) : undefined
     const ref = keyRefFor(provider)
     const info = await credentials.describe(ref)
-    if (key !== undefined && info.writable === false) throw invalid(`The API key for ${provider} is set outside Seal Bot and cannot be changed here`)
+    if (key !== undefined && info.writable === false) throw invalid(`The API key for ${provider} is set outside DSH ChatChat and cannot be changed here`)
     // A blank key keeps a key that is already there, else the provider's own sign-in.
     const keyed = key !== undefined || info.configured === true
     const profile = custom ? customProfile(body, known) : {}

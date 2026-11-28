@@ -1,3 +1,6 @@
+// Modified by DSH ChatChat contributors. See MODIFICATIONS.md.
+// Modifications Copyright (c) 2026 DSH ChatChat contributors.
+
 // Side chats: questions answered from a fresh snapshot of a Bot's private chat,
 // shown in the Bot's side panel. A follow-up carries the chat's finished pairs
 // on top of a new snapshot, so the route sees a short conversation. Nothing is
@@ -185,7 +188,7 @@ export function install(rt) {
   }
 
   const abandoned = botId => disposing || dropped.has(botId) || rt.botOf(botId) === undefined
-  const stopError = (botId) => new Error(disposing && !dropped.has(botId) && rt.botOf(botId) !== undefined ? 'Seal Bot is stopping.' : 'Unknown Bot')
+  const stopError = (botId) => new Error(disposing && !dropped.has(botId) && rt.botOf(botId) !== undefined ? 'DSH ChatChat is stopping.' : 'Unknown Bot')
 
   // Wait until every targeted flight has left. A call still inside resolveAgent
   // has no `done` yet; yielding lets it notice disposal and drop the slot.
