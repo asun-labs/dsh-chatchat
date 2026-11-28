@@ -38,21 +38,22 @@ function fixture(t, home, branding) {
   } }
 }
 
-test('standalone and legacy hosts create the independent default Bot and native Agent', async t => {
+test('the Host config selects the default Bot and native Agent in full and cached rosters', async t => {
   for (const id of ['dsh', 'seal']) {
     const home = mkdtempSync(join(tmpdir(), 'chatchat-brand-'))
     const { rt, stop, call } = fixture(t, home, id)
     try {
       await rt.bootstrap()
       const bot = rt.botOf(rt.state.mainBotIds[0])
-      assert.equal(bot.name, brandProfile(id).botName)
-      assert.equal(bot.avatar.image, DEFAULT_AVATARS.dsh)
-      assert.equal((await rt.addAgent()).name, brandProfile(id).agentName)
+      const prefix = id === 'seal' ? 'Seal' : 'DSH'
+      assert.equal(bot.name, `${prefix} Bot`)
+      assert.equal(bot.avatar.image, DEFAULT_AVATARS[id])
+      assert.equal((await rt.addAgent()).name, `${prefix} Agent`)
       const snapshot = (await call('state', {})).value
-      assert.equal(snapshot.branding, 'dsh')
+      assert.equal(snapshot.branding, id)
       const thin = (await call('state', { since: snapshot.revision, models: snapshot.modelsKey, live: snapshot.liveKey })).value
       assert.equal(thin.unchanged, true)
-      assert.equal(thin.branding, 'dsh', 'cached rosters retain the independent plugin identity')
+      assert.equal(thin.branding, id)
     } finally { await stop(); removeFixtureHome(home) }
   }
   assert.equal(hostBranding().id, 'dsh')
@@ -63,16 +64,16 @@ test('standalone and legacy hosts create the independent default Bot and native 
 
 test('default branding migrates once and custom name/avatar survive another host restart', async t => {
   const home = mkdtempSync(join(tmpdir(), 'chatchat-brand-migrate-'))
-  let current = fixture(t, home, 'seal')
+  let current = fixture(t, home, 'dsh')
   try {
     await current.rt.bootstrap()
     const id = current.rt.state.mainBotIds[0]
     await current.stop()
-    current = fixture(t, home, 'dsh')
+    current = fixture(t, home, 'seal')
     await current.rt.bootstrap()
     const bot = current.rt.botOf(id)
-    assert.equal(bot.name, 'DSH Bot')
-    assert.equal(bot.avatar.image, DEFAULT_AVATARS.dsh)
+    assert.equal(bot.name, 'Seal Bot')
+    assert.equal(bot.avatar.image, DEFAULT_AVATARS.seal)
     await current.rt.updateBot(id, { name: 'My team', avatar: { image: 'data:image/png;base64,Y3VzdG9t' } })
     await current.stop()
     current = fixture(t, home, 'seal')
@@ -88,7 +89,7 @@ test('default branding migrates once and custom name/avatar survive another host
   } finally { await current.stop(); removeFixtureHome(home) }
 })
 
-test('Client labels and icons stay independent without replacing interpolated user names', () => {
+test('Client labels and icons follow the Host without replacing interpolated user names', () => {
   const globals = { seal: globalThis.__SEAL_DOT_ICON__, dsh: globalThis.__DSH_BOT_ICON__ }
   globalThis.__SEAL_DOT_ICON__ = DEFAULT_AVATARS.seal
   globalThis.__DSH_BOT_ICON__ = DEFAULT_AVATARS.dsh
@@ -98,7 +99,7 @@ test('Client labels and icons stay independent without replacing interpolated us
       try {
         const brand = brandProfile(id)
         assert.equal(t('Add Seal Agent'), `Add ${brand.agentName}`)
-        assert.equal(brandImage(), DEFAULT_AVATARS.dsh)
+        assert.equal(brandImage(), DEFAULT_AVATARS[id])
         assert.equal(t('Message {name}', { name: 'Seal Bot' }), 'Message Seal Bot')
         assert.equal(hostText('Seal Bot is still loading this chat.'), `${brand.botName} is still loading this chat.`)
         assert.equal(hostText('User named Seal Bot'), 'User named Seal Bot')
@@ -141,7 +142,7 @@ test('official DSH avatar is pinned and ships with its license and matching Host
   assert.equal(JSON.parse(assetDefines().__SEAL_DOT_ICON__), DEFAULT_AVATARS.seal)
 })
 
-test('default workspace titles stay independent, migrate once, and preserve custom titles', async () => {
+test('default workspace titles follow the Host, migrate once, and preserve custom titles', async () => {
   for (const id of ['dsh', 'seal']) {
     for (const title of ['Seal Dot', 'Seal Bot', 'DSH Bot', '我的项目']) {
       const edits = []

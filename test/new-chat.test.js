@@ -101,7 +101,7 @@ test('new section is above group chat and uses the original save and rename flow
   assert.deepEqual(calls, [['save', 0], ['close'], ['rename', 'section']])
 })
 
-for (const brand of ['dsh', 'seal']) test(`the new-chat menu keeps the independent Agent for the ${brand} option`, async () => {
+for (const brand of ['dsh', 'seal']) test(`the new-chat menu uses the ${brand} Host Agent and avatar`, async () => {
   const branding = module.exports.installBranding(brand)
   try {
   const calls = []
@@ -109,14 +109,14 @@ for (const brand of ['dsh', 'seal']) test(`the new-chat menu keeps the independe
     addAgent: async () => calls.push('add'), closeOverlay: () => calls.push('close'),
   } })
   const tree = view.render()
-  const name = 'DSH Agent'
+  const name = brand === 'seal' ? 'Seal Agent' : 'DSH Agent'
   const entry = options(tree).find(node => text(node).includes(`Add ${name}`))
   assert.ok(entry)
-  const image = 'data:image/svg+xml;base64,dsh-icon-fixture'
+  const image = brand === 'seal' ? 'data:image/png;base64,seal-icon-fixture' : 'data:image/svg+xml;base64,dsh-icon-fixture'
   const agentIcon = all(entry, node => node.props?.look?.image === image)[0]
-  assert.ok(agentIcon, 'Agent uses the independent default avatar')
+  assert.ok(agentIcon, 'Agent uses the Host default avatar')
   assert.equal(agentIcon.props.size, 24)
-  assert.equal(text(tree).includes('Seal Agent'), false)
+  assert.equal(text(tree).includes(brand === 'seal' ? 'DSH Agent' : 'Seal Agent'), false)
   entry.props.onClick()
   await tick()
   assert.deepEqual(calls, ['add', 'close'])
